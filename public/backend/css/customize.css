@@ -1,0 +1,37 @@
+.error-message {
+    color: red;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+input::placeholder {
+    font-size: 13px;
+}
+
+.navbar-default {
+    min-height: 100vh;
+}
+
+.profile .status {
+    font-size: 12px;
+    color: limegreen;
+}
+
+.mb-3.d-flex {
+    display: flex;
+    justify-content: space-between; /* Đảm bảo hai phần tử cách xa nhau */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    vertical-align: middle; /* Giữ checkbox nằm giữa */
+    margin-top: -2px; /* Điều chỉnh nếu bị lệch */
+}
+

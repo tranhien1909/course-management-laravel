@@ -12,4 +12,14 @@ class Course extends Model
     protected $primaryKey = 'id'; // Đảm bảo đúng tên trường
     public $incrementing = false; // Vì ID là chuỗi, không tự động tăng
     protected $keyType = 'string'; // Kiểu khóa là string
+
+    protected $fillable = [
+        'description',
+    ];
+
+    // Quan hệ với bảng classes
+    public function classes() {
+        return $this->hasMany(ClassModel::class, 'course_id');
+    }
+
 }

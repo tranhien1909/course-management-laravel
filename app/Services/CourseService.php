@@ -15,4 +15,9 @@ class CourseService implements CourseServiceInterface
         $courses = $this->courseRepository->getAllPaginate();
         return $courses;
     }
+
+    public function create(array $data)
+    {
+        return Course::create($data);
+    }
 }

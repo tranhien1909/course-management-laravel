@@ -20,12 +20,6 @@
 
     }
 
-    .add-btn {
-        position: absolute;
-        right: 10px;
-        top: 30px;
-
-    }
 
     .course-img {
         width: 140px;
@@ -54,97 +48,6 @@
         color: white;
         font-size: 14px;
     }
-
-    .form-container {
-        margin-top: 50px;
-        position: fixed;
-        top: 0;
-        right: -520px;
-        /* Ẩn ban đầu */
-        width: 520px;
-        height: calc(100% - 50px);
-        background: white;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        transition: right 0.3s ease-in-out;
-        z-index: 1001;
-    }
-
-    .form-container.active {
-        right: 0;
-        /* Hiện form */
-    }
-
-    .closebtn {
-        background: none;
-        color: #888;
-        /* Màu xám */
-        font-size: 17px;
-        border: none;
-        cursor: pointer;
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        /* Cách khoảng 10px */
-    }
-
-    form {
-        margin-left: 12px;
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 12px;
-        align-items: center;
-        margin-top: 15px;
-    }
-
-    .form-container h2 {
-        margin-left: 25px;
-    }
-
-    label {
-        width: 120px;
-    }
-
-    input,
-    textarea,
-    select {
-        width: 93%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    .form-footer {
-        grid-column: span 2;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .save-btn {
-        background: #3b6db3;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        border: none;
-        margin-right: 30px;
-    }
-
-    .delete-btn {
-        background: none;
-        border: none;
-        color: black;
-        font-size: 18px;
-        cursor: pointer;
-        margin-left: auto;
-    }
-
-    #addForm {
-        max-height: 100vh;
-        /* Giới hạn chiều cao modal */
-        overflow-y: auto;
-        /* Tạo thanh cuộn khi nội dung quá dài */
-    }
 </style>
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -163,17 +66,16 @@
                         <h3 style="font-size: 18px; margin-top: 20px">DANH SÁCH HỌC VIÊN</h3>
                     </ol>
                 </div>
-                <div class="col-lg-2">
-                    <button class="add-btn" onclick="toggleForm()">+ Thêm</button>
-                </div>
             </div>
             <div class="filter-bar">
-                <button>Export</button>
+                <a href="{{ route('studentExport.pdf') }}"><button>Export</button></a>
 
                 <div class="search-container">
                     <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                     <input type="text" placeholder="Nhập tên khóa học cần tìm ...">
                 </div>
+
+                <button class="add-btn" onclick="toggleForm()">+ Thêm Học viên</button>
             </div>
 
             <div class="ibox-content">
@@ -187,11 +89,13 @@
                             <tr>
                                 <th><input type="checkbox" id="select-all"></th>
                                 <th>STT</th>
+                                <th>Mã học viên</th>
                                 <th>Ảnh đại diện</th>
                                 <th>Họ tên</th>
+                                <th>Giới tính</th>
                                 <th>Ngày sinh</th>
                                 <th>Email</th>
-                                <th>Phone</th>
+                                <th>SĐT</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -200,10 +104,13 @@
                                     <tr class="course-row">
                                         <td><input type='checkbox' class='row-checkbox'></td>
                                         <td>{{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}</td>
-                                        <td><img src="{{ $user->avatar }}" class="rounded-circle"
+                                        <td>{{ $user->student_id }}</td>
+                                        <td><img src="{{ $user->avatar ?? 'https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-image-700-205124837.jpg' }}"
+                                                class="rounded-circle"
                                                 style="width: 100px; height: 100px; object-fit: cover;"
                                                 alt='Ảnh avatar'></td>
                                         <td>{{ $user->fullname }}</td>
+                                        <td>{{ $user->gender }}</td>
                                         <td>{{ date('d/m/Y', strtotime($user->birthday)) }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->phone }}</td>
@@ -220,55 +127,83 @@
                 </div>
             </div>
         </div>
+
         <div class="form-container" id="addForm">
             <button class="closebtn" onclick="toggleForm()">X</button>
-            <h2 style="font-size: 17px;">THÊM KHÓA HỌC</h2>
-            <form>
-                <label>Mã khóa học</label>
-                <input type="text" name="ma_khoa_hoc" required>
-
-                <label>Tên khóa học</label>
-                <input type="text" name="ten_khoa_hoc" required>
-
-                <label>Mức độ</label>
-                <select name="muc_do" required>
-                    <option value="coban">Cơ bản</option>
-                    <option value="trungcap">Trung cấp</option>
-                    <option value="nangcao">Nâng cao</option>
-                </select>
-
-                <label>Số buổi học</label>
-                <input type="number" name="so_buoi_hoc" required>
-
-                <label>Ngày khai giảng</label>
-                <input type="date" name="thoi_gian_bat_dau" required>
-
-                <label>Thời gian học</label>
-                <input type="text" name="thoi_gian_hoc" required>
-
-                <label>Mô tả</label>
-                <textarea name="mo_ta"></textarea>
-
-                <label>Đối tượng</label>
-                <textarea name="doituong"></textarea>
-
-                <label>Ảnh khóa học</label>
-                <input type="file" name="hinh_anh[]" multiple>
-
-                <label>Học phí</label>
-                <input type="text" name="hoc_phi" required>
-
-                <label>Trạng thái học</label>
-                <select name="trang_thai_hoc" required>
-                    <option value="coban">Cơ bản</option>
-                    <option value="trungcap">Trung cấp</option>
-                    <option value="nangcao">Nâng cao</option>
-                </select>
-
-                <div class="form-footer">
-                    <button type="submit" class="save-btn">Lưu</button>
+            <h2 class="text-center">THÊM HỌC VIÊN</h2>
+            {{-- Hiển thị thông báo thành công --}}
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
                 </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form action="{{ route('student.store') }}" method="POST" class="box" enctype="multipart/form-data">
+                {{-- CSRF token để bảo mật --}}
+                @csrf
+                <div class="avatar">
+                    <div>
+                        <input type="file" class="image-input" accept="image/*" id="fileInput">
+                        <img src="https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+                            class="img-circle img-avatar" id="avatarImage">
+                    </div>
+                </div>
+                <form class="store">
+                    <label>Username: <span class="text-danger">(*)</span></label>
+                    <input type="text" name="username" value="{{ old('username') }}" required>
+
+                    <label>Họ tên: <span class="text-danger">(*)</span></label>
+                    <input type="text" name="fullname" value="{{ old('fullname') }}" required>
+
+                    <label>Giới tính: <span class="text-danger">(*)</span></label>
+                    <select name="gender">
+                        <option value="Nam" {{ old('gender') == 'Nam' ? 'selected' : '' }}>Nam</option>
+                        <option value="Nữ" {{ old('gender') == 'Nữ' ? 'selected' : '' }}>Nữ</option>
+
+                    </select>
+
+                    <label>Ngày sinh: <span class="text-danger">(*)</span></label>
+                    <input type="date" name="birthday" value="{{ old('birthday') }}">
+
+                    <label>Email: <span class="text-danger">(*)</span></label>
+                    <input type="text" name="email" value="{{ old('email') }}">
+                    </select>
+
+                    <label>Số điện thoại: <span class="text-danger">(*)</span></label>
+                    <input type="text" name="phone" value="{{ old('phone') }}">
+
+                    <label>Địa chỉ:</label>
+                    <input type="text" name="address" value="{{ old('address') }}">
+
+                    <label>Mật khẩu: <span class="text-danger">(*)</span></label>
+                    <input type="password" name="password" autocomplete="new-password" value="" required>
+
+                    <label>Nhập lại mật khẩu: <span class="text-danger">(*)</span></label>
+                    <input type="password" name="password_confirmation" autocomplete="new-password" value=""
+                        required>
+
+                    <div class="form-footer">
+                        <button type="submit" class="save-btn">Lưu</button>
+                    </div>
+                </form>
+                <script>
+                    document.getElementById('studentForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        console.log('Form submitted'); // Kiểm tra console
+                        this.submit(); // Gửi form
+                    });
+                </script>
             </form>
+
         </div>
     </div>
 
@@ -295,6 +230,21 @@
         const btnEdit = document.querySelector(".btn-edit");
         const btnDelete = document.querySelector(".btn-delete");
         const selectAll = document.getElementById("select-all");
+
+        // Reset form khi load trang
+        const form = document.querySelector('form');
+        form.reset();
+
+        // Validate client-side trước khi submit
+        form.addEventListener('submit', function(e) {
+            const pwd = form.querySelector('[name="password"]').value;
+            const confirm = form.querySelector('[name="password_confirmation"]').value;
+
+            if (pwd !== confirm) {
+                e.preventDefault();
+                alert('Mật khẩu xác nhận không khớp!');
+            }
+        });
 
         function updateButtons() {
             let checkedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
@@ -338,5 +288,33 @@
 
         // Gọi updateButtons() để vô hiệu hóa nút ngay khi trang tải xong
         updateButtons();
+    });
+
+    document.getElementById('avatarImage').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            // Kiểm tra kích thước file
+            if (file.size > 2 * 1024 * 1024) { // 2MB
+                alert('Kích thước ảnh không được vượt quá 2MB');
+                return;
+            }
+
+            // Kiểm tra loại file
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+            if (!validTypes.includes(file.type)) {
+                alert('Chỉ chấp nhận file ảnh (JPEG, PNG, JPG, GIF)');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarImage').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     });
 </script>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\AuthRequest;
 use Illuminate\Support\Facades\Auth;
+use Flasher\Laravel\Facade\Flasher;
 
 class AuthController extends Controller
 {
@@ -32,9 +33,11 @@ class AuthController extends Controller
         ];
     
         if (Auth::attempt($credentials)) {
-            return redirect()->route('dashboard.index')->with('success', 'Đăng nhập thành công');
+            Flasher::addSuccess('Đăng nhập thành công!');
+            return redirect()->route('dashboard.index');
         } else {
-            return redirect()->route('auth.admin')->with('error', 'Email hoặc mật khẩu không đúng');
+            Flasher::addError('Email hoặc mật khẩu không đúng');
+            return redirect()->route('auth.admin');
         }
     }
 

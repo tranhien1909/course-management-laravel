@@ -6,12 +6,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "Roboto", Tahoma, sans-serif;
     outline: none;
     border: none;
     text-decoration: none;
     text-transform: capitalize;
     transition: .2s linear;
+    font-size: 14px;
   }
   
   html {
@@ -65,20 +66,11 @@
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);
   }
   
-  header .logo {
-    font-size: 3rem;
-    color: #333;
-    font-weight: bolder;
-  }
-  
-  header .logo span {
-    color: var(--blue);
-  }
-  
   header .navbar a {
     font-size: 2rem;
     padding: 0 1.5rem;
     color: #666;
+    text-decoration: none !important;
   }
   
   header .navbar a:hover {
@@ -473,6 +465,10 @@
     cursor: pointer;
   }
   
+  .fab {
+    font-size: 14px;
+  }
+
   /* media queries */
   @media (max-width: 991px) {
     html {

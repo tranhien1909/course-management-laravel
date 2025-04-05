@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('teachers', function (Blueprint $table) {
-            $table->id();
+            $table->string('id')->primary();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('bio')->nullable();
             $table->string('expertise')->nullable();
+            $table->date('joining_date')->nullable();
+            $table->enum('status', ['Active', 'Inactive'])->default('Active'); // Trạng thái
             $table->timestamps();
         });
     }

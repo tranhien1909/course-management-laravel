@@ -8,12 +8,44 @@
 
 </head>
 
-<body class="blue-bg" style="background-color: rgb(76, 211, 248);">
+<style>
+    body {
+        background-image: url('https://png.pngtree.com/background/20210710/original/pngtree-world-investment-finance-technology-blue-poster-background-picture-image_1012274.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: inherit;
+        filter: brightness(50%);
+        /* Làm mờ 30% */
+        z-index: -1;
+    }
+
+    label {
+        color: black;
+    }
+</style>
+
+<body class="blue-bg">
     <div class="loginColumns animated fadeInDown">
         <div class="row">
 
             <div class="col-md-6">
-                <h2 class="font-bold text-center">Welcome to SMART</h2>
+
+                <h1 class="text-center"><a href="{{ url('/') }}"><img src="{{ asset('backend/img/smart_logo.png') }}"
+                            alt="" style="width: 100px"></a>
+                </h1>
+
+                <h2 class="font-bold text-center" style="margin-bottom: 20px;">Welcome to SMART</h2>
 
                 <p class="font-bold">
                     Hệ thống Quản lý Khóa Học SMART được thiết kế để mang đến cho bạn trải nghiệm học tập và quản lý
@@ -32,6 +64,7 @@
             </div>
             <div class="col-md-6">
                 <div class="ibox-content">
+                    <h3 class="text-center" style="color: black;">LOGIN</h3>
                     <form method="post" class="m-t" action="{{ route('auth.login') }}" role="form">
                         @csrf
                         <div class="form-group mb-3">
@@ -66,8 +99,9 @@
                         </div>
 
 
-                        <p class="text-center mt-3">Ban chưa có tài khoản? <a href="{{ route('auth.register') }}"
-                                class="text-success fw-bold" style="text-decoration: none">Đăng ký ngay</a></p>
+                        <p class="text-center mb-3" style="color: black">Ban chưa có tài khoản? <a
+                                href="{{ route('auth.register') }}" class="text-success fw-bold"
+                                style="text-decoration: none">Đăng ký ngay</a></p>
 
                     </form>
                 </div>

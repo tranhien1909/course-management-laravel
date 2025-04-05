@@ -23,13 +23,6 @@
         gap: 15px;
     }
 
-    .add-btn {
-        position: absolute;
-        right: 10px;
-        top: 30px;
-
-    }
-
     /* Style cho nút */
     .btn-edit,
     .btn-delete {
@@ -110,96 +103,6 @@
         z-index: 1001;
         /* Hiển thị trên cùng */
     }
-
-    .form-container {
-        margin-top: 50px;
-        position: fixed;
-        top: 0;
-        right: -550px;
-        /* Ẩn ban đầu */
-        width: 550px;
-        height: calc(100% - 50px);
-        background: white;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        transition: right 0.3s ease-in-out;
-        z-index: 1001;
-    }
-
-    .form-container.active {
-        right: 0;
-        /* Hiện form */
-    }
-
-    .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: none;
-        z-index: 1000;
-    }
-
-    .overlay.active {
-        display: block;
-    }
-
-    .closebtn {
-        background: none;
-        color: #888;
-        /* Màu xám */
-        font-size: 17px;
-        border: none;
-        cursor: pointer;
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        /* Cách khoảng 10px */
-    }
-
-    form {
-        margin-left: 12px;
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 12px;
-        align-items: center;
-        margin-top: 15px;
-    }
-
-    .form-container h2 {
-        margin-left: 25px;
-    }
-
-    label {
-        width: 180px;
-    }
-
-    input,
-    textarea,
-    select {
-        width: 94%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    .form-footer {
-        grid-column: span 2;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .save-btn {
-        background: #3b6db3;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        border: none;
-        margin-right: 30px;
-    }
 </style>
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -218,9 +121,6 @@
                         <h3 style="font-size: 18px; margin-top: 20px">DANH SÁCH HÓA ĐƠN</h3>
                     </ol>
                 </div>
-                <div class="col-lg-2">
-                    <button class="add-btn" onclick="toggleForm()">+ Thêm</button>
-                </div>
             </div>
             <div class="filter-bar">
                 <button>Export</button>
@@ -236,6 +136,8 @@
                     <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                     <input type="text" placeholder="Nhập mã hóa đơn cần tìm ...">
                 </div>
+
+                <button class="add-btn" onclick="toggleForm()">+ Thêm Hoá đơn</button>
             </div>
             <div class="ibox-content">
                 <div class="action-buttons">
@@ -307,7 +209,7 @@
 </div>
 <div class="form-container" id="addForm">
     <button class="closebtn" onclick="toggleForm()">X</button>
-    <h2 style="font-size: 17px;">HÓA ĐƠN</h2>
+    <h2 class="text-center">THÊM HÓA ĐƠN</h2>
     <form>
         <label>Mã hóa đơn</label>
         <input type="text" name="ma_hoa_don" required>
@@ -353,7 +255,7 @@
         <textarea name="ghi_chu"></textarea>
 
         <div class="form-footer">
-            <button type="submit" class="save-btn">Thêm</button>
+            <button type="submit" class="save-btn">Lưu</button>
         </div>
     </form>
 </div>

@@ -21,7 +21,7 @@
                     </ul>
                 </div>
                 <div class="logo-element">
-                    SMART
+                    <img src="{{ asset('backend/img/smart_logo.png') }}" alt="" style="width: 60px;">
                 </div>
             </li>
             <li class="active">

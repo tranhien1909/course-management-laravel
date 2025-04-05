@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -18,9 +19,23 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'student_id',
+        'username',
+        'fullname',
+        'gender',
+        'birthday',
         'email',
+        'phone',
+        'address',
         'password',
+        'avatar',
+        'role'
+    ];
+    
+    // Thêm cast cho gender và role
+    protected $casts = [
+        'gender' => 'string',
+        'role' => 'string'
     ];
 
     /**

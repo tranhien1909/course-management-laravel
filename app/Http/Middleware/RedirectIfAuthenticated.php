@@ -17,7 +17,7 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard.index'); // Chuyển hướng nếu đã đăng nhập
+            return redirect()->route('dashboard.index')->with('error', 'Bạn phải đăng nhập để sử dụng '); // Chuyển hướng nếu đã đăng nhập
         }
         return $next($request);
     }

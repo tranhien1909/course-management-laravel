@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/thongtinkhoahoc', function () {
+    return view('thongtinkhoahoc');
+});
+
 // Phân quyền theo vai trò
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
@@ -36,9 +40,12 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     });
 });
 
+Route::get('profile', [DashboardController::class, 'profile']) 
+    -> name('dashboard.profile')
+    ->middleware(AdminMiddleware::class);
+
 
 // Backend Routes
-
 Route::get('dashboard', [DashboardController::class, 'index']) 
     -> name('dashboard.index')
     ->middleware(AdminMiddleware::class);
@@ -50,19 +57,32 @@ Route::get('admin', [AuthController::class, 'index'])
 Route::get('logout', [AuthController::class, 'logout']) 
     -> name('auth.logout');
 
-// Các trang quản lý
-Route::get('profile', [UserController::class, 'index']) 
-    -> name('profile')
-    ->middleware(AdminMiddleware::class);
+// // Các trang quản lý
+// Route::get('profile', [UserController::class, 'index']) 
+//     -> name('profile')
+//     ->middleware(AdminMiddleware::class);
 
 // Quản lý khoá học
 Route::get('course_management/index', [CourseController::class, 'index']) 
     -> name('course.index')
     ->middleware(AdminMiddleware::class);
 
+Route::post('course_management/store', [CourseController::class, 'store'])
+    ->name('courses.store')
+    ->middleware(AdminMiddleware::class);
+
+Route::post('/upload-temp-image', [CourseController::class, 'uploadTempImage']);
+
 Route::get('course_management/detail', [CourseController::class, 'detail']) 
     -> name('course.detail')
     ->middleware(AdminMiddleware::class);
+
+Route::get('courses_management/{id}', [CourseController::class, 'detail'])
+    ->name('course.detail')    
+    ->middleware(AdminMiddleware::class);
+
+
+Route::get('course-pdf', [CourseController::class, 'exportPDF'])->name('courseExport.pdf');
 
 // Quản lý lớp học
 Route::get('class_management/index', [ClassController::class, 'index']) 
@@ -73,6 +93,8 @@ Route::get('class_management/detail', [ClassController::class, 'detail'])
     -> name('class.detail')
     ->middleware(AdminMiddleware::class);
 
+Route::get('/class-pdf', [ClassController::class, 'exportPDF'])->name('classExport.pdf');
+
 // Quản lý giảng viên
 Route::get('teacher_management/index', [TeacherController::class, 'index']) 
     -> name('teacher.index')
@@ -82,14 +104,25 @@ Route::get('teacher_management/detail', [TeacherController::class, 'detail'])
     -> name('teacher.detail')
     ->middleware(AdminMiddleware::class);
 
-// Quản lý học viên
-Route::get('student_management/index', [UserController::class, 'index']) 
-    -> name('student.index')
-    ->middleware(AdminMiddleware::class);
+Route::get('/teacher-pdf', [TeacherController::class, 'exportPDF'])->name('teacherExport.pdf');
 
-Route::get('student_management/detail', [UserController::class, 'detail']) 
-    -> name('student.detail')
-    ->middleware(AdminMiddleware::class);
+// Quản lý học viên
+Route::group(['prefix' => 'user'], function() {
+    Route::get('student_management/index', [UserController::class, 'index']) 
+        -> name('student.index')
+        ->middleware(AdminMiddleware::class);
+
+    Route::get('student_management/detail', [UserController::class, 'detail']) 
+        -> name('student.detail')
+        ->middleware(AdminMiddleware::class);
+
+    Route::post('student_management/store', [UserController::class, 'store'])
+        -> name('student.store')
+        ->middleware(AdminMiddleware::class);
+
+    Route::get('/student-pdf', [UserController::class, 'exportPDF'])->name('studentExport.pdf');
+
+});
 
 // Quản lý thu chi
 Route::get('spending/index', [SpendingController::class, 'index']) 

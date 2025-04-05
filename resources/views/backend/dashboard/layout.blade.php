@@ -6,6 +6,7 @@
 </head>
 
 <body>
+
     <div id="wrapper">
         @include('backend.dashboard.component.sidebar')
         {{-- @include('fontend.user.dashboard.component.sidebar') --}}
@@ -27,8 +28,10 @@
 
         </div>
     </div>
+    @flasher_render
 
     @include('backend.dashboard.component.script')
+
 </body>
 
 </html>

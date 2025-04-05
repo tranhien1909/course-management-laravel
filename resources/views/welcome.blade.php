@@ -9,9 +9,16 @@
     <!-- Font awesome cdn link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="backend/css/style-introduce.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
 
     <!-- header section starts -->
     <header>
@@ -19,7 +26,8 @@
         <input type="checkbox" name="toggle" id="toggle">
         <label for="toggle" class="fas fa-bars"></label>
 
-        <a href="#" class="logo">Smart <span>.</span></a>
+        <a href="#" class="logo"><img src="{{ asset('backend/img/smart_logo_color.png') }}" alt=""
+                style="width: 100px;"></a>
         <nav class="navbar">
             <a href="#home">home</a>
             <a href="#about">about</a>
@@ -78,32 +86,32 @@
         <div class="icons">
             <i class="fa-solid fa-earth-americas"></i>
             <div class="info">
-                <h3>free delivery</h3>
-                <span>on all orders</span>
+                <h3>Learn Anytime, Anywhere</h3>
+                <span>Access the course from any device, anytime.</span>
+            </div>
+        </div>
+
+        <div class="icons">
+            <i class="fa-solid fa-route"></i>
+            <div class="info">
+                <h3>Personalized Pathway</h3>
+                <span>The curriculum is tailored to your level and goals.</span>
             </div>
         </div>
 
         <div class="icons">
             <i class="fa-solid fa-graduation-cap"></i>
             <div class="info">
-                <h3>10 days returns</h3>
-                <span>on all orders</span>
-            </div>
-        </div>
-
-        <div class="icons">
-            <i class="fa-solid fa-microphone-lines"></i>
-            <div class="info">
-                <h3>free delivery</h3>
-                <span>on all orders</span>
+                <h3>Professional Instructors</h3>
+                <span>A team of teachers with international certificates and many years of experience.</span>
             </div>
         </div>
 
         <div class="icons">
             <i class="fa-solid fa-school"></i>
             <div class="info">
-                <h3>free delivery</h3>
-                <span>on all orders</span>
+                <h3>Free Study Materials</h3>
+                <span>Provide free textbooks and exercises for students.</span>
             </div>
         </div>
     </section>
@@ -121,7 +129,7 @@
                     <img src="backend/img/course_1.jpg" alt="">
                     <div class="icons">
                         <a href="#" class="fas fa-heart"></a>
-                        <a href="#" class="cart-btn">Tham gia ngay!</a>
+                        <a href="#" class="cart-btn">Đăng ký ngay!</a>
                         <a href="#" class="fas fa-share"></a>
                     </div>
                 </div>
@@ -140,7 +148,7 @@
                     <img src="backend/img/course_1.jpg" alt="">
                     <div class="icons">
                         <a href="#" class="fas fa-heart"></a>
-                        <a href="#" class="cart-btn">Tham gia ngay!</a>
+                        <a href="#" class="cart-btn">Đăng ký ngay!</a>
                         <a href="#" class="fas fa-share"></a>
                     </div>
                 </div>
@@ -159,7 +167,7 @@
                     <img src="backend/img/course_1.jpg" alt="">
                     <div class="icons">
                         <a href="#" class="fas fa-heart"></a>
-                        <a href="#" class="cart-btn">Tham gia ngay!</a>
+                        <a href="#" class="cart-btn">Đăng ký ngay!</a>
                         <a href="#" class="fas fa-share"></a>
                     </div>
                 </div>
@@ -178,7 +186,7 @@
                     <img src="backend/img/course_1.jpg" alt="">
                     <div class="icons">
                         <a href="#" class="fas fa-heart"></a>
-                        <a href="#" class="cart-btn">Tham gia ngay!</a>
+                        <a href="#" class="cart-btn">Đăng ký ngay!</a>
                         <a href="#" class="fas fa-share"></a>
                     </div>
                 </div>
@@ -197,7 +205,7 @@
                     <img src="backend/img/course_1.jpg" alt="">
                     <div class="icons">
                         <a href="#" class="fas fa-heart"></a>
-                        <a href="#" class="cart-btn">Tham gia ngay!</a>
+                        <a href="#" class="cart-btn">Đăng ký ngay!</a>
                         <a href="#" class="fas fa-share"></a>
                     </div>
                 </div>
@@ -216,7 +224,7 @@
                     <img src="backend/img/course_1.jpg" alt="">
                     <div class="icons">
                         <a href="#" class="fas fa-heart"></a>
-                        <a href="#" class="cart-btn">Tham gia ngay!</a>
+                        <a href="#" class="cart-btn">Đăng ký ngay!</a>
                         <a href="#" class="fas fa-share"></a>
                     </div>
                 </div>
@@ -235,7 +243,7 @@
                     <img src="backend/img/course_1.jpg" alt="">
                     <div class="icons">
                         <a href="#" class="fas fa-heart"></a>
-                        <a href="#" class="cart-btn">Tham gia ngay!</a>
+                        <a href="#" class="cart-btn">Đăng ký ngay!</a>
                         <a href="#" class="fas fa-share"></a>
                     </div>
                 </div>
@@ -252,7 +260,7 @@
 
     <!-- review section starts -->
     <section class="review" id="review">
-        <h1 class="heading">customer's <span>review</span></h1>
+        <h1 class="heading">student's <span>review</span></h1>
         <div class="box-container">
             <div class="box">
                 <div class="stars">
@@ -344,43 +352,110 @@
 
     <!-- footer section starts -->
     <section class="footer" id="footer">
-        <div class="box-container">
-            <div class="box">
-                <h3>quick link</h3>
-                <a href="#">home</a>
-                <a href="#">about</a>
-                <a href="#">courses</a>
-                <a href="#">review</a>
-                <a href="#">contact</a>
-            </div>
+        <div class="container">
+            <hr class="mt-3 mb-5">
+            <div class="row">
+                <!-- Cột 1: Dịch vụ khách hàng -->
+                <div class="col-md-3">
+                    <h4 class="fw-bold mb-5">VỀ SMART</h4>
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Trang chủ</a></li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Giới thiệu</a></li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Khoá học</a></li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Review</a></li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Chính Sách Bảo Hành</a></li>
+                    </ul>
+                </div>
 
-            <div class="box">
-                <h3>extra link</h3>
-                <a href="#">my account</a>
-                <a href="#">my order</a>
-                <a href="#">courses</a>
-                <a href="#">review</a>
-                <a href="#">contact</a>
-            </div>
+                <!-- Cột 2: Shopee Việt Nam -->
+                <div class="col-md-3">
+                    <h4 class="fw-bold mb-5">SHOPEE VIỆT NAM</h4>
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Điều Khoản SMART</a></li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Chính Sách Bảo Mật</a></li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Tiếp Thị Liên Kết</a></li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
+                                href="#">Liên Hệ Truyền Thông</a></li>
+                    </ul>
+                </div>
 
-            <div class="box">
-                <h3>contact us</h3>
-                <a href="#">address: Lĩnh Nam, Hoàng Mai, Hà Nội</a>
-                <a href="#">phone number: 039 575 1903</a>
-                <a href="#">email: dhmt15a2hn@gmail.com</a>
-            </div>
+                <!-- Cột 3: Thanh toán & Vận chuyển -->
+                <div class="col-md-3">
+                    <h4 class="fw-bold mb-5">THANH TOÁN</h4>
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-center justify-content-lg-between mb-3">
+                            <div class="border shadow p-2">
+                                <img src="https://down-vn.img.susercontent.com/file/d4bbea4570b93bfd5fc652ca82a262a8"
+                                    alt="Visa">
+                            </div>
+                        </li>
+                        <li class="d-flex justify-content-center justify-content-lg-between mb-3">
+                            <div class="border shadow p-2">
+                                <img src="https://down-vn.img.susercontent.com/file/a0a9062ebe19b45c1ae0506f16af5c16"
+                                    alt="MasterCard">
+                            </div>
 
-            <div class="box">
-                <h3>extra link</h3>
-                <a href="#">my account</a>
-                <a href="#">my order</a>
-                <a href="#">courses</a>
-                <a href="#">review</a>
-                <a href="#">contact</a>
-            </div>
+                        </li>
+                        <li class="d-flex justify-content-center justify-content-lg-between mb-3">
+                            <div class="border shadow p-2">
+                                <img src="https://down-vn.img.susercontent.com/file/38fd98e55806c3b2e4535c4e4a6c4c08"
+                                    alt="JCB">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
+                <!-- Cột 4: Theo dõi & Tải ứng dụng -->
+                <div class="col-md-3">
+                    <h4 class="fw-bold mb-5">HỖ TRỢ KHÁCH HÀNG</h4>
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+                            <!-- Section: Social media -->
+                            <!-- Facebook -->
+                            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!"
+                                role="button"><i class="fab fa-facebook-f"></i></a>
+
+                            <!-- Twitter -->
+                            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!"
+                                role="button"><i class="fab fa-twitter"></i></a>
+
+                            <!-- Google -->
+                            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!"
+                                role="button"><i class="fab fa-google"></i></a>
+
+                            <!-- Instagram -->
+                            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!"
+                                role="button"><i class="fab fa-instagram"></i></a>
+
+                            <!-- Linkedin -->
+                            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!"
+                                role="button"><i class="fab fa-linkedin-in"></i></a>
+                            <!-- Section: Social media -->
+                        </li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+                            <p>Địa chỉ: Lĩnh Nam, Hoàng Mai, Hà Nội</p>
+                        </li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+                            <p>SĐT: 039 575 1903</p>
+                        </li>
+                        <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+                            <p>Email: dhmt15a2hn@gmail.com</p>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
         </div>
-        <div class="credit">created by <span> smart english</span> | all right resever</div>
+
+        @include('backend.dashboard.component.footer')
     </section>
     <!-- footer section ends -->
 

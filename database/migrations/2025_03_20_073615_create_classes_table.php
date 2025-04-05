@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('id', 20)->primary(); // Mã lớp học do admin nhập
             $table->string('course_id', 20); // Khóa học liên kết
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
-            $table->string('class_name', 255);
             $table->bigInteger('number_of_student');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

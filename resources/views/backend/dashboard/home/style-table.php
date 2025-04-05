@@ -68,7 +68,7 @@
     }
 
     .search-container input {
-        width: 97%;
+        width: 100%;
         padding: 9px;
         padding-left: 40px;
         /* Tạo khoảng cách bên trái đủ cho icon */
@@ -138,7 +138,115 @@
     }
 
     .course-row.selected {
-        background-color:rgb(193, 225, 240);
+        background-color:rgb(225, 238, 244);
         opacity: 1;
+    }
+
+    #addForm {
+        max-height: 100vh;
+        /* Giới hạn chiều cao modal */
+        overflow-y: auto;
+        /* Tạo thanh cuộn khi nội dung quá dài */
+    }
+
+    .form-container {
+        margin-top: 50px;
+        position: fixed;
+        top: 0;
+        right: -550px;
+        /* Ẩn ban đầu */
+        width: 550px;
+        height: calc(100% - 50px);
+        background: white;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        transition: right 0.3s ease-in-out;
+        z-index: 1001;
+    }
+
+    .form-container.active {
+        right: 0;
+        /* Hiện form */
+    }
+
+    .closebtn {
+        background: none;
+        color: red;
+        /* Màu xám */
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        /* Cách khoảng 10px */
+        font-weight: bolder;
+    }
+
+    .form-container h2 {
+        margin-left: 25px;
+        color:  #3b6db3;
+        font-weight: bolder;
+        font-size: 17px;
+    }
+
+    .store {
+        margin-left: 12px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 12px;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    label {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .form-footer {
+        grid-column: span 2;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+
+    .save-btn {
+        background: #3b6db3;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+        margin-right: 18px;
+    }
+
+    .delete-btn {
+        background: none;
+        border: none;
+        color: black;
+        font-size: 18px;
+        cursor: pointer;
+        margin-left: auto;
+    }
+
+    .avatar {
+        justify-items: center;
+    }
+
+    .img-avatar {
+        width: 100px;
+        height: 100px;
+        margin-top: 10px;
+        cursor: pointer;
     }
 </style>

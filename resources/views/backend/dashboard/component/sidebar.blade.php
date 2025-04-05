@@ -6,8 +6,8 @@
                         <img alt="image" class="img-circle" src="{{ asset('backend/img/profile_small.jpg') }}" />
                     </span>
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David
-                                    Williams</strong>
+                        <span class="clear"> <span class="block m-t-xs"> <strong
+                                    class="font-bold">{{ Auth::user()->name }}</strong>
 
                             </span>
                             <span class="status online" style="color: limegreen;">● Online</span>
@@ -15,13 +15,13 @@
 
                         </span> </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a href="profile.html">Profile</a></li>
+                        <li><a href="{{ route('dashboard.profile') }}">Profile</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ route('auth.logout') }}">Logout</a></li>
                     </ul>
                 </div>
                 <div class="logo-element">
-                    SMART
+                    <img src="{{ asset('backend/img/smart_logo.png') }}" alt="" style="width: 60px;">
                 </div>
             </li>
             <li class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">

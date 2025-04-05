@@ -63,7 +63,7 @@
             <a href="{{ route('course.index') }}">
                 <div class="d-flex" style="background: #5191c9">
                     <div class="info-card">
-                        <h2>5</h2>
+                        <h2>{{ $thongKe['khoa_hoc'] }}</h2>
                         <p>Khoá học</p>
                     </div>
                     <div class="card-img">
@@ -79,7 +79,7 @@
             <a href="{{ route('class.index') }}">
                 <div class="d-flex" style="background: #ed6556">
                     <div class="info-card">
-                        <h2>4</h2>
+                        <h2>{{ $thongKe['lop_hoc'] }}</h2>
                         <p>Lớp học</p>
                     </div>
                     <div class="card-img">
@@ -94,7 +94,7 @@
             <a href="{{ route('teacher.index') }}">
                 <div class="d-flex" style="background: #d6ea56">
                     <div class="info-card">
-                        <h2>5</h2>
+                        <h2>{{ $thongKe['giang_vien'] }}</h2>
                         <p>Giảng viên</p>
                     </div>
                     <div class="card-img">
@@ -109,7 +109,7 @@
             <a href="{{ route('student.index') }}">
                 <div class="d-flex" style="background: #60eaa7">
                     <div class="info-card">
-                        <h2>230</h2>
+                        <h2>{{ $thongKe['hoc_vien'] }}</h2>
                         <p>Học viên</p>
                     </div>
                     <div class="card-img">

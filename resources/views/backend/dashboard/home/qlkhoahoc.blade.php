@@ -20,13 +20,6 @@
 
     }
 
-    .add-btn {
-        position: absolute;
-        right: 10px;
-        top: 30px;
-
-    }
-
     .course-img {
         width: 140px;
     }
@@ -55,95 +48,8 @@
         font-size: 14px;
     }
 
-    .form-container {
-        margin-top: 50px;
-        position: fixed;
-        top: 0;
-        right: -520px;
-        /* Ẩn ban đầu */
-        width: 520px;
-        height: calc(100% - 50px);
-        background: white;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        transition: right 0.3s ease-in-out;
-        z-index: 1001;
-    }
-
-    .form-container.active {
-        right: 0;
-        /* Hiện form */
-    }
-
-    .closebtn {
-        background: none;
-        color: #888;
-        /* Màu xám */
-        font-size: 17px;
-        border: none;
-        cursor: pointer;
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        /* Cách khoảng 10px */
-    }
-
-    form {
-        margin-left: 12px;
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 12px;
-        align-items: center;
-        margin-top: 15px;
-    }
-
-    .form-container h2 {
-        margin-left: 25px;
-    }
-
-    label {
-        width: 120px;
-    }
-
-    input,
-    textarea,
-    select {
-        width: 93%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    .form-footer {
-        grid-column: span 2;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .save-btn {
-        background: #3b6db3;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        border: none;
-        margin-right: 30px;
-    }
-
-    .delete-btn {
-        background: none;
-        border: none;
-        color: black;
-        font-size: 18px;
-        cursor: pointer;
-        margin-left: auto;
-    }
-
-    #addForm {
-        max-height: 100vh;
-        /* Giới hạn chiều cao modal */
-        overflow-y: auto;
-        /* Tạo thanh cuộn khi nội dung quá dài */
+    .image-input {
+        display: none;
     }
 </style>
 <div class="wrapper wrapper-content">
@@ -163,19 +69,17 @@
                         <h3 style="font-size: 18px; margin-top: 20px">DANH SÁCH KHÓA HỌC</h3>
                     </ol>
                 </div>
-                <div class="col-lg-2">
-                    <button class="add-btn" onclick="toggleForm()">+ Thêm</button>
-                </div>
             </div>
             <div class="filter-bar">
-                <button>Export</button>
+                <a href="{{ route('courseExport.pdf') }}"><button>Export</button></a>
+
                 <select>
-                    <option disabled>Lọc</option>
                     <option>Đang diễn ra</option>
                     <option>Sắp khai giảng</option>
+                    <option>Đã kết thúc</option>
                 </select>
                 <select>
-                    <option>Mức độ</option>
+                    <option disabled>Mức độ</option>
                     <option>Lớp 1</option>
                     <option>Người đi làm</option>
                 </select>
@@ -183,6 +87,8 @@
                     <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                     <input type="text" placeholder="Nhập tên khóa học cần tìm ...">
                 </div>
+
+                <button class="add-btn" onclick="toggleForm()">+ Thêm Khoá học</button>
             </div>
 
             <div class="ibox-content">
@@ -199,7 +105,7 @@
                                 <th>Mã khóa học</th>
                                 <th>Ảnh khóa học</th>
                                 <th>Tên khóa học</th>
-                                <th>Mức độ</th>
+                                <th>Level</th>
                                 <th>Số buổi học</th>
                                 <th>Học phí</th>
                                 <th>Trạng thái</th>
@@ -231,56 +137,52 @@
                 </div>
             </div>
         </div>
-        <div class="form-container" id="addForm">
-            <button class="closebtn" onclick="toggleForm()">X</button>
-            <h2 style="font-size: 17px;">THÊM KHÓA HỌC</h2>
-            <form>
-                <label>Mã khóa học</label>
-                <input type="text" name="ma_khoa_hoc" required>
 
-                <label>Tên khóa học</label>
-                <input type="text" name="ten_khoa_hoc" required>
-
-                <label>Mức độ</label>
-                <select name="muc_do" required>
-                    <option value="coban">Cơ bản</option>
-                    <option value="trungcap">Trung cấp</option>
-                    <option value="nangcao">Nâng cao</option>
-                </select>
-
-                <label>Số buổi học</label>
-                <input type="number" name="so_buoi_hoc" required>
-
-                <label>Ngày khai giảng</label>
-                <input type="date" name="thoi_gian_bat_dau" required>
-
-                <label>Thời gian học</label>
-                <input type="text" name="thoi_gian_hoc" required>
-
-                <label>Mô tả</label>
-                <textarea name="mo_ta"></textarea>
-
-                <label>Đối tượng</label>
-                <textarea name="doituong"></textarea>
-
-                <label>Ảnh khóa học</label>
-                <input type="file" name="hinh_anh[]" multiple>
-
-                <label>Học phí</label>
-                <input type="text" name="hoc_phi" required>
-
-                <label>Trạng thái học</label>
-                <select name="trang_thai_hoc" required>
-                    <option value="coban">Cơ bản</option>
-                    <option value="trungcap">Trung cấp</option>
-                    <option value="nangcao">Nâng cao</option>
-                </select>
-
-                <div class="form-footer">
-                    <button type="submit" class="save-btn">Lưu</button>
+        <form method="POST" action="{{ route('courses.store') }}" enctype="multipart/form-data">
+            @csrf
+            <!-- Các trường hiện có -->
+            <div class="form-container" id="addForm">
+                <button class="closebtn" onclick="toggleForm()">X</button>
+                <h2 class="text-center">THÊM KHÓA HỌC</h2>
+                <div class="avatar">
+                    <div>
+                        <input type="file" class="image-input" accept="image/*" id="fileInput">
+                        <img src="https://thudaumot.binhduong.gov.vn/Portals/0/images/default.jpg" class="img-avatar"
+                            id="avatarImage">
+                    </div>
                 </div>
-            </form>
-        </div>
+                <form>
+                    <label>Mã khóa học:</label>
+                    <input type="text" name="id" required>
+
+                    <label>Tên khóa học:</label>
+                    <input type="text" name="course_name" required>
+
+                    <label>Mức độ:</label>
+                    <select name="level" required>
+                        <option value="A1">A1</option>
+                        <option value="B1">B1</option>
+                        <option value="C1">C1</option>
+                    </select>
+
+                    <label>Số buổi học:</label>
+                    <input type="number" name="lessons" required>
+
+                    <label>Mô tả:</label>
+                    <textarea name="description"></textarea>
+
+                    <label>Học phí:</label>
+                    <input type="text" name="price" required>
+
+                    <div class="form-footer">
+                        <button type="submit" class="save-btn">Lưu</button>
+                    </div>
+
+                    <!-- Thêm trường ảnh ẩn để lưu path -->
+                    <input type="hidden" name="image" id="imagePath">
+                </form>
+            </div>
+        </form>
     </div>
 
 </div>
@@ -349,5 +251,99 @@
 
         // Gọi updateButtons() để vô hiệu hóa nút ngay khi trang tải xong
         updateButtons();
+    });
+
+    document.getElementById('avatarImage').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarImage').src = e.target.result;
+
+                // Tạo form data và upload ảnh
+                const formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/upload-temp-image', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('imagePath').value = data.path;
+                    });
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.querySelector("#addCourseForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);
+
+        fetch("{{ route('courses.store') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.success);
+                location.reload(); // Reload trang sau khi thêm
+            });
+    });
+
+    function deleteCourse(courseId) {
+        if (!confirm("Bạn có chắc muốn xóa khóa học này?")) return;
+
+        fetch(`/courses/${courseId}`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.success);
+                location.reload();
+            });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const checkboxes = document.querySelectorAll(".row-checkbox");
+        const btnEdit = document.querySelector(".btn-edit");
+        let selectedCourseId = null;
+
+        function updateButtons() {
+            let checkedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
+
+            if (checkedCheckboxes.length === 1) {
+                btnEdit.disabled = false;
+                selectedCourseId = checkedCheckboxes[0].closest("tr").dataset.id; // Lấy ID khóa học
+            } else {
+                btnEdit.disabled = true;
+                selectedCourseId = null;
+            }
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", updateButtons);
+        });
+
+        btnEdit.addEventListener("click", function() {
+            if (selectedCourseId) {
+                window.location.href = `/courses/${selectedCourseId}`;
+            }
+        });
     });
 </script>

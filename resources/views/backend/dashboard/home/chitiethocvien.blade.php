@@ -451,7 +451,7 @@
                         <a href="{{ route('dashboard.index') }}">Trang chủ</a>
                     </li>
                     <li>
-                        <a href="{{ route('teacher.index') }}">QL Học viên</a>
+                        <a href="{{ route('student.index') }}">QL Học viên</a>
                     </li>
                     <li class="active">
                         <strong>Nguyễn Văn B</strong>

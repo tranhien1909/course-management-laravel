@@ -364,7 +364,7 @@
                         <a href="{{ route('teacher.index') }}">QL Lớp học</a>
                     </li>
                     <li class="active">
-                        <strong>IIG001</strong>
+                        <strong>{{ $class->id }}</strong>
                     </li>
 
                 </ol>
@@ -383,20 +383,30 @@
                 <div id="tab1" class="tab-content active">
                     <div class="thongtinchung">
                         <div class="left">
-                            <input type="text" id="class-id" placeholder="Mã Lớp Học">
-                            <input type="text" id="class-name" placeholder="Tên Lớp Học">
-                            <textarea id="course-name" rows="2" placeholder="Tên Khóa Học"></textarea>
-                            <textarea id="description" rows="4" placeholder="Mô Tả"></textarea>
+                            <label for="class-id">Mã lớp học:</label>
+                            <input type="text" id="class-id" placeholder="Mã lớp học" value="{{ $class->id }}"
+                                disabled>
+                            <label for="teacher_name">Giáo viên phụ trách:</label>
+                            <input type="text" id="teacher_name" placeholder="GV phụ trách"
+                                value="{{ $class->user->fullname }}" disabled>
+                            <label for="course-name">Tên khóa học:</label>
+                            <textarea id="course-name" rows="2" placeholder="Tên khoá học" value="{{ $class->course->course_name }}" disabled></textarea>
+                            <label for="description">Mô tả:</label>
+                            <textarea id="description" rows="4" placeholder="Mô tả" value="{{ $class->description }}" disabled></textarea>
                         </div>
                         <div class="right">
-                            <div class="form-row">
-                                <input type="number" id="students" placeholder="Số Học Viên">
-                                <input type="date" id="start-date">
-                            </div>
-                            <input type="text" id="teacher" placeholder="Giáo Viên Phụ Trách">
+
+                            <label for="start-date"><strong>Ngày bắt đầu:</strong></label>
+                            <input type="date" id="start-date"
+                                value="{{ \Carbon\Carbon::parse($class->start_date)->format('Y-m-d') }}" disabled>
+                            <label for="teacher_name">Sĩ số:</label>
+                            <input type="number" id="number_of_student" placeholder="Sĩ số"
+                                value="{{ $class->number_of_student }}" disabled>
+                            <label for="room">Phòng học:</label>
                             <input type="text" id="time" placeholder="Thời Gian Học">
-                            <input type="text" id="status" placeholder="Trạng thái">
-                            <textarea id="note" rows="2" placeholder="Ghi chú"></textarea>
+                            <label for="status">Trạng thái:</label>
+                            <input type="text" id="status" placeholder="Trạng thái" value="{{ $class->status }}"
+                                disabled>
                         </div>
                     </div>
                     <div class="button-container">
@@ -413,7 +423,6 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width: 30px;"></th>
                                     <th style="width: 50px;">STT</th>
                                     <th style="width: 90px;">Buổi học</th>
                                     <th style="width: 250px;">Nội dung</th>
@@ -424,7 +433,6 @@
                             </thead>
                             <tbody>
                                 <tr class="course-row">
-                                    <td><input type="checkbox" class="row-checkbox"></td>
                                     <td>1</td>
                                     <td>Buổi 1</td>
                                     <td>Giới thiệu khóa học và phương pháp học tập</td>

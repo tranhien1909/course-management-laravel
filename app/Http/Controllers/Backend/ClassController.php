@@ -21,17 +21,18 @@ class ClassController extends Controller
         // Load trước tất cả quan hệ cần thiết
         $classes = Classroom::with([
             'course:id,course_name',
-            'teacher:id,user_id', // Chỉ lấy các trường cần thiết từ teacher
-            'teacher.user:id,fullname' // Quan hệ lồng
+            'user:id,fullname', // Chỉ lấy các trường cần thiết từ teacher
         ])->paginate(5);
 
         $template = 'backend.dashboard.home.qllophoc';
         return view('backend.dashboard.layout', compact('template', 'classes'));
     }
 
-    public function detail() {
+    public function detail($id)
+    {
+        $class = Classroom::findOrFail($id);
         $template = 'backend.dashboard.home.chitietlophoc';
-        return view('backend.dashboard.layout', compact('template'));
+        return view('backend.dashboard.layout', compact('template', 'class'));
     }
 
     public function exportPDF()

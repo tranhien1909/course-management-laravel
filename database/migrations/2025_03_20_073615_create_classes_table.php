@@ -15,13 +15,10 @@ return new class extends Migration
             $table->string('id', 20)->primary(); // Mã lớp học do admin nhập
             $table->string('course_id', 20); // Khóa học liên kết
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
+            $table->text('description')->nullable();
             $table->bigInteger('number_of_student');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->text('schedule');
-            $table->string('room', 50)->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active'); // Trạng thái
             $table->timestamps();
 

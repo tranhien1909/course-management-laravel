@@ -19,7 +19,7 @@ class Course extends Model
 
     // Quan hệ với bảng classes
     public function classes() {
-        return $this->hasMany(ClassModel::class, 'course_id');
+        return $this->hasMany(Classroom::class, 'course_id');
     }
 
 }

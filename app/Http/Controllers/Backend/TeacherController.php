@@ -22,9 +22,11 @@ class TeacherController extends Controller
         return view('backend.dashboard.layout', compact('template', 'teachers'));
     }
 
-    public function detail() {
+    public function detail($id)
+    {
+        $teacher = Teacher::findOrFail($id);
         $template = 'backend.dashboard.home.chitietgiangvien';
-        return view('backend.dashboard.layout', compact('template'));
+        return view('backend.dashboard.layout', compact('template', 'teacher'));
     }
 
     public function store(Request $request)
@@ -40,11 +42,11 @@ class TeacherController extends Controller
 
         // Kiểm tra user_id và tạo mã giáo viên tương ứng
         $userId = $request->input('user_id');
-        $teacherId = ($userId < 10) ? 'SM00' . $userId : 'SM' . $userId;
+        $customId = 'SM' . str_pad($userId, 3, '0', STR_PAD_LEFT);
 
         // Tạo giáo viên mới
         $teacher = Teacher::create([
-            'id' => $teacherId,
+            'id' => $customId,
             'user_id' => $userId,
             'bio' => $request->input('bio'),
             'expertise' => $request->input('expertise'),

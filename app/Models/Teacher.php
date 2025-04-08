@@ -19,6 +19,6 @@ class Teacher extends Model {
     
     // Quan hệ với bảng classes
     public function classes() {
-        return $this->hasMany(ClassModel::class, 'teacher_id');
+        return $this->hasMany(Classroom::class, 'teacher_id');
     }
 }

@@ -267,7 +267,7 @@
                         <a href="{{ route('course.index') }}">QL Khoá học</a>
                     </li>
                     <li class="active">
-                        <strong>Toeic Mất Gốc</strong>
+                        <strong>{{{$course->course_name}}}</strong>
                     </li>
 
                 </ol>
@@ -284,8 +284,10 @@
                 <div id="tab1" class="tab-content active">
                     <div class="thongtinchung">
                         <div class="left">
-                            <input type="text" id="course-name" placeholder="Tên Khóa Học">
-                            <textarea id="description" rows="5" placeholder="Mô tả"></textarea>
+                            <label for="course-name"><strong>Tên khoá học:</strong></label>
+                            <input type="text" id="course-name" placeholder="Tên khoá học" value="{{$course->course_name}}" disabled>
+                            <label for="description"><strong>Mô tả:</strong></label>
+                            <textarea id="description" rows="5" placeholder="Mô tả" disabled>{{$course->description}}</textarea>
                             <label for="course-images">Ảnh Khóa Học:</label>
                             <div class="image-container">
                                 <div class="image-box">
@@ -319,18 +321,29 @@
                         </div>
                         <div class="right">
                             <div class="form-row">
-                                <input type="text" id="course-id" placeholder="Mã Khóa Học">
-                                <input type="text" id="level" placeholder="Mức độ">
+                                    <label for="course-id" class="right"><strong>Mã khoá học:</strong></label>
+                                    <label for="level" class="right"><strong>Level:</strong></label>
                             </div>
                             <div class="form-row">
-                                <input type="number" id="sessions" placeholder="Số buổi học">
-                                <input type="date" id="start-date">
+                                <input type="text" id="course-id" placeholder="Mã khoá học" value="{{$course->id}}" disabled>
+                                <input type="text" id="level" placeholder="Level" value="{{$course->level}}" disabled>
                             </div>
-                            <input type="text" id="time" placeholder="Thời gian học">
-                            <textarea id="target" rows="3" placeholder="Đối tượng"></textarea>
                             <div class="form-row">
-                                <input type="text" id="fee" placeholder="Học phí">
-                                <input type="text" id="status" placeholder="Trạng thái">
+                                <label for="lessons" class="right"><strong>Số buổi học:</strong></label>
+                                <label for="start-date" class="right"><strong>Ngày tạo:</strong></label>
+                            </div>
+                            <div class="form-row">
+                                <input type="number" id="lessons" placeholder="Số buổi học" value="{{$course->lessons}}" disabled>
+                                <input type="date" id="start-date" value="{{ \Carbon\Carbon::parse($course->created_at)->format('Y-m-d') }}" disabled>
+
+                            </div>
+                            <div class="form-row">
+                                <label for="price" class="right"><strong>Học phí:</strong></label>
+                                <label for="status" class="right"><strong>Trạng thái:</strong></label>
+                            </div>
+                            <div class="form-row">
+                                <input type="text" id="price" value="{{ number_format($course->price, 0, ',', '.') }} đ" disabled>
+                                <input type="text" id="status" placeholder="Trạng thái" value="{{$course->status}}" disabled>
                             </div>
                         </div>
                     </div>
@@ -343,43 +356,46 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="select-all"></th>
                                     <th>STT</th>
                                     <th>Mã lớp học</th>
-                                    <th>Tên lớp học</th>
+                                    <th>Tên khoá học</th>
                                     <th>Ngày khai giảng</th>
-                                    <th>Ngày kết thúc</th>
                                     <th>Giáo viên phụ trách</th>
                                     <th>Sĩ số</th>
                                     <th>Phòng học</th>
                                     <th>Trạng thái</th>
+                                    <th colspan="2">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @if (isset($classes) && is_object($classes))
+                                @if ($classes->count() > 0)
                                     @foreach ($classes as $index => $class)
                                         <tr class="course-row">
-                                            <td><input type='checkbox' class='row-checkbox'></td>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $class->id }}</td>
-                                            <td>{{ $class->class_name }}</td>
+                                            <td>{{ $course->course_name }}</td>
                                             <td>{{ date('d/m/Y', strtotime($class->start_date)) }}</td>
-                                            <td>{{ date('d/m/Y', strtotime($class->end_date)) }}</td>
-                                            <td></td> --}}
-                                {{-- <td>{{ $class->teacherUser->fullname ?? 'N/A' }}</td> --}}
-                                {{-- <td>{{ $class->number_of_student }}</td>
+                                            <td>{{ $class->user->fullname ?? 'N/A' }}</td>
+                                            <td>{{ $class->number_of_student }}</td>
                                             <td>{{ $class->room }}</td>
                                             <td>{{ $class->status }}</td>
+                                            <td>
+                                                <a href="{{ route('class.detail', $class->id) }}" title="Xem chi tiết"><i
+                                                        class="fa-solid fa-pen-to-square"></i></a>
+                                            </td>
+                                            <td>
+                                                <a href=""><i class="fa-solid fa-trash" title="Xoá"></i></a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="10">Không có khóa học nào.</td>
+                                        <td colspan="10">Không có lớp học nào thuộc khóa học này.</td>
                                     </tr>
-                                @endif --}}
+                                @endif
                             </tbody>
+                            
                         </table>
-                        {{-- {{ $classes->links('pagination::bootstrap-4') }} --}}
                     </div>
                 </div>
                 <div id="tab3" class="tab-content">

@@ -10,11 +10,18 @@ class DashboardController extends Controller
 {
     public function __construct()
     {
-        
+        // $this->middleware('auth');
+
+        // Thêm middleware role:admin chỉ cho phương thức index
+        // $this->middleware('role:admin')->only('index');
     }
 
     public function index()
     {
+        // Chỉ admin mới có thể truy cập
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
+        }
 
         $thongKe = [
             'khoa_hoc' => DB::table('courses')->count(),

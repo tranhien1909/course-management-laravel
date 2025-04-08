@@ -7,7 +7,7 @@
                     </span>
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <span class="clear"> <span class="block m-t-xs"> <strong
-                                    class="font-bold">{{ Auth::user()->name }}</strong>
+                                    class="font-bold">{{ Auth::check() ? Auth::user()->fullname : 'Khách' }}</strong>
 
                             </span>
                             <span class="status online" style="color: limegreen;">● Online</span>

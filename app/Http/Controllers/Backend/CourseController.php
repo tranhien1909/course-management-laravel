@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Services\Interfaces\CourseServiceInterface;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreCourseRequest;
 
 class CourseController extends Controller
 {
@@ -28,37 +30,51 @@ class CourseController extends Controller
     // Xem chi tiết
     public function detail($id) {
         $template = 'backend.dashboard.home.chitietkhoahoc';
-        $course = Course::findOrFail($id);
-        return view('backend.dashboard.layout', compact('template', 'course'));
+    // Lấy course và load trước quan hệ classes + user
+    $course = Course::with(['classes.user:id,fullname'])->findOrFail($id);
+
+    // Lấy danh sách lớp từ quan hệ đã load sẵn
+    $classes = $course->classes;
+
+        return view('backend.dashboard.layout', compact('template', 'course', 'classes'));
     }
 
-    public function store(Request $request)
+    public function store(StoreCourseRequest $request)
     {
-        $validated = $request->validate([
-            'id' => 'required|unique:courses,id',
-            'course_name' => 'required|string|max:255',
-            'level' => 'required|in:A1,B1,C1',
-            'lessons' => 'required|integer|min:1',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        // Xử lý upload ảnh
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('course_images', 'public');
-            $validated['image'] = $imagePath;
-        }
+        $validated = $request->validated();
 
         try {
-            $course = $this->courseService->create($validated);
-            return redirect()->route('courses.index')->with('success', 'Thêm khóa học thành công!');
+            DB::beginTransaction();
+
+            // Xử lý avatar
+            $avatarPath = $request->hasFile('avatar') 
+                ? $request->file('avatar')->store('avatars', 'public') 
+                : null;
+
+            // Tạo course
+            $course = Course::create([
+                'id' => $validated['id'],
+                'course_name' => $validated['course_name'],
+                'level' => $validated['level'],
+                'lessons' => $validated['lessons'],
+                'description' => $validated['description'] ?? null,
+                'price' => $validated['price'],
+                'avatar' => $avatarPath,
+            ]);
+
+            DB::commit();
+            
+            return redirect()->route('course.index')
+                ->with('success', 'Thêm khoá học thành công!');
+                
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+            DB::rollBack();
+            return back()->withInput()
+                ->with('error', 'Lỗi hệ thống: '.$e->getMessage());
         }
     }
 
-    public function uploadTempImage(Request $request)
+    public function uploadTempImage(StoreCourseRequest $request)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -86,8 +102,9 @@ class CourseController extends Controller
         $course = Course::findOrFail($id);
         $course->delete();
     
-        return response()->json(['success' => 'Khóa học đã được xóa!']);
+        return response()->json(['success' => 'Xoá thành công']);
     }
+    
 
     // In pdf
     public function exportPDF()

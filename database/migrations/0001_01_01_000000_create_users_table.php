@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('student_id', 20)->nullable(); // Mã học viên 
             $table->string('avatar')->nullable()->default('https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-image-700-205124837.jpg');
-            $table->string('username', 100)->unique(); // Đảm bảo username là duy nhất
             $table->string('fullname', 100)->default('user');
             $table->date('birthday')->nullable();
             $table->string('email')->unique(); // Đảm bảo email không trùng lặp

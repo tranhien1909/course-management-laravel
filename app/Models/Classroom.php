@@ -17,9 +17,9 @@ class Classroom extends Model
     protected $keyType = 'string'; // Kiểu khóa là string
 
     // Quan hệ với bảng teachers
-    public function teacher()
+    public function user()
     {
-        return $this->belongsTo(Teacher::class, 'teacher_id');
+        return $this->belongsTo(User::class, 'teacher_id');
     }
 
     // Quan hệ với bảng courses

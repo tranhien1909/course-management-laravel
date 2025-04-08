@@ -1,10 +1,6 @@
 @include('backend.dashboard.home.style-table')
 
 <style>
-    .ibox-content {
-        position: relative;
-    }
-
     table img {
         width: 100px;
         height: 100px;
@@ -13,42 +9,9 @@
         margin-left: 6px;
     }
 
-    /* Căn hai nút Sửa và Xóa về bên phải */
-    .action-buttons {
-        position: absolute;
-        right: 23px;
-        top: 20px;
-        /* Điều chỉnh khoảng cách với bảng */
-        display: flex;
-        gap: 15px;
-    }
-
     .table-responsive {
-        margin-top: 65px;
+        margin-top: 30px;
 
-    }
-
-    /* Style cho nút */
-    .btn-edit,
-    .btn-delete {
-        padding: 6px 12px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        border-radius: 5px;
-    }
-
-    .btn-edit:disabled,
-    .btn-delete:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-
-    .btn-edit,
-    .btn-delete {
-        background: #3b6db3;
-        color: white;
-        font-size: 14px;
     }
 
     .image-input {
@@ -78,16 +41,12 @@
 
                 <div class="search-container">
                     <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" placeholder="Nhập hoặc mã giáo viên cần tìm ...">
+                    <input type="text" placeholder="Nhập tên hoặc mã cần tìm ...">
                 </div>
 
                 <button class="add-btn" onclick="toggleForm()">+ Thêm Giảng Viên</button>
             </div>
             <div class="ibox-content">
-                <div class="action-buttons">
-                    <button class="btn-edit">Xem chi tiết</button>
-                    <button class="btn-delete">Xóa</button>
-                </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
@@ -103,6 +62,7 @@
                                 <th>SĐT</th>
                                 <th>Ngày vào làm</th>
                                 <th>Trạng thái</th>
+                                <th colspan="2">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,6 +81,13 @@
                                         <td>{{ $teacher->user->phone ?? 'N/A' }}</td>
                                         <td>{{ date('d/m/Y', strtotime($teacher->joining_date)) }}</td>
                                         <td>{{ $teacher->status }}</td>
+                                        <td>
+                                            <a href="{{ route('teacher.detail', $teacher->id) }}"
+                                                title="Xem chi tiết"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        </td>
+                                        <td>
+                                            <a href=""><i class="fa-solid fa-trash" title="Xoá"></i></a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @else

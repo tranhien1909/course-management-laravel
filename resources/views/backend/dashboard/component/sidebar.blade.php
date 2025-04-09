@@ -3,7 +3,9 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element"> <span>
-                        <img alt="image" class="img-circle" src="{{ asset('backend/img/profile_small.jpg') }}" />
+                        <img alt="image" class="img-circle"
+                            src="{{ Auth::check() ? Auth::user()->avatar : asset('backend/img/profile_small.jpg') }}"
+                            style="width: 96px; height: 96px;" />
                     </span>
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <span class="clear"> <span class="block m-t-xs"> <strong

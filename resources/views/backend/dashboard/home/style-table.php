@@ -80,7 +80,6 @@
     .search-icon {
         position: absolute;
         top: 50%;
-        left: 10px;
         /* Điều chỉnh vị trí icon */
         transform: translateY(-50%);
         font-size: 14px;

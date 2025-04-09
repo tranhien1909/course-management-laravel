@@ -40,8 +40,13 @@
                 <a href="{{ route('teacherExport.pdf') }}"><button>Export</button></a>
 
                 <div class="search-container">
-                    <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" placeholder="Nhập tên hoặc mã cần tìm ...">
+                    <form action="{{ route('teacher.index') }}" method="GET">
+                        <input type="text" name="search" class="form-control"
+                            placeholder="Tìm kiếm theo mã lớp hoặc tên khóa học" value="{{ request('search') }}">
+                        <button type="submit" class="search-icon"
+                            style="background-color: white; left: 8px; padding: 6px;"><i
+                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
+                    </form>
                 </div>
 
                 <button class="add-btn" onclick="toggleForm()">+ Thêm Giảng Viên</button>
@@ -51,7 +56,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th><input type="checkbox" id="select-all"></th>
+
                                 <th>STT</th>
                                 <th>Mã giáo viên</th>
                                 <th>Ảnh đại diện</th>
@@ -69,7 +74,7 @@
                             @if (isset($teachers) && is_object($teachers))
                                 @foreach ($teachers as $index => $teacher)
                                     <tr class="course-row">
-                                        <td><input type='checkbox' class='row-checkbox'></td>
+
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $teacher->id }}</td>
                                         <td><img src="{{ $teacher->user->avatar }}" class="rounded-circle"
@@ -81,23 +86,38 @@
                                         <td>{{ $teacher->user->phone ?? 'N/A' }}</td>
                                         <td>{{ date('d/m/Y', strtotime($teacher->joining_date)) }}</td>
                                         <td>{{ $teacher->status }}</td>
-                                        <td>
+                                        <td style="padding: 1px 24px;">
                                             <a href="{{ route('teacher.detail', $teacher->id) }}"
                                                 title="Xem chi tiết"><i class="fa-solid fa-pen-to-square"></i></a>
                                         </td>
                                         <td>
-                                            <a href=""><i class="fa-solid fa-trash" title="Xoá"></i></a>
+                                            <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
+                                                class="delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link p-0" style="border: none;"
+                                                    title="Xoá">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="9">Không có khóa học nào.</td>
+                                    <td colspan="12">Không có khóa học nào.</td>
+                                </tr>
+                            @endif
+
+                            @if (isset($teachers))
+                                <tr>
+                                    <td colspan="12">
+                                        {{ $teachers->links('pagination::bootstrap-4') }}
+                                    </td>
                                 </tr>
                             @endif
                         </tbody>
                     </table>
-                    {{ $teachers->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>
@@ -107,103 +127,83 @@
 <div class="form-container" id="addForm">
     <button class="closebtn" onclick="toggleForm()">X</button>
     <h2 class="text-center">THÊM GIẢNG VIÊN</h2>
-    <div class="avatar">
-        <div>
-            <input type="file" class="image-input" accept="image/*" id="fileInput">
-            <img src="https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-                class="img-circle img-avatar" id="avatarImage">
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
-    </div>
+    @endif
+    <form action="{{ route('teacher.store') }}" method="POST" class="box" id="teacherForm"
+        enctype="multipart/form-data">
+        @csrf
+        <div class="avatar">
+            <div>
+                <input type="file" class="image-input" accept="image/*" id="fileInput">
+                <img src="https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+                    class="img-circle img-avatar" id="avatarImage">
+            </div>
+        </div>
 
-    <form>
-        <label>Username:</label>
-        <input type="text" name="username" required>
 
-        <label>Họ tên:</label>
-        <input type="text" name="fullname" required>
+        <label>Họ tên: <span class="text-danger">(*)</span></label>
+        <input type="text" name="fullname" value="{{ old('fullname') }}" required>
 
-        <label>Giới tính:</label>
+        <label>Giới tính: <span class="text-danger">(*)</span></label>
         <select name="gender" required>
-            <option value="male">Nam</option>
-            <option value="female">Nữ</option>
+            <option value="" disabled selected>Chọn giới tính</option>
+            @foreach (['Nam', 'Nữ'] as $gender)
+                <option value="{{ $gender }}" {{ old('gender') == $gender ? 'selected' : '' }}>
+                    {{ $gender }}
+                </option>
+            @endforeach
         </select>
 
-        <label>Ngày sinh:</label>
-        <input type="date" name="birthday" required>
+        <label>Ngày sinh: <span class="text-danger">(*)</span></label>
+        <input type="date" name="birthday" value="{{ old('birthday') }}" required>
 
-        <label>Email:</label>
-        <input type="text" name="email" required>
+        <label>Email: <span class="text-danger">(*)</span></label>
+        <input type="text" name="email" value="{{ old('email') }}" required>
         </select>
 
-        <label>Số điện thoại:</label>
-        <input type="text" name="phone" required>
+        <label>Số điện thoại: <span class="text-danger">(*)</span></label>
+        <input type="text" name="phone" value="{{ old('phone') }}" required>
 
         <label>Địa chỉ:</label>
-        <input type="text" name="address" required>
+        <input type="text" name="address" value="{{ old('address') }}" required>
 
         <label>Bằng cấp:</label>
-        <input type="text" name="expertise" required>
+        <input type="text" name="expertise" value="{{ old('expertise') }}" required>
+
+        <label>Ngày vào làm: <span class="text-danger">(*)</span></label>
+        <input type="date" name="joining_date" value="{{ old('joining_date') }}" required>
 
         <label>Giới thiệu:</label>
         <textarea name="bio"></textarea>
 
-        <label>Mật khẩu:</label>
-        <input type="password" name="password" required>
+        <label>Mật khẩu: <span class="text-danger">(*)</span></label>
+        <input type="password" name="password" autocomplete="new-password" value="" required>
 
-        <label>Nhập lại mật khẩu:</label>
-        <input type="password" name="password" required>
+        <label>Nhập lại mật khẩu: <span class="text-danger">(*)</span></label>
+        <input type="password" name="password_confirmation" autocomplete="new-password" value="" required>
 
         <div class="form-footer">
             <button type="submit" class="save-btn">Lưu</button>
         </div>
     </form>
+    <script>
+        document.getElementById('teacherForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted'); // Kiểm tra console
+            this.submit(); // Gửi form
+        });
+    </script>
 </div>
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const checkboxes = document.querySelectorAll(".row-checkbox");
-        const btnEdit = document.querySelector(".btn-edit");
-        const btnDelete = document.querySelector(".btn-delete");
-        const selectAll = document.getElementById("select-all");
-
-        function updateButtons() {
-            let checkedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
-            let checkedCount = checkedCheckboxes.length;
-
-            btnEdit.disabled = checkedCount !== 1;
-            btnDelete.disabled = checkedCount === 0;
-
-            checkboxes.forEach(checkbox => {
-                let row = checkbox.closest("tr");
-                if (checkbox.checked) {
-                    row.classList.add("selected");
-                } else {
-                    row.classList.remove("selected");
-                }
-            });
-        }
-
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", updateButtons);
-        });
-
-        if (selectAll) {
-            selectAll.checked = false; // Đảm bảo checkbox "Chọn tất cả" không được chọn khi tải trang
-            selectAll.addEventListener("change", function() {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-                updateButtons();
-            });
-        }
-        updateButtons();
-    });
-
     function toggleForm() {
         var form = document.getElementById("addForm");
         var overlay = document.getElementById("overlay");
@@ -233,5 +233,75 @@
             };
             reader.readAsDataURL(file);
         }
+    });
+
+    // Hàm xử lý thêm mới
+    document.getElementById('teacherForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+
+        fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw err;
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.success);
+                    location.reload();
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                alert(error.message || "Lỗi khi thêm học viên");
+            });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.delete-form').on('submit', function(e) {
+            e.preventDefault();
+
+            if (!confirm('Bạn có chắc chắn muốn xoá giảng viên này?')) {
+                return false;
+            }
+
+            var form = $(this);
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: form.find('input[name="_token"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.success);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000); // đợi toastr hiển thị rồi reload
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error(xhr.responseJSON.error || 'Có lỗi xảy ra');
+                }
+            });
+        });
     });
 </script>

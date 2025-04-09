@@ -133,8 +133,13 @@
                 </div>
 
                 <div class="search-container">
-                    <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" placeholder="Nhập mã hóa đơn cần tìm ...">
+                    <form action="" method="GET">
+                        <input type="text" name="search" class="form-control"
+                            placeholder="Tìm kiếm theo mã lớp hoặc tên khóa học" value="">
+                        <button type="submit" class="search-icon"
+                            style="background-color: white; left: 8px; padding: 6px;"><i
+                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
+                    </form>
                 </div>
 
                 <button class="add-btn" onclick="toggleForm()">+ Thêm Hoá đơn</button>

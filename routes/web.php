@@ -117,11 +117,6 @@ Route::delete('course_management/{id}', [CourseController::class, 'destroy'])
     ->name('course.destroy')
     ->middleware(AdminMiddleware::class);
 
-Route::post('course_management/{id}', [CourseController::class, 'destroy'])
-    ->middleware(AdminMiddleware::class);
-
-
-
 Route::get('course-pdf', [CourseController::class, 'exportPDF'])->name('courseExport.pdf');
 
 // Quản lý lớp học
@@ -133,6 +128,13 @@ Route::get('class_management/{id}', [ClassController::class, 'detail'])
     -> name('class.detail')
     ->middleware(AdminMiddleware::class);
 
+Route::post('class_management/store', [ClassController::class, 'store'])
+    ->name('class.store')
+    ->middleware(AdminMiddleware::class);
+
+Route::delete('/classes/{class}', [ClassController::class, 'destroy'])->name('class.destroy');
+
+
 Route::get('/class-pdf', [ClassController::class, 'exportPDF'])->name('classExport.pdf');
 
 // Quản lý giảng viên
@@ -141,6 +143,12 @@ Route::get('teacher_management/index', [TeacherController::class, 'index'])
     ->middleware(AdminMiddleware::class);
 
 Route::get('teacher_management/{id}', [TeacherController::class, 'detail'])->name('teacher.detail');
+
+Route::post('teacher_management/store', [TeacherController::class, 'store'])
+    ->name('teacher.store')
+    ->middleware(AdminMiddleware::class);
+
+Route::delete('/teacher/{class}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
 
 Route::get('/teacher-pdf', [TeacherController::class, 'exportPDF'])->name('teacherExport.pdf');
 

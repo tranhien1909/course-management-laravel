@@ -19,9 +19,18 @@ class CourseController extends Controller
         $this->courseService = $courseService;
     }
 
-    public function index() {
+    public function index(Request $request) {
 
-        $courses = $this->courseService->paginate();
+        $search = $request->input('search');
+        $courses = Course::when($search, function ($query, $search) {
+                $query->where('course_name', 'like', "%$search%")
+                      ->orWhere('id', 'like', "%$search%")
+                      ->orWhere('level', 'like', "%$search%")
+                      ->orWhere('lessons', 'like', "%$search%")
+                      ->orWhere('status', 'like', "%$search%")
+                      ->orWhere('price', 'like', "%$search%");
+            })
+            ->paginate(5);
 
         $template = 'backend.dashboard.home.qlkhoahoc';
         return view('backend.dashboard.layout', compact('template', 'courses'));
@@ -99,12 +108,15 @@ class CourseController extends Controller
     // Xóa khóa học
     public function destroy($id)
     {
-        $course = Course::findOrFail($id);
-        $course->delete();
-    
-        return response()->json(['success' => 'Xoá thành công']);
+        try {
+            $course = Course::findOrFail($id);
+            $course->delete();
+        
+            return redirect()->route('course.index')->with('success', 'Xoá khoá học thành công!');
+        } catch (\Exception $e) {
+            return redirect()->route('course.index')->with('error', 'Không thể xoá khoá học');
+        }
     }
-    
 
     // In pdf
     public function exportPDF()

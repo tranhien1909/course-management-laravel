@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('student_id', 20)->nullable(); // Mã học viên 
+            $table->string('student_id', 20)->nullable()->unique(); // Mã học viên 
             $table->string('avatar')->nullable()->default('https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-image-700-205124837.jpg');
             $table->string('fullname', 100)->default('user');
             $table->date('birthday')->nullable();

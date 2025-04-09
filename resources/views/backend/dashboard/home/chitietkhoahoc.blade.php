@@ -296,26 +296,7 @@
                                         <span class="delete-icon"><i class="fa-solid fa-x"></i></i></span>
                                     </div>
                                     <input type="file" class="image-input" accept="image/*">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlrZqTCInyg6RfYC7Ape20o-EWP1EN_A8fOA&s"
-                                        class="image-preview">
-                                </div>
-                                <div class="image-box">
-                                    <div class="image-actions">
-                                        <span class="edit-icon"><i class="fa-solid fa-wrench"></i></span>
-                                        <span class="delete-icon"><i class="fa-solid fa-x"></i></span>
-                                    </div>
-                                    <input type="file" class="image-input" accept="image/*">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlrZqTCInyg6RfYC7Ape20o-EWP1EN_A8fOA&s"
-                                        class="image-preview">
-                                </div>
-                                <div class="image-box">
-                                    <div class="image-actions">
-                                        <span class="edit-icon"><i class="fa-solid fa-wrench"></i></span>
-                                        <span class="delete-icon"><i class="fa-solid fa-x"></i></span>
-                                    </div>
-                                    <input type="file" class="image-input" accept="image/*">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlrZqTCInyg6RfYC7Ape20o-EWP1EN_A8fOA&s"
-                                        class="image-preview">
+                                    <img src="{{ $course->image }}" alt="Course Image" class="image-preview">
                                 </div>
                             </div>
                         </div>
@@ -362,7 +343,6 @@
                                     <th>Ngày khai giảng</th>
                                     <th>Giáo viên phụ trách</th>
                                     <th>Sĩ số</th>
-                                    <th>Phòng học</th>
                                     <th>Trạng thái</th>
                                     <th colspan="2">Thao tác</th>
                                 </tr>
@@ -377,9 +357,8 @@
                                             <td>{{ date('d/m/Y', strtotime($class->start_date)) }}</td>
                                             <td>{{ $class->user->fullname ?? 'N/A' }}</td>
                                             <td>{{ $class->number_of_student }}</td>
-                                            <td>{{ $class->room }}</td>
                                             <td>{{ $class->status }}</td>
-                                            <td>
+                                            <td style="padding: 1px 24px;">
                                                 <a href="{{ route('class.detail', $class->id) }}" title="Xem chi tiết"><i
                                                         class="fa-solid fa-pen-to-square"></i></a>
                                             </td>

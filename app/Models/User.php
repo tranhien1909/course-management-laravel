@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Classroom;
+use App\Models\Teacher;
+use App\Models\Course;
+use App\Models\Enrollment;
+use App\Models\ClassSchedule;
 
 
 class User extends Authenticatable
@@ -22,7 +27,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'student_id',
-        'username',
         'fullname',
         'gender',
         'birthday',
@@ -70,5 +74,11 @@ class User extends Authenticatable
     public function teacher()
     {
         return $this->hasOne(Teacher::class, 'user_id');
+    }
+
+    // Quan hệ với bảng Enrollment
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class, 'student_id');
     }
 }

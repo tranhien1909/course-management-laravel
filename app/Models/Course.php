@@ -3,6 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Classroom;
+use App\Models\Teacher;
+use App\Models\User;
+use App\Models\Enrollment;
+use App\Models\ClassSchedule;
 
 class Course extends Model
 {
@@ -14,12 +19,24 @@ class Course extends Model
     protected $keyType = 'string'; // Kiểu khóa là string
 
     protected $fillable = [
-        'description',
+        'id',
+        'course_name',
+        'level',
+        'lessons',
+        'status',
+        'price',
+        'image',
+        'description'
     ];
 
     // Quan hệ với bảng classes
     public function classes() {
         return $this->hasMany(Classroom::class, 'course_id');
     }
+
+        // Quan hệ với bảng classes
+        public function courseMaterials() {
+            return $this->hasMany(courseMaterial::class, 'course_id');
+        }
 
 }

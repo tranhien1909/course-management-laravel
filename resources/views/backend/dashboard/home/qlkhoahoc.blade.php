@@ -46,8 +46,13 @@
                     <option>Người đi làm</option>
                 </select>
                 <div class="search-container">
-                    <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" placeholder="Nhập tên hoặc mã cần tìm ...">
+                    <form action="{{ route('course.index') }}" method="GET">
+                        <input type="text" name="search" class="form-control"
+                            placeholder="Tìm kiếm theo mã hoặc tên khoá học" value="{{ request('search') }}">
+                        <button type="submit" class="search-icon"
+                            style="background-color: white; left: 8px; padding: 6px;"><i
+                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
+                    </form>
                 </div>
 
                 <button class="add-btn" onclick="toggleForm()">+ Thêm Khoá học</button>
@@ -81,26 +86,38 @@
                                         <td>{{ $course->lessons }}</td>
                                         <td>{{ number_format($course->price, 0, ',', '.') }} đ</td>
                                         <td>{{ $course->status }}</td>
-                                        <td>
+                                        <td style="padding: 1px 24px;">
                                             <a href="{{ route('course.detail', $course->id) }}" title="Xem chi tiết"><i
                                                     class="fa-solid fa-pen-to-square"></i></a>
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0);"
-                                                onclick="deleteCourse('{{ $course->id }}')">
-                                                <i class="fa-solid fa-trash" title="Xoá"></i>
-                                            </a>
+                                            <form action="{{ route('course.destroy', $course->id) }}" method="POST"
+                                                class="delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link p-0" style="border: none;"
+                                                    title="Xoá">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="11">Không có khóa học nào.</td>
+                                    <td colspan="10">Không có khóa học nào.</td>
+                                </tr>
+                            @endif
+
+                            @if (isset($courses))
+                                <tr>
+                                    <td colspan="11">
+                                        {{ $courses->links('pagination::bootstrap-4') }}
+                                    </td>
                                 </tr>
                             @endif
                         </tbody>
                     </table>
-                    {{ $courses->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>
@@ -141,10 +158,13 @@
                     <input type="text" name="course_name" value="{{ old('course_name') }}" required>
 
                     <label>Mức độ:</label>
-                    <select name="level" required>
-                        <option value="A1">A1</option>
-                        <option value="B1">B1</option>
-                        <option value="C1">C1</option>
+                    <select name="level" id="level" required>
+                        <option value="" disabled selected>Chọn mức độ</option>
+                        @foreach (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as $level)
+                            <option value="{{ $level }}" {{ old('level') == $level ? 'selected' : '' }}>
+                                {{ $level }}
+                            </option>
+                        @endforeach
                     </select>
 
                     <label>Số buổi học: <span class="text-danger">(*)</span></label>
@@ -240,50 +260,84 @@
         }
     });
 
-    document.querySelector("#addCourseForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        let formData = new FormData(this);
+    // document.querySelector("#addCourseForm").addEventListener("submit", function(event) {
+    //     event.preventDefault();
+    //     let formData = new FormData(this);
 
-        fetch("{{ route('course.store') }}", {
-                method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+    //     fetch("{{ route('course.store') }}", {
+    //             method: "POST",
+    //             headers: {
+    //                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+    //             },
+    //             body: formData
+    //         })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             alert(data.success);
+    //             location.reload(); // Reload trang sau khi thêm
+    //         });
+    // });
+
+    // function deleteCourse(courseId) {
+    //     if (!confirm("Bạn có chắc muốn xóa khóa học này?")) return;
+
+    //     const formData = new FormData();
+    //     formData.append('_method', 'DELETE');
+    //     formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+
+    //     fetch(`/management_laravel/CourseManagement/public/course_management/${courseId}`, {
+    //             method: 'POST',
+    //             body: formData
+    //         })
+    //         .then(response => {
+    //             if (!response.ok) {
+    //                 return response.text().then(text => {
+    //                     throw new Error(text || 'Request thất bại');
+    //                 });
+    //             }
+    //             return response.json();
+    //         })
+    //         .then(data => {
+    //             alert(data.success || 'Xóa thành công!');
+    //             location.reload();
+    //         })
+    //         .catch(error => {
+    //             console.error('Lỗi:', error);
+    //             alert("Không thể xoá khoá học. Vui lòng thử lại.");
+    //         });
+    // }
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.delete-form').on('submit', function(e) {
+            e.preventDefault();
+
+            if (!confirm('Bạn có chắc chắn muốn xoá khoá học này?')) {
+                return false;
+            }
+
+            var form = $(this);
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: form.find('input[name="_token"]').val()
                 },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.success);
-                location.reload(); // Reload trang sau khi thêm
-            });
-    });
-
-    function deleteCourse(courseId) {
-        if (!confirm("Bạn có chắc muốn xóa khóa học này?")) return;
-
-        const formData = new FormData();
-        formData.append('_method', 'DELETE');
-        formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-        fetch(`/management_laravel/CourseManagement/public/course_management/${courseId}`, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(text || 'Request thất bại');
-                    });
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.success);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000); // đợi toastr hiển thị rồi reload
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error(xhr.responseJSON.error || 'Có lỗi xảy ra');
                 }
-                return response.json();
-            })
-            .then(data => {
-                alert(data.success || 'Xóa thành công!');
-                location.reload();
-            })
-            .catch(error => {
-                console.error('Lỗi:', error);
-                alert("Không thể xoá khoá học. Vui lòng thử lại.");
             });
-    }
+        });
+    });
 </script>

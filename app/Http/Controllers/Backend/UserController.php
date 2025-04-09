@@ -18,11 +18,18 @@ class UserController extends Controller
         
     }
 
-    public function index() {
+    public function index(Request $request) {
 
-        // $users = User::paginate(5);
+        $search = $request->input('search');
+
         $users = User::where('role', 'student')
-        ->paginate(5);
+            ->when($search, function ($query, $search) {
+                $query->where('fullname', 'like', "%$search%")
+                      ->orWhere('student_id', 'like', "%$search%")
+                      ->orWhere('email', 'like', "%$search%")
+                      ->orWhere('phone', 'like', "%$search%");
+            })
+            ->paginate(5);
 
         $template = 'backend.dashboard.home.qlhocvien';
         return view('backend.dashboard.layout', compact('template', 'users'));
@@ -42,7 +49,6 @@ class UserController extends Controller
 
             // Tạo user
             $user = User::create([
-                'username' => $validated['username'],
                 'fullname' => $validated['fullname'],
                 'gender' => $validated['gender'],
                 'birthday' => $validated['birthday'],
@@ -59,8 +65,9 @@ class UserController extends Controller
             $user->update(['student_id' => $studentId]);
 
             DB::commit();
-            
-            return response()->json(['success' => 'Thêm học viên thành công!']);
+
+            return redirect()->route('student.index')->with('success', 'Thêm học viên thành công!');
+        
                 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -70,59 +77,6 @@ class UserController extends Controller
         }
     }
 
-    // public function search(Request $request)
-    // {
-    //     if(!$request->has('keyword')) {
-    //         return redirect()->back();
-    //     }
-    //     dd($request->keyword);
-    
-    //     $users = User::where('role', 'student')
-    //         ->where(function($query) use ($request) {
-    //             $query->where('fullname', 'like', '%'.$request->keyword.'%')
-    //                   ->orWhere('student_id', 'like', '%'.$request->keyword.'%')
-    //                   ->orWhere('email', 'like', '%'.$request->keyword.'%')
-    //                   ->orWhere('phone', 'like', '%'.$request->keyword.'%');
-    //         })
-    //         ->paginate(5);
-    
-    //     if ($request->ajax()) {
-    //         return response()->json([
-    //             'html' => view('backend.dashboard.partials.student_table', compact('users'))->render()
-    //         ]);
-    //     }
-    
-    //     return view('backend.dashboard.layout', [
-    //         'template' => 'backend.dashboard.home.qlhocvien',
-    //         'users' => $users
-    //     ]);
-    // }
-
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        dd($request->all()); // Debug đơn giản
-        
-        $users = User::where('role', 'student')
-            ->where(function($query) use ($keyword) {
-                $query->where('fullname', 'like', "%$keyword%")
-                      ->orWhere('student_id', 'like', "%$keyword%")
-                      ->orWhere('email', 'like', "%$keyword%")
-                      ->orWhere('phone', 'like', "%$keyword%");
-            })
-            ->paginate(5);
-        
-        $template = 'backend.dashboard.home.qlhocvien';
-        
-        if ($request->ajax()) {
-            return response()->json([
-                'html' => view('backend.dashboard.partials.student_table', compact('users'))->render()
-            ]);
-        }
-        
-        return view('backend.dashboard.layout', compact('template', 'users', 'keyword'));
-    }
-
     public function detail($id)
     {
         $user = User::findOrFail($id);
@@ -130,16 +84,16 @@ class UserController extends Controller
         return view('backend.dashboard.layout', compact('template', 'user'));
     }
 
-    // Xóa khóa học
+    // Xóa 
     public function destroy($id)
     {
         try {
             $user = User::findOrFail($id);
             $user->delete();
-            
-            return response()->json(['success' => 'Xoá thành công']);
+
+            return redirect()->route('student.index')->with('success', 'Xoá học viên thành công!');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Không thể xoá học viên'], 500);
+            return redirect()->route('student.index')->with('error', 'Không thể xoá học viên');
         }
     }
 

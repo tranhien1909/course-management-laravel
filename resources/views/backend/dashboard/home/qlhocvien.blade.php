@@ -31,12 +31,12 @@
                 <a href="{{ route('studentExport.pdf') }}"><button>Export</button></a>
 
                 <div class="search-container">
-                    <form id="searchForm" method="GET" action="{{ route('student.search') }}">
-                        @csrf
-                        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" name="keyword" placeholder="Nhập tên hoặc mã cần tìm ..."
-                            value="{{ request('keyword') }}">
-                        <button type="submit" style="display: none;"></button>
+                    <form action="{{ route('student.index') }}" method="GET">
+                        <input type="text" name="search" class="form-control"
+                            placeholder="Tìm kiếm theo mã hoặc tên học viên" value="{{ request('search') }}">
+                        <button type="submit" class="search-icon"
+                            style="background-color: white; left: 8px; padding: 6px;"><i
+                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
                     </form>
                 </div>
 
@@ -60,7 +60,52 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @include('backend.dashboard.partials.student_table')
+                            @if (isset($users) && is_object($users))
+                                @foreach ($users as $index => $user)
+                                    <tr class="course-row">
+                                        <td>{{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}</td>
+                                        <td>{{ $user->student_id }}</td>
+                                        <td><img src="{{ $user->avatar ?? 'https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-image-700-205124837.jpg' }}"
+                                                class="rounded-circle"
+                                                style="width: 100px; height: 100px; object-fit: cover;"
+                                                alt='Ảnh avatar'></td>
+                                        <td>{{ $user->fullname }}</td>
+                                        <td>{{ $user->gender }}</td>
+                                        <td>{{ date('d/m/Y', strtotime($user->birthday)) }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->phone }}</td>
+                                        <td style="padding: 1px 24px;">
+                                            <a href="{{ route('student.detail', $user->id) }}" title="Xem chi tiết">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('student.destroy', $user->id) }}" method="POST"
+                                                class="delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link p-0" style="border: none;"
+                                                    title="Xoá">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="10">Không tìm thấy học viên nào.</td>
+                                </tr>
+                            @endif
+
+                            @if (isset($users))
+                                <tr>
+                                    <td colspan="10">
+                                        {{ $users->links('pagination::bootstrap-4') }}
+                                    </td>
+                                </tr>
+                            @endif
+
                         </tbody>
                     </table>
                 </div>
@@ -98,14 +143,13 @@
                     </div>
                 </div>
                 <div class="store">
-                    <label>Username: <span class="text-danger">(*)</span></label>
-                    <input type="text" name="username" value="{{ old('username') }}" required>
 
                     <label>Họ tên: <span class="text-danger">(*)</span></label>
                     <input type="text" name="fullname" value="{{ old('fullname') }}" required>
 
                     <label>Giới tính: <span class="text-danger">(*)</span></label>
                     <select name="gender">
+                        <option value="" disabled selected>Chọn giới tính</option>
                         <option value="Nam" {{ old('gender') == 'Nam' ? 'selected' : '' }}>Nam</option>
                         <option value="Nữ" {{ old('gender') == 'Nữ' ? 'selected' : '' }}>Nữ</option>
 
@@ -228,79 +272,38 @@
                 alert(error.message || "Lỗi khi thêm học viên");
             });
     });
+</script>
 
-    function deleteStudent(userId) {
-        if (!confirm("Bạn có chắc muốn xóa học viên này?")) return;
+<script>
+    $(document).ready(function() {
+        $('.delete-form').on('submit', function(e) {
+            e.preventDefault();
 
-        fetch(`{{ route('student.destroy', '') }}/${userId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+            if (!confirm('Bạn có chắc chắn muốn xoá học viên này?')) {
+                return false;
+            }
+
+            var form = $(this);
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: form.find('input[name="_token"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.success);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000); // đợi toastr hiển thị rồi reload
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error(xhr.responseJSON.error || 'Có lỗi xảy ra');
                 }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => {
-                        throw err;
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert(data.success || 'Xóa thành công!');
-                location.reload();
-            })
-            .catch(error => {
-                console.error('Lỗi:', error);
-                alert(error.message || "Không thể xoá học viên. Vui lòng thử lại.");
             });
-    }
-
-    // Hàm xử lý tìm kiếm k tải lại trang
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const keyword = this.querySelector('input[name="keyword"]').value;
-        const url = `${this.action}?keyword=${encodeURIComponent(keyword)}`;
-
-        fetch(url, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.html) {
-                    document.querySelector('table tbody').innerHTML = data.html;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Fallback: tải lại trang nếu AJAX thất bại
-                window.location.href = url;
-            });
+        });
     });
-
-    function updateStudentTable(html) {
-        const tbody = document.querySelector('table tbody');
-        const pagination = document.querySelector('.pagination');
-
-        // Tạo DOM tạm để phân tích HTML
-        const tempDom = document.createElement('div');
-        tempDom.innerHTML = html;
-
-        // Cập nhật nội dung bảng
-        const newTbody = tempDom.querySelector('table tbody');
-        const newPagination = tempDom.querySelector('.pagination');
-
-        if (newTbody) tbody.innerHTML = newTbody.innerHTML;
-        if (newPagination) pagination.innerHTML = newPagination.innerHTML;
-    }
 </script>

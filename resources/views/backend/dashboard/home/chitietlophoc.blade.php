@@ -361,7 +361,7 @@
                         <a href="{{ route('dashboard.index') }}">Trang chủ</a>
                     </li>
                     <li>
-                        <a href="{{ route('teacher.index') }}">QL Lớp học</a>
+                        <a href="{{ route('class.index') }}">QL Lớp học</a>
                     </li>
                     <li class="active">
                         <strong>{{ $class->id }}</strong>
@@ -388,9 +388,9 @@
                                 disabled>
                             <label for="teacher_name">Giáo viên phụ trách:</label>
                             <input type="text" id="teacher_name" placeholder="GV phụ trách"
-                                value="{{ $class->user->fullname }}" disabled>
+                                value="{{ $class->user->fullname ?? 'N/A' }}" disabled>
                             <label for="course-name">Tên khóa học:</label>
-                            <textarea id="course-name" rows="2" placeholder="Tên khoá học" value="{{ $class->course->course_name }}" disabled></textarea>
+                            <textarea id="course-name" rows="2" placeholder="Tên khoá học" disabled>{{ $class->course->course_name ?? 'N/A' }}</textarea>
                             <label for="description">Mô tả:</label>
                             <textarea id="description" rows="4" placeholder="Mô tả" value="{{ $class->description }}" disabled></textarea>
                         </div>
@@ -453,38 +453,49 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="select-all"></th>
                                     <th>STT</th>
+                                    <th>Mã học viên</th>
                                     <th>Ảnh đại diện</th>
                                     <th>Họ tên</th>
+                                    <th>Giới tính</th>
                                     <th>Ngày sinh</th>
                                     <th>Email</th>
-                                    <th>Phone</th>
+                                    <th>SĐT</th>
+                                    <th colspan="2">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @if (isset($users) && is_object($users))
-                                    @foreach ($users as $index => $user)
-                                        <tr class="course-row">
-                                            <td><input type='checkbox' class='row-checkbox'></td>
-                                            <td>{{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}</td>
-                                            <td><img src="{{ $user->avatar }}" class="rounded-circle"
-                                                    style="width: 100px; height: 100px; object-fit: cover;"
-                                                    alt='Ảnh avatar'></td>
+                                @forelse ($class->enrollments as $index => $enrollment)
+                                    @php $user = $enrollment->student; @endphp
+                                    @if ($user)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $user->student_id }}</td>
+                                            <td><img src="{{ $user->avatar }}" width="40" /></td>
                                             <td>{{ $user->fullname }}</td>
+                                            <td>{{ $user->gender }}</td>
                                             <td>{{ date('d/m/Y', strtotime($user->birthday)) }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->phone }}</td>
+                                            <td style="padding: 1px 24px;">
+                                                <a href="{{ route('student.detail', $user->id) }}"
+                                                    title="Xem chi tiết">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="#"><i class="fa-solid fa-trash" title="Xoá"></i></a>
+                                            </td>
                                         </tr>
-                                    @endforeach
-                                @else
+                                    @endif
+                                @empty
                                     <tr>
-                                        <td colspan="7">Không có khóa học nào.</td>
+                                        <td colspan="10">Không có học viên nào đăng ký lớp học này.</td>
                                     </tr>
-                                @endif --}}
+                                @endforelse
                             </tbody>
+
                         </table>
-                        {{-- {{ $users->links('pagination::bootstrap-4') }} --}}
                     </div>
                 </div>
                 <div id="tab4" class="tab-content">
@@ -497,28 +508,32 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width: 30px;"><input type="checkbox" id="allCheckbox"></th>
                                         <th style="width: 50px;">STT</th>
-                                        <th style="width: 110px;">Mã tài liệu</th>
                                         <th style="width: 200px;">File/Link tài liệu</th>
-                                        <th style="width: 200px;">Lớp học</th>
                                         <th style="width: 200px;">Giáo viên phụ trách</th>
                                         <th style="width: 120px;">Ngày tải lên</th>
                                         <th style="width: 120px;">Trạng thái</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="course-row">
-                                        <td><input type="checkbox" class="checkbox"></td>
-                                        <td>1</td>
-                                        <td>TL001</td>
-                                        <td><a href="https://example.com/tailieu1.pdf" target="_blank">Introduction to
-                                                Machine Learning</a></td>
-                                        <td>Toán 12 - Lớp A1</td>
-                                        <td>Thầy Nguyễn Văn A</td>
-                                        <td>10/03/2024</td>
-                                        <td id="status-1">Chờ duyệt</td>
-                                    </tr>
+                                    @foreach ($class->course->courseMaterials as $material)
+                                        @php
+                                            $teacher = $material->teacher;
+                                            $user = $teacher ? $teacher->user : null; // Kiểm tra nếu có giáo viên phụ trách
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>
+                                                <a href="{{ Str::startsWith($material->file_url, 'http') ? $material->file_url : asset('storage/' . $material->file_url) }}"
+                                                    target="_blank">
+                                                    {{ $material->title }}
+                                                </a>
+                                            </td>
+                                            <td>{{ $class->user->fullname ?? 'N/A' }}</td>
+                                            <td>{{ $material->created_at->format('d/m/Y') }}</td>
+                                            <td>Đã duyệt</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
 

@@ -24,7 +24,7 @@ class StoreCourseRequest extends FormRequest
         return [
             'id' => 'required|unique:courses,id',
             'course_name' => 'required|string|max:255',
-            'level' => 'required|in:A1,B1,C1',
+            'level' => 'required',
             'lessons' => 'required|integer|min:1',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',

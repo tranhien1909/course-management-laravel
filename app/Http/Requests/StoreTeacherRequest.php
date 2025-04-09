@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreStudentRequest extends FormRequest
+class StoreTeacherRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +23,17 @@ class StoreStudentRequest extends FormRequest
     {
         return [
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'email' => 'required|email|unique:users|max:255',
+            'email' => 'required|email',
             'gender' => 'required|in:Nam,Nữ',
             'fullname' => 'required',
             'address' => 'nullable',
             'birthday' => 'required|date',
             'phone' => 'required',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:6|confirmed',
+
+            'bio' => 'nullable|string',
+            'expertise' => 'nullable|string',
+            'joining_date' => 'nullable|date',
         ];
     }
 
@@ -38,7 +42,6 @@ class StoreStudentRequest extends FormRequest
         return [
             'email.required' => 'Bạn chưa nhập email',
             'email.email' => 'Email không đúng định dạng. Ví dự: abc@gmail.com',
-            'email.unique' => 'Email đã tồn tại. Hãy điền email khác',
             'password.required' => 'Bạn chưa nhập password',
             'password.confirmed' => 'Mật khẩu xác nhận không khớp',
             'password.min' => 'Password phải có ít nhất 6 ký tự'

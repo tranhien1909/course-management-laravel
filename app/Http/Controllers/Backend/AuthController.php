@@ -14,7 +14,7 @@ class AuthController extends Controller
         
     }
 
-    public function index() {
+    public function showLoginForm() {
         if (Auth::id() > 0) {
             // Chuyển hướng theo role của user
             return $this->redirectToDashboard();
@@ -27,18 +27,16 @@ class AuthController extends Controller
         return view('backend.auth.register');
     }
 
-    public function showLoginForm(AuthRequest $request) {
-        $credentials = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password')
-        ];
+
+    public function login(AuthRequest $request) {
+        $credentials = $request->validated();
     
         if (Auth::attempt($credentials)) {
             Flasher::addSuccess('Đăng nhập thành công!');
             return $this->redirectToDashboard();
         } else {
             Flasher::addError('Email hoặc mật khẩu không đúng');
-            return redirect()->route('auth.admin');
+            return redirect()->route('login.form');
         }
     }
 
@@ -46,7 +44,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('auth.admin');
+        return redirect()->route('login.form');
     }
 
     /**
@@ -60,22 +58,8 @@ class AuthController extends Controller
             'admin' => redirect()->route('admin.dashboard'),
             'teacher' => redirect()->route('teacher.dashboard'),
             'student' => redirect()->route('student.dashboard'),
-            default => redirect('/home'),
+            default => redirect('/'),
         };
         
-        // if ($user->hasRole('admin')) {
-        //     return redirect()->route('admin.dashboard');
-        // }
-        
-        // if ($user->hasRole('teacher')) {
-        //     return redirect()->route('teacher.dashboard');
-        // }
-        
-        // if ($user->hasRole('student')) {
-        //     return redirect()->route('student.dashboard');
-        // }
-        
-        // // Default redirect if no role matches
-        // return redirect()->route('/');
     }
 }

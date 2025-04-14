@@ -1,44 +1,31 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Frontend\Teacher\TeacherDashboardController;
+use App\Http\Controllers\Frontend\User\StudentDashboardController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\ClassController;
 use App\Http\Controllers\Backend\TeacherController;
 use App\Http\Controllers\Backend\SpendingController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\RoleMiddleware;
 
 
 // Trang chủ
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [WelcomeController::class, 'index']) 
+    -> name('welcome');
 
-Route::get('/thongtinkhoahoc', function () {
-    return view('thongtinkhoahoc');
-});
+Route::get('/all', [WelcomeController::class, 'all']) 
+    -> name('cackhoahoc');
 
-// Phân quyền theo vai trò
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-});
-
-Route::middleware(['auth', 'role:teacher'])->group(function () {
-    Route::get('/teacher/dashboard', function () {
-        return view('teacher.dashboard');
-    })->name('teacher.dashboard');
-});
-
-Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student/dashboard', function () {
-        return view('student.dashboard');
-    })->name('student.dashboard');
-});
+Route::get('/detail/{id}', [WelcomeController::class, 'detail']) 
+    -> name('chitiet');
 
 Route::get('profile', [DashboardController::class, 'profile']) 
     -> name('dashboard.profile')
@@ -46,57 +33,31 @@ Route::get('profile', [DashboardController::class, 'profile'])
 
 // Auth routes - không yêu cầu đăng nhập
 Route::middleware([RedirectIfAuthenticated::class])->group(function () {
-    Route::get('admin', [AuthController::class, 'index'])->name('auth.admin');
-    Route::post('admin/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
+
+    // Route hiển thị form đăng nhập (GET)
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
+
+    // Route xử lý đăng nhập (POST)
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 });
 
-// Routes yêu cầu đăng nhập
-// Route::middleware(['auth'])->group(function () {
-//     // Logout route
-//     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
-    
-//     // Profile route - chung cho tất cả roles
-//     Route::get('profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
-    
-//     // Admin routes
-//     Route::prefix('admin')->middleware('role:admin')->group(function () {
-//         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-//     });
-    
-//     // Teacher routes
-//     Route::prefix('teacher')->middleware('role:teacher')->group(function () {
-//         Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
-//     });
-    
-//     // Student routes
-//     Route::prefix('student')->middleware('role:student')->group(function () {
-//         Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
-//     });
-// });
+    // Logout route
+Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-// Backend Routes
-Route::get('dashboard', [DashboardController::class, 'index']) 
-    -> name('dashboard.index')
-    ->middleware(AdminMiddleware::class);
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+    ->name('admin.dashboard')
+    ->middleware('auth');
 
-Route::get('admin', [AuthController::class, 'index']) 
-    -> name('auth.admin')
-    ->middleware(RedirectIfAuthenticated::class);
+    Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'index'])
+    ->name('teacher.dashboard')
+    ->middleware('auth');
 
-Route::get('logout', [AuthController::class, 'logout']) 
-    -> name('auth.logout');
-
-    // Routes dành cho khách (chưa đăng nhập)
-Route::middleware(['guest'])->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
-    Route::post('/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
-});
-
-// // Các trang quản lý
-// Route::get('profile', [UserController::class, 'index']) 
-//     -> name('profile')
-//     ->middleware(AdminMiddleware::class);
+    Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])
+    ->name('student.dashboard')
+    ->middleware('auth');
 
 // Quản lý khoá học
 Route::get('course_management/index', [CourseController::class, 'index']) 
@@ -179,7 +140,24 @@ Route::get('spending/detail', [SpendingController::class, 'detail'])
 
 
 // Frontend Routes
-Route::get('home', function() {
-    return view('frontend.dashboard.layout');
-}) -> name('frontend.layout');
+Route::get('my-class', [TeacherDashboardController::class, 'myClass']) 
+    -> name('teacher.class');
 
+    Route::get('my-class/{id}', [TeacherDashboardController::class, 'detail']) 
+    -> name('myclass.detail');
+
+    Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
+
+
+//
+Route::get('student-class', [StudentDashboardController::class, 'myClass']) 
+    -> name('student.class');
+
+    Route::get('student-diemdanh', [StudentDashboardController::class, 'diemdanh']) 
+    -> name('student.diemdanh');
+
+    Route::get('student-kqht', [StudentDashboardController::class, 'kqHT']) 
+    -> name('student.kqht');
+
+    Route::get('student-calendar', [StudentDashboardController::class, 'lichhoc']) 
+    -> name('student.lichhoc');

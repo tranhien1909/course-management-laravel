@@ -65,7 +65,7 @@
             <div class="col-md-6">
                 <div class="ibox-content">
                     <h3 class="text-center" style="color: black;">LOGIN</h3>
-                    <form method="post" class="m-t" action="{{ route('auth.login') }}" role="form">
+                    <form method="post" class="m-t" action="{{ route('login.submit') }}" role="form">
                         @csrf
                         <div class="form-group mb-3">
                             <label for="email" class="form-label">Email</label>
@@ -100,7 +100,7 @@
 
 
                         <p class="text-center mb-3" style="color: black">Ban chưa có tài khoản? <a
-                                href="{{ route('auth.register') }}" class="text-success fw-bold"
+                                href="{{ route('register.form') }}" class="text-success fw-bold"
                                 style="text-decoration: none">Đăng ký ngay</a></p>
 
                     </form>

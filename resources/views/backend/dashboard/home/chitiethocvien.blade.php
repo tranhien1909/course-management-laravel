@@ -452,7 +452,7 @@
             <div class="col-lg-10">
                 <ol class="breadcrumb">
                     <li>
-                        <a href="{{ route('dashboard.index') }}">Trang chủ</a>
+                        <a href="{{ route('admin.dashboard') }}">Trang chủ</a>
                     </li>
                     <li>
                         <a href="{{ route('student.index') }}">QL Học viên</a>
@@ -693,6 +693,37 @@
 
                     </div>
                     <div id="tab4" class="tab-content">
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Mã học viên</th>
+                                            <th>Mã khóa học</th>
+                                            <th>Học phí</th>
+                                            <th>Phương thức thanh toán</th>
+                                            <th>Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($payments as $index => $payment)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d/m/Y H:i') }}
+                                                </td>
+                                                <td>{{ $payment->student_id }}</td>
+                                                <td>{{ $payment->course_id }}</td>
+                                                <td>{{ number_format($payment->amount, 0, ',', '.') }}</td>
+                                                <td>{{ ucfirst($payment->payment_method) }}</td>
+                                                <td>{{ ucfirst($payment->status) }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -1,5 +1,7 @@
 {{-- <link href="backend/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
 <link href="backend/css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'> --}}
+@include('backend.dashboard.home.style-table')
+
 
 {{-- Thêm --}}
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
@@ -13,9 +15,27 @@
 </style>
 
 <div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="overlay" id="overlay" onclick="toggleForm()"></div>
+        <div class="ibox float-e-margins">
+            <div class="row wrapper border-bottom white-bg page-heading"
+                style="margin-left: -9px; margin-bottom: 20px; position: relative;">
+                <div class="col-lg-10">
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="{{ route('student.dashboard') }}">Trang chủ</a>
+                        </li>
+                        <li class="active">
+                            <strong>Lịch học</strong>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>LỊCH HỌC </h5>
         </div>
         <div class="ibox-content">
             <div id="calendar"></div>

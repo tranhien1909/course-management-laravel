@@ -8,20 +8,6 @@
         justify-content: center;
     }
 
-    .my-class {
-        transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        /* Hiệu ứng mượt mà */
-    }
-
-    .my-class:hover {
-        background-color: #e8c17f;
-        /* Màu nền khi hover */
-        transform: scale(1.05);
-        /* Phóng to nhẹ */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        /* Đổ bóng */
-    }
-
     .card-header {
         text-transform: uppercase;
         text-align: center;
@@ -29,68 +15,8 @@
         font-weight: bold;
         color: #0056b3;
     }
-
-    .card-body {
-        width: 65%;
-        margin-left: 50px;
-    }
-
-    .class-info {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .d-flex {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-    }
-
-    .d-flex i {
-        padding-bottom: 5px;
-        font-size: 20px;
-        margin-right: 20px;
-    }
-
-    .img-circle {
-        width: 96px;
-        height: 96px;
-    }
-
-    .progress {
-        height: 20px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-    }
-
-    .progress-bar {
-        background-color: #007bff;
-    }
-
-    .btn-custom {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 15px;
-    }
-
-    .btn-custom:hover {
-        background-color: #0056b3;
-    }
-
-    .ct-perfect-fourth {
-        height: 400px;
-    }
-
-    .profile-image {
-        margin-top: 10px;
-    }
 </style>
 
-<link href="backend/css/plugins/chartist/chartist.min.css" rel="stylesheet">
 
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -101,7 +27,7 @@
                 <div class="col-lg-10">
                     <ol class="breadcrumb">
                         <li>
-                            <a href="{{ route('dashboard.index') }}">Trang chủ</a>
+                            <a href="{{ route('admin.dashboard') }}">Trang chủ</a>
                         </li>
                         <li class="active">
                             <strong>Profile</strong>
@@ -148,23 +74,3 @@
 
             </div>
         </div>
-
-        <!-- Bootstrap JS and dependencies -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <!-- Chartist -->
-        <script src="backend/js/plugins/chartist/chartist.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                new Chartist.Pie('#ct-chart6', {
-                    series: [20, 10, 30, 40]
-                }, {
-                    donut: true,
-                    donutWidth: 60,
-                    startAngle: 270,
-                    total: 200,
-                    showLabel: false
-                });
-            });
-        </script>

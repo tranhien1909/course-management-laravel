@@ -14,18 +14,23 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!Auth::check()) {
-            return redirect()->route('auth.admin')->with('error', 'Vui lòng đăng nhập');
+            return redirect('/login');
         }
 
         $user = Auth::user();
+
+            // Thêm debug để kiểm tra
+    \Log::info('User role: '.$user->role.' | Required roles: '.implode(',', $roles));
         
-        if ($user->role !== $role) {
-            abort(403, 'Bạn không có quyền truy cập trang này');
+        foreach ($roles as $role) {
+            if ($user->role === $role) {
+                return $next($request);
+            }
         }
 
-        return $next($request);
+        abort(403, 'Bạn không có quyền truy cập trang này');
     }
 }

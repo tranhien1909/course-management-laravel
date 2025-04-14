@@ -15,7 +15,7 @@
                 <div class="col-lg-10">
                     <ol class="breadcrumb">
                         <li>
-                            <a href="{{ route('dashboard.index') }}">Trang chủ</a>
+                            <a href="{{ route('admin.dashboard') }}">Trang chủ</a>
                         </li>
                         <li class="active">
                             <strong>QL Lớp học</strong>
@@ -34,11 +34,6 @@
 
             <div class="filter-bar">
                 <a href="{{ route('classExport.pdf') }}"><button>Export</button></a>
-                <select>
-                    <option disabled>Lọc</option>
-                    <option>Đang diễn ra</option>
-                    <option>Sắp khai giảng</option>
-                </select>
 
                 <div class="search-container">
                     <form action="{{ route('class.index') }}" method="GET">

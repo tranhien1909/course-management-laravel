@@ -79,9 +79,11 @@ class UserController extends Controller
 
     public function detail($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with(['payments.course'])->findOrFail($id);
+        $payments = $user->payments;
+
         $template = 'backend.dashboard.home.chitiethocvien';
-        return view('backend.dashboard.layout', compact('template', 'user'));
+        return view('backend.dashboard.layout', compact('template', 'user', 'payments'));
     }
 
     // Xóa 

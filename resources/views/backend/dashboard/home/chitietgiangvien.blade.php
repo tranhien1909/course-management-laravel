@@ -271,7 +271,7 @@
             <div class="col-lg-10">
                 <ol class="breadcrumb">
                     <li>
-                        <a href="{{ route('dashboard.index') }}">Trang chủ</a>
+                        <a href="{{ route('admin.dashboard') }}">Trang chủ</a>
                     </li>
                     <li>
                         <a href="{{ route('teacher.index') }}">QL Giảng viên</a>

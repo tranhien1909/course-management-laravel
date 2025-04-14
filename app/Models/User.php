@@ -12,6 +12,8 @@ use App\Models\Teacher;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\ClassSchedule;
+use App\Models\Payment;
+use App\Models\Attendance;
 
 
 class User extends Authenticatable
@@ -81,4 +83,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Enrollment::class, 'student_id');
     }
+
+    public function classes()
+    {
+        return $this->hasMany(Classroom::class, 'teacher_id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'student_id');
+    }
+
+    public function payments()
+{
+    return $this->hasMany(Payment::class, 'student_id', 'student_id');
+}
 }

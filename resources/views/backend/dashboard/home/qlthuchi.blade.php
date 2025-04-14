@@ -13,39 +13,6 @@
         margin-left: 6px;
     }
 
-    /* Căn hai nút Sửa và Xóa về bên phải */
-    .action-buttons {
-        position: absolute;
-        right: 23px;
-        top: 20px;
-        /* Điều chỉnh khoảng cách với bảng */
-        display: flex;
-        gap: 15px;
-    }
-
-    /* Style cho nút */
-    .btn-edit,
-    .btn-delete {
-        padding: 6px 12px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        border-radius: 5px;
-    }
-
-    .btn-edit:disabled,
-    .btn-delete:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-
-    .btn-edit,
-    .btn-delete {
-        background: #3b6db3;
-        color: white;
-        font-size: 14px;
-    }
-
     .course-row {
         background-color: white;
         opacity: 1;
@@ -113,7 +80,7 @@
                 <div class="col-lg-10">
                     <ol class="breadcrumb">
                         <li>
-                            <a href="{{ route('dashboard.index') }}">Trang chủ</a>
+                            <a href="{{ route('admin.dashboard') }}">Trang chủ</a>
                         </li>
                         <li class="active">
                             <strong>QL Thu Chi</strong>
@@ -145,67 +112,37 @@
                 <button class="add-btn" onclick="toggleForm()">+ Thêm Hoá đơn</button>
             </div>
             <div class="ibox-content">
-                <div class="action-buttons">
-                    <button class="btn-edit">Sửa</button>
-                    <button class="btn-delete">Xóa</button>
-                </div>
-                <div class="table-responsive" style="margin-top: 60px;">
+                <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th><input type="checkbox" id="select-all"></th>
                                 <th>STT</th>
-                                <th>Mã hóa đơn</th>
                                 <th>Ngày tạo</th>
-                                <th>Tên học viên</th>
-                                <th>Khóa học</th>
-                                <th>Số buổi học</th>
-                                <th>Trạng thái học viên</th>
+                                <th>Mã học viên</th>
+                                <th>Mã khóa học</th>
                                 <th>Học phí</th>
-                                <th>Giảm giá</th>
-                                <th>Trạng thái thanh toán</th>
                                 <th>Phương thức thanh toán</th>
+                                <th>Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="course-row">
-                                <td><input type="checkbox" class="row-checkbox"></td>
-                                <td>1</td>
-                                <td>HD0001</td>
-                                <td>21/11/2023</td>
-                                <td>Nguyễn Văn A</td>
-                                <td class="word-wrap">DanceSport Cơ Bản</td>
-                                <td>30/30</td>
-                                <td>Đang học</td>
-                                <td>5.000.000 VNĐ</td>
-                                <td>10%</td>
-                                <td>Đã thanh toán</td>
-                                <td>Chuyển khoản</td>
-                            </tr>
-                            {{-- @if (isset($teachers) && is_object($teachers))
-                                @foreach ($teachers as $index => $teacher)
-                                    <tr class="course-row">
-                                        <td><input type='checkbox' class='row-checkbox'></td>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td><img src="" class="rounded-circle"
-                                                style="width: 100px; height: 100px; object-fit: cover;"
-                                                alt='Ảnh avatar'></td>
-                                        <td></td> --}}
-                            {{-- <td>{{ $teacher->teacher_name }}</td> --}}
-                            {{-- <td>{{ $teacher->expertise }}</td> --}}
-                            {{-- <td>{{ date('d/m/Y', strtotime($teacher->start_date)) }}</td>
-                                        <td>{{ date('d/m/Y', strtotime($teacher->end_date)) }}</td> --}}
-                            {{-- <td>{{ $teacher->teacherUser->fullname ?? 'N/A' }}</td> --}}
-                            {{-- </tr>
-                                @endforeach
-                            @else
+                            @forelse ($user->payments as $index => $payment)
                                 <tr>
-                                    <td colspan="9">Không có khóa học nào.</td>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d/m/Y H:i') }}</td>
+                                    <td>{{ $payment->student_id }}</td>
+                                    <td>{{ $payment->course->course_name ?? $payment->course_id }}</td>
+                                    <td>{{ number_format($payment->amount, 0, ',', '.') }}</td>
+                                    <td>{{ ucfirst($payment->payment_method) }}</td>
+                                    <td>{{ ucfirst($payment->status) }}</td>
                                 </tr>
-                            @endif --}}
+                            @empty
+                                <tr>
+                                    <td colspan="7">Chưa có khoản thanh toán nào.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
-                    {{-- {{ $teachers->links('pagination::bootstrap-4') }} --}}
                 </div>
             </div>
         </div>
@@ -222,27 +159,14 @@
         <label>Ngày tạo</label>
         <input type="date" name="ngay_tao" required>
 
-        <label>Tên học viên</label>
+        <label>Mã học viên</label>
         <input type="text" name="ten_hoc_vien" required>
 
-        <label>Khóa học</label>
+        <label>Mã khóa học</label>
         <textarea type="text" name="khoa_hoc" required></textarea>
-
-        <label>Số buổi học</label>
-        <input type="number" name="so_buoi_hoc" required>
-
-        <label>Trạng thái học viên</label>
-        <select name="trang_thai_hoc_vien" required>
-            <option value="dang_hoc">Đang học</option>
-            <option value="hoan_thanh">Hoàn thành</option>
-            <option value="ngung_hoc">Ngừng học</option>
-        </select>
 
         <label>Học phí</label>
         <input type="text" name="hoc_phi" required>
-
-        <label>Giảm giá</label>
-        <input type="text" name="giam_gia" required>
 
         <label>Trạng thái thanh toán</label>
         <select name="trang_thai_thanh_toan" required>

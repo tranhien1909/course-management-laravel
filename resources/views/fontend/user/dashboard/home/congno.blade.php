@@ -9,7 +9,7 @@
                 <div class="col-lg-10">
                     <ol class="breadcrumb">
                         <li>
-                            <a href="{{ route('dashboard.index') }}">Trang chủ</a>
+                            <a href="{{ route('student.dashboard') }}">Trang chủ</a>
                         </li>
                         <li class="active">
                             <strong>Công nợ</strong>

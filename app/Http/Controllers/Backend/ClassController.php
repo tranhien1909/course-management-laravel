@@ -9,6 +9,7 @@ use App\Models\Course;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Models\CourseMaterial;
+use App\Models\ClassSchedule;
 use App\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -48,16 +49,17 @@ class ClassController extends Controller
         $class = Classroom::with([
             'course',                               // Tên khóa học
             'user',                                 // Giảng viên phụ trách
-            'enrollments.student',                  // Các học viên đăng ký lớp
-            'course.courseMaterials' => function ($query) use ($id) { // Sử dụng $id để lấy course_id của lớp
-                $query->where('course_id', function($query) use ($id) {
-                    $query->select('course_id')->from('classes')->where('id', $id);
-                });
-            },
+            'enrollments.student', 
+            'classSchedules'
+            
         ])->findOrFail($id);
+
+        $classSchedules = ClassSchedule::with(['class.course', 'class.user'])
+        ->where('class_id', $id)
+        ->get();
     
         $template = 'backend.dashboard.home.chitietlophoc';
-        return view('backend.dashboard.layout', compact('template', 'class'));
+        return view('backend.dashboard.layout', compact('template', 'class', 'classSchedules'));
     }
     
 

@@ -1,3 +1,24 @@
+<style>
+    .btn-logout {
+        background: none;
+        border: none;
+        color: #a7b1c2;
+        text-align: left;
+        width: 100%;
+        padding: 10px 24px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+    .btn-logout:hover {
+        background-color: #293846;
+        color: white;
+    }
+</style>
+
 <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
@@ -12,22 +33,16 @@
                                     class="font-bold">{{ Auth::check() ? Auth::user()->fullname : 'Khách' }}</strong>
 
                             </span>
-                            <span class="status online" style="color: limegreen;">● Online</span>
-                            <span class="text-muted text-xs block">Admin <b class="caret"></b></span>
+                            <span class="status online" style="color: limegreen;">● Admin</span>
 
                         </span> </a>
-                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a href="{{ route('dashboard.profile') }}">Profile</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{{ route('auth.logout') }}">Logout</a></li>
-                    </ul>
                 </div>
                 <div class="logo-element">
                     <img src="{{ asset('backend/img/smart_logo.png') }}" alt="" style="width: 60px;">
                 </div>
             </li>
-            <li class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
-                <a href="{{ route('dashboard.index') }}"><i class="fa-solid fa-home"></i> <span class="nav-label">Trang
+            <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-home"></i> <span class="nav-label">Trang
                         chủ</span></a>
             </li>
             <li class="{{ request()->routeIs('course.index') ? 'active' : '' }}">
@@ -61,10 +76,18 @@
                         kê</span>
                 </a>
             </li>
-            <li>
-                <a href="{{ route('auth.logout') }}"><i class="fa-solid fa-sign-out"></i><span
-                        class="nav-label">Logout</span>
+            <li class="{{ request()->routeIs('dashboard.profile') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.profile') }}"><i class="fa-solid fa-chart-line"></i> <span
+                        class="nav-label">Profile</span>
                 </a>
+            </li>
+            <li>
+                <form method="POST" action="{{ route('auth.logout') }}" style="margin: 0;">
+                    @csrf
+                    <button type="submit" class="btn-logout">
+                        <i class="fa-solid fa-sign-out"></i> <span class="nav-label">Logout</span>
+                    </button>
+                </form>
             </li>
 
         </ul>

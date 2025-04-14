@@ -12,8 +12,8 @@
         <div id="page-wrapper" class="gray-bg">
             @include('fontend.teacher.dashboard.component.nav')
 
-            {{-- @include($template) --}}
-            @include('backend.dashboard.home.qlgiangvien')
+            @include($template)
+            {{-- @include('backend.dashboard.home.qlgiangvien') --}}
 
             @include('backend.dashboard.component.footer')
 

@@ -9,7 +9,7 @@
                 <div class="col-lg-10">
                     <ol class="breadcrumb">
                         <li>
-                            <a href="{{ route('dashboard.index') }}">Trang chủ</a>
+                            <a href="{{ route('student.dashboard') }}">Trang chủ</a>
                         </li>
                         <li class="active">
                             <strong>Thông tin điểm danh</strong>
@@ -19,15 +19,14 @@
             </div>
 
             <div class="filter-bar">
-                <select>
-                    <option disabled>Lọc</option>
-                    <option>Đang diễn ra</option>
-                    <option>Đã kết thúc</option>
-                </select>
-
                 <div class="search-container">
-                    <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" placeholder="Nhập tên hoặc mã học cần tìm ...">
+                    <form action="" method="GET">
+                        <input type="text" name="search" class="form-control"
+                            placeholder="Tìm kiếm theo mã lớp hoặc tên khóa học" value="{{ request('search') }}">
+                        <button type="submit" class="search-icon"
+                            style="background-color: white; left: 8px; padding: 6px;"><i
+                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
+                    </form>
                 </div>
             </div>
             <div class="ibox-content">

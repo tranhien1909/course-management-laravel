@@ -350,32 +350,6 @@
     .actions button:hover {
         background-color: #0056b3;
     }
-
-    /* Tui them */
-
-    .schedule-table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
-
-    .schedule-table th,
-    .schedule-table td {
-        border: 1px solid #ddd;
-        text-align: center;
-        vertical-align: top;
-        padding: 8px;
-        height: 120px;
-    }
-
-    .schedule-box {
-        background-color: #5cb85c;
-        color: #fff;
-        padding: 5px;
-        border-radius: 5px;
-        font-size: 13px;
-        margin-bottom: 5px;
-    }
 </style>
 
 <div class="wrapper wrapper-content">
@@ -387,7 +361,7 @@
                         <a href="{{ route('admin.dashboard') }}">Trang chủ</a>
                     </li>
                     <li>
-                        <a href="{{ route('class.index') }}">QL Lớp học</a>
+                        <a href="{{ route('class.index') }}">Lớp học của tôi</a>
                     </li>
                     <li class="active">
                         <strong>{{ $class->id }}</strong>
@@ -399,132 +373,47 @@
 
         <div class="ibox float-e-margins" style="background: white">
             <div class="tabs">
-                <div class="tab-item active" data-tab="tab1">Thông Tin Chung</div>
-                <div class="tab-item" data-tab="tab2">Lịch Học</div>
-                <div class="tab-item" data-tab="tab3">Danh Sách Học Viên</div>
+                <div class="tab-item active" data-tab="tab1">Lịch Học</div>
+                <div class="tab-item" data-tab="tab2">Danh Sách Học Viên</div>
+                <div class="tab-item" data-tab="tab3">Tài Liệu Học Tập</div>
             </div>
 
             <div class="tab-content-container">
                 <div id="tab1" class="tab-content active">
-                    <div class="thongtinchung">
-                        <div class="left">
-                            <label for="class-id">Mã lớp học:</label>
-                            <input type="text" id="class-id" placeholder="Mã lớp học" value="{{ $class->id }}"
-                                disabled>
-                            <label for="teacher_name">Giáo viên phụ trách:</label>
-                            <input type="text" id="teacher_name" placeholder="GV phụ trách"
-                                value="{{ $class->user->fullname ?? 'N/A' }}" disabled>
-                            <label for="course-name">Tên khóa học:</label>
-                            <textarea id="course-name" rows="2" placeholder="Tên khoá học" disabled>{{ $class->course->course_name ?? 'N/A' }}</textarea>
-                            <label for="description">Mô tả:</label>
-                            <textarea id="description" rows="4" placeholder="Mô tả" value="{{ $class->description }}" disabled></textarea>
-                        </div>
-                        <div class="right">
-
-                            <label for="start-date"><strong>Ngày bắt đầu:</strong></label>
-                            <input type="date" id="start-date"
-                                value="{{ \Carbon\Carbon::parse($class->start_date)->format('Y-m-d') }}" disabled>
-                            <label for="teacher_name">Sĩ số:</label>
-                            <input type="number" id="number_of_student" placeholder="Sĩ số"
-                                value="{{ $class->number_of_student }}" disabled>
-                            <label for="room">Phòng học:</label>
-                            <input type="text" id="time" placeholder="Thời Gian Học">
-                            <label for="status">Trạng thái:</label>
-                            <input type="text" id="status" placeholder="Trạng thái" value="{{ $class->status }}"
-                                disabled>
-                        </div>
-                    </div>
-                    <div class="button-container">
-                        <button class="save-button">Lưu</button>
-                    </div>
-                </div>
-                <div id="tab2" class="tab-content">
                     <div class="filter-bar">
-                        <button class="add-btn" onclick="toggleForm()">+ Thêm Giảng Viên</button>
+                        <button class="add-btn" onclick="toggleForm()">+ Thêm lịch học</button>
                     </div>
 
                     <div class="table-responsive">
-                        <div class="actions">
-                            <button id="edit-btn" style="display: none;">Sửa</button>
-                            <button id="delete-btn" style="display: none;">Xóa</button>
-                        </div>
-                        @php
-                            use Carbon\Carbon;
-
-                            // Nhận ngày từ request hoặc hôm nay
-                            $selectedDate = Carbon::parse(request('date', now()));
-
-                            // Xác định ngày đầu tuần (THỨ 2)
-                            $weekStart = $selectedDate->copy()->startOfWeek(Carbon::MONDAY);
-
-                            // Mảng các ngày trong tuần từ Thứ 2 đến Chủ Nhật
-                            $daysOfWeek = [
-                                'Monday',
-                                'Tuesday',
-                                'Wednesday',
-                                'Thursday',
-                                'Friday',
-                                'Saturday',
-                                'Sunday',
-                            ];
-
-                            // Tạo danh sách ngày tương ứng với từng thứ
-                            $weekDates = collect($daysOfWeek)->map(function ($day, $i) use ($weekStart) {
-                                return $weekStart->copy()->addDays($i);
-                            });
-
-                            function isMorning($time)
-                            {
-                                return Carbon::parse($time)->format('H:i') < '12:00';
-                            }
-                        @endphp
-
-
-                        <table class="schedule-table">
+                        <table>
                             <thead>
                                 <tr>
-                                    <th>Buổi</th>
-                                    @foreach ($weekDates as $date)
-                                        <th>{{ $date->translatedFormat('l') }}<br>{{ $date->format('d/m/Y') }}</th>
-                                    @endforeach
+                                    <th style="width: 50px;">STT</th>
+                                    <th style="width: 90px;">Ngày trong tuần</th>
+                                    <th style="width: 110px;">Thời gian học</th>
+                                    <th style="width: 230px;">Phòng học</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (['Sáng', 'Chiều'] as $period)
-                                    <tr>
-                                        <td>{{ $period }}</td>
-                                        @foreach ($weekDates as $date)
-                                            <td>
-                                                @foreach ($classSchedules as $schedule)
-                                                    @php
-                                                        $dayMatch = $schedule->day_of_week === $date->englishDayOfWeek;
-                                                        $isMorningSession = isMorning($schedule->start_time);
-                                                        $showInThisCell =
-                                                            ($period == 'Sáng' && $isMorningSession) ||
-                                                            ($period == 'Chiều' && !$isMorningSession);
-                                                    @endphp
-
-                                                    @if ($dayMatch && $showInThisCell)
-                                                        <div class="schedule-box green">
-                                                            <strong>{{ $schedule->class_id ?? '---' }}</strong><br>
-                                                            {{ Carbon::parse($schedule->start_time)->format('H:i') }} -
-                                                            {{ Carbon::parse($schedule->end_time)->format('H:i') }}<br>
-                                                            Phòng: {{ $schedule->room ?? 'Online' }}<br>
-                                                            GV: {{ $schedule->class->user->fullname ?? '---' }}
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </td>
-                                        @endforeach
+                                @forelse ($class->classSchedules as $index => $classSchedule)
+                                    <tr class="course-row">
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($classSchedule->day_of_week)->translatedFormat('l') }}
+                                        </td>
+                                        <td>{{ $classSchedule->start_time }} - {{ $classSchedule->end_time }}</td>
+                                        <td><a href="{{ $classSchedule->room }}"
+                                                target="_blank">{{ $classSchedule->room ?? 'Online' }}</a></td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="4">Chưa có lịch học nào cho lớp này.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
-
-
                     </div>
                 </div>
-                <div id="tab3" class="tab-content">
+                <div id="tab2" class="tab-content">
                     <div class="filter-bar">
                         <button>Export</button>
                     </div>
@@ -577,7 +466,53 @@
                         </table>
                     </div>
                 </div>
+                <div id="tab3" class="tab-content">
+                    <div class="filter-bar">
+                        <button class="add-btn" onclick="toggleForm()">+ Thêm tài liệu</button>
+                    </div>
 
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">STT</th>
+                                        <th style="width: 200px;">File/Link tài liệu</th>
+                                        <th style="width: 200px;">Giáo viên phụ trách</th>
+                                        <th style="width: 120px;">Ngày tải lên</th>
+                                        <th style="width: 120px;">Trạng thái</th>
+                                        <th style="width: 120px;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($class->course->courseMaterials as $material)
+                                        @php
+                                            $teacher = $material->teacher;
+                                            $user = $teacher ? $teacher->user : null; // Kiểm tra nếu có giáo viên phụ trách
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>
+                                                <a href="{{ Str::startsWith($material->file_url, 'http') ? $material->file_url : asset('storage/' . $material->file_url) }}"
+                                                    target="_blank">
+                                                    {{ $material->title }}
+                                                </a>
+                                            </td>
+                                            <td>{{ $class->user->fullname ?? 'N/A' }}</td>
+                                            <td>{{ $material->created_at->format('d/m/Y') }}</td>
+                                            <td>Đã duyệt</td>
+                                            <td>
+                                                <a href="#"><i class="fa-solid fa-trash" title="Xoá"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -598,107 +533,20 @@
     </div>
 </div>
 
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const tabItems = document.querySelectorAll(".tab-item");
         const tabContents = document.querySelectorAll(".tab-content");
-        const editForm = document.getElementById("edit-form");
-        const closeButton = document.querySelector(".close");
-        const editBtn = document.getElementById("edit-btn");
-        const deleteBtn = document.getElementById("delete-btn");
 
-        // Chuyển đổi giữa các tab
         tabItems.forEach(tab => {
             tab.addEventListener("click", function() {
                 document.querySelector(".tab-item.active").classList.remove("active");
                 document.querySelector(".tab-content.active").classList.remove("active");
-                tab.classList.add("active");
-                document.getElementById(tab.dataset.tab).classList.add("active");
+
+                this.classList.add("active");
+                document.getElementById(this.dataset.tab).classList.add("active");
             });
-        });
-
-        // Mở form chỉnh sửa khi nhấn nút "Sửa"
-        editBtn.addEventListener("click", () => {
-            if (document.querySelector(".row-checkbox:checked")) {
-                editForm.classList.add("active");
-                loadEditData();
-            }
-        });
-
-        // Đóng form khi nhấn dấu "×"
-        closeButton.addEventListener("click", () => editForm.classList.remove("active"));
-
-        // Lưu chỉnh sửa
-        document.querySelector("#edit-form button").addEventListener("click", () => {
-            alert("Lưu thông tin thành công!");
-            editForm.classList.remove("active");
-        });
-
-        // Cập nhật các nút "Sửa" và "Xóa" khi chọn checkbox
-        function updateButtons() {
-            let selectedRows = document.querySelectorAll(".row-checkbox:checked");
-            editBtn.style.display = selectedRows.length === 1 ? "inline-block" : "none";
-            deleteBtn.style.display = selectedRows.length > 0 ? "inline-block" : "none";
-
-            if (selectedRows.length === 1) loadEditData();
-        }
-
-        // Lấy dữ liệu từ hàng được chọn
-        function loadEditData() {
-            let row = document.querySelector(".row-checkbox:checked")?.closest("tr");
-            if (row) {
-                document.getElementById("edit-buoi-hoc").value = row.cells[2].textContent.trim();
-                document.getElementById("edit-noi-dung").value = row.cells[3].textContent.trim();
-                let ngayDay = row.cells[4].textContent.trim().split("/"); // Tách ngày theo dấu "/"
-                document.getElementById("edit-ngay-day").value =
-                    `${ngayDay[2]}-${ngayDay[1]}-${ngayDay[0]}`; // Định dạng lại thành yyyy-mm-dd
-
-                document.getElementById("edit-thoi-gian").value = row.cells[5].textContent.trim();
-                document.getElementById("edit-phong-hoc").value = row.cells[6].textContent.trim();
-            }
-        }
-
-        // Gọi updateButtons() khi checkbox thay đổi
-        document.querySelectorAll(".row-checkbox").forEach(checkbox => checkbox.addEventListener("change",
-            updateButtons));
-    });
-
-    function approve(id) {
-        document.getElementById('status-' + id).innerText = "Đã duyệt";
-    }
-
-    function reject(id) {
-        document.getElementById('status-' + id).innerText = "Không duyệt";
-    }
-    document.addEventListener("DOMContentLoaded", function() {
-        const checkboxes = document.querySelectorAll(".checkbox");
-        const approveBtn = document.getElementById("approve-btn");
-        const deleteBtn = document.getElementById("dele-btn");
-
-        function updateButtons() {
-            let selectedCount = document.querySelectorAll(".checkbox:checked").length;
-
-            if (selectedCount > 0) {
-                approveBtn.style.display = "inline-block";
-                deleteBtn.style.display = "inline-block";
-            } else {
-                approveBtn.style.display = "none";
-                deleteBtn.style.display = "none";
-            }
-        }
-
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", function() {
-                updateButtons();
-                allCheckbox.checked = checkboxes.length === document.querySelectorAll(
-                    ".checkbox:checked").length;
-            });
-        });
-        allCheckbox.addEventListener("change", function() {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = allCheckbox.checked;
-            });
-            updateButtons();
         });
     });
 </script>

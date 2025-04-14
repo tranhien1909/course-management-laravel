@@ -40,7 +40,10 @@ class CourseController extends Controller
     public function detail($id) {
         $template = 'backend.dashboard.home.chitietkhoahoc';
     // Lấy course và load trước quan hệ classes + user
-    $course = Course::with(['classes.user:id,fullname'])->findOrFail($id);
+    $course = Course::with([
+        'classes.user:id,fullname',
+        'exams'
+    ])->findOrFail($id);
 
     // Lấy danh sách lớp từ quan hệ đã load sẵn
     $classes = $course->classes;

@@ -8,6 +8,7 @@ use App\Models\Teacher;
 use App\Models\User;
 use App\Models\Enrollment;
 use App\Models\ClassSchedule;
+use App\Models\Payment;
 
 class Course extends Model
 {
@@ -38,5 +39,15 @@ class Course extends Model
         public function courseMaterials() {
             return $this->hasMany(courseMaterial::class, 'course_id');
         }
+
+        public function payments()
+    {
+        return $this->hasMany(Payment::class, 'course_id');
+    }
+
+    public function exams()
+    {
+        return $this->hasMany(Exam::class, 'course_id', 'id');
+    }
 
 }

@@ -12,7 +12,7 @@
         <div id="page-wrapper" class="gray-bg">
             @include('fontend.user.dashboard.component.nav')
 
-            {{-- @include($template) --}}
+            @include($template)
             {{-- @include('backend.dashboard.home.qlgiangvien') --}}
 
 

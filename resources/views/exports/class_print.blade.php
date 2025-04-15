@@ -131,7 +131,7 @@
                     <td>{{ $class->id }}</td>
                     <td>{{ $class->course->course_name }}</td>
                     <td>{{ date('d/m/Y', strtotime($class->start_date)) }}</td>
-                    <td>{{ $class->teacher->user->fullname ?? 'N/A' }}</td>
+                    <td>{{ $class->user->fullname ?? 'N/A' }}</td>
                     <td>{{ $class->number_of_student }}</td>
                     <td>{{ $class->room }}</td>
                 </tr>

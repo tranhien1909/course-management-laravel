@@ -39,32 +39,6 @@
         display: block;
     }
 
-    .thongtinchung {
-        display: flex;
-        margin: auto;
-        gap: 20px;
-        width: 100%;
-    }
-
-    .left,
-    .right {
-        flex: 1;
-    }
-
-    .left {
-        border-right: 1px solid silver;
-        padding-right: 20px;
-    }
-
-    .form-row {
-        display: flex;
-        gap: 10px;
-    }
-
-    .form-row input {
-        flex: 1;
-    }
-
     input,
     textarea {
         width: 100%;
@@ -74,76 +48,6 @@
         margin-bottom: 15px;
         font-size: 15px;
     }
-
-    .image-container {
-        display: flex;
-        gap: 30px;
-        margin-top: 12px;
-        margin-left: 20px;
-        margin-bottom: 12px;
-    }
-
-    .image-box {
-        width: 140px;
-        height: 140px;
-        border: 1px solid silver;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-    }
-
-    .image-box img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .image-actions {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        display: flex;
-        gap: 5px;
-    }
-
-    .image-input {
-        display: none !important;
-    }
-
-    .image-actions .edit-icon,
-    .image-actions .delete-icon {
-        background-color: rgba(0, 0, 0, 0.6);
-        color: white;
-        padding: 2px 5px;
-        font-size: 12px;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    .button-container {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 35px;
-        margin-right: 10px;
-        margin-bottom: -20px;
-    }
-
-    .button-container button {
-        padding: 8px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .save-button {
-        background-color: #3b6db3;
-        color: white;
-        margin-bottom: 30px;
-    }
-
 
     .class-card {
         background: #cedbec;
@@ -208,7 +112,6 @@
         /* Căn từ trên xuống */
         gap: 15px;
         padding: 10px;
-        padding-top: 40px;
         margin-left: -20px;
     }
 
@@ -448,7 +351,7 @@
 
 <div class="wrapper wrapper-content">
     <div class="row">
-        <div class="row wrapper border-bottom white-bg page-heading" style="margin-left: -9px; margin-bottom: 20px;">
+        <div class="row wrapper border-bottom white-bg page-heading" style="margin-left: -9px;">
             <div class="col-lg-10">
                 <ol class="breadcrumb">
                     <li>
@@ -528,7 +431,7 @@
 
                             <div class="row mb-10">
                                 <div class="col-md-12 text-right">
-                                    <button class="btn btn-success">Lưu</button>
+                                    <button class="btn btn-success">Sửa</button>
                                 </div>
                             </div>
                         </div>
@@ -537,143 +440,142 @@
 
                     <div id="tab2" class="tab-content">
                         <div class="ibox float-e-margins">
-                            <div class="class-card">
-                                <div class="class-header">
-                                    <span class="class-title">Lớp Sapling 1</span>
-                                    <span class="class-status">Đang học</span>
+                            @foreach ($enrollments as $enrollment)
+                                @php $class = $enrollment->class; @endphp
+                                <div class="class-card">
+                                    <div class="class-header">
+                                        <span class="class-title">Lớp: {{ $class->id }}</span>
+                                        <span class="class-status">{{ ucfirst($enrollment->status) }}</span>
+                                    </div>
+                                    <div class="class-info">
+                                        <div class="info-item">
+                                            Ngày ghi danh: <b>{{ $enrollment->enrollment_date }}</b>
+                                        </div>
+                                        <div class="info-item">
+                                            Ngày khai giảng: <b>{{ $class->start_date }}</b>
+                                        </div>
+                                        <div class="info-item">
+                                            Ngày kết thúc: <b>{{ $class->end_date }}</b>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="class-info">
-                                    <div class="info-item">
-                                        <i class="fa-solid fa-line-chart"></i> Tiến độ lớp học: <b>27/37</b>
-                                    </div>
-                                    <div class="info-item">
-                                        <i class="fa-solid fa-calendar-plus-o"></i> Ngày khai giảng: <b>110/08/2023</b>
-                                    </div>
-                                    <div class="info-item">
-                                        <i class="fa-solid fa-calendar-check-o"></i> Ngày kết thúc: <b>02/01/2024</b>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
+
 
                         <div class="chuyencan">
                             <div class="col-md-9" style="overflow-x: auto; width: 100%;">
-                                <div class="actions">
-                                    <button id="edit-btn" style="display: none;">Sửa</button>
-                                    <button id="delete-btn" style="display: none;">Xóa</button>
-                                </div>
 
                                 <div class="table-responsive">
-                                    <table style="min-width: 98%;">
+                                    <table style="min-width: 90%;">
                                         <thead>
                                             <tr>
-                                                <th style="width: 30px;"></th>
-                                                <th style="width: 50px;">STT</th>
-                                                <th style="width: 170px;">Buổi học</th>
-                                                <th style="width: 150px;">Giờ học</th>
-                                                <th style="width: 150px;">Điểm danh</th>
-                                                <th style="width: 250px;">Ghi chú</th>
+                                                <th>STT</th>
+                                                <th>Buổi học</th>
+                                                <th>Giờ học</th>
+                                                <th>Điểm danh</th>
+                                                <th>Ghi chú</th>
+                                                <th>Thao tác</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="course-row">
-                                                <td><input type="checkbox" class="row-checkbox"
-                                                        onclick="updateButton()">
-                                                </td>
-                                                <td>1</td>
-                                                <td>
-                                                    <div style="margin-bottom: 10px;">Buổi 1</div>
-                                                    <div>15/08/2023</div> <!-- Ngày học -->
-                                                </td>
-                                                <td>8:00 - 10:00</td>
-                                                <td>Đi muộn</td>
-                                                <td>Chuẩn bị bài tập chương 1</td>
-                                            </tr>
+                                            @foreach ($attendances as $index => $attendance)
+                                                <tr class="course-row">
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>
+                                                        <div style="margin-bottom: 10px;">Buổi {{ $index + 1 }}
+                                                        </div>
+                                                        <div>
+                                                            {{ \Carbon\Carbon::parse($attendance->date)->format('d/m/Y') }}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @if ($attendance->session === 'morning')
+                                                            8:00 - 11:00
+                                                        @else
+                                                            13:30 - 17:00
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($attendance->status == 'present')
+                                                            Có mặt
+                                                        @elseif($attendance->status == 'absent')
+                                                            Vắng
+                                                        @else
+                                                            Đi muộn
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $attendance->notes ?? '---' }}</td>
+                                                    <td style="padding: 1px 24px;">
+                                                        <a href="{{ route('student.detail', $user->id) }}"
+                                                            title="Sửa">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
 
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-3" style="margin-top: 30px;">
                                 <div class="row">
                                     <div class="stat-item">
-                                        Số buổi nghỉ: <span class="total">2</span>
+                                        Số buổi nghỉ: <span class="total">{{ $absentCount }}</span>
                                         <div class="small-text">
-                                            <span>Tháng này: 0</span>
-                                            <span>Tháng trước: 1</span>
+                                            <span>Tháng này: {{ $absentThisMonth }}</span>
+                                            <span>Tháng trước: {{ $absentLastMonth }}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="stat-item">
-                                        Số buổi muộn: <span class="total">2</span>
+                                        Số buổi muộn: <span class="total">{{ $lateCount }}</span>
                                         <div class="small-text">
-                                            <span>Tháng này: 0</span>
-                                            <span>Tháng trước: 1</span>
+                                            <span>Tháng này: {{ $lateThisMonth }}</span>
+                                            <span>Tháng trước: {{ $lateLastMonth }}</span>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-
-
                         </div>
-
 
                     </div>
                     <div id="tab3" class="tab-content" style="padding-bottom: 50px;">
-                        <div class="ketqua">
-                            <div class="chart-container">
-                                <canvas id="myChart"></canvas>
-                            </div>
-                            <div class="stats-box">
-                                <p>Số bài kiểm tra hoàn thành: <span class="green">0/12</span></p>
-                                <p>Điểm kiểm tra trung bình: <span class="green">63/100</span></p>
-                            </div>
-                        </div>
                         <div class="ibox-content">
-                            <div class="action-buttons">
-                                <button class="btn-edit" id="editbtn" style="display: none;">Sửa</button>
-                                <button class="btn-delete" id="deletebtn" style="display: none;">Xóa</button>
+                            <div class="ketqua">
+                                <div class="chart-container">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                                <div class="stats-box">
+                                    <p>Số bài kiểm tra hoàn thành: <span class="green">0/12</span></p>
+                                    <p>Điểm kiểm tra trung bình: <span class="green">63/100</span></p>
+                                </div>
                             </div>
-
                             <div class="table-responsive">
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th></th>
                                             <th>STT</th>
                                             <th>Bài kiểm tra</th>
                                             <th>Ngày làm bài</th>
-                                            <th>Trạng thái</th>
                                             <th>Điểm</th>
                                             <th>Ghi chú</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="course-row">
-                                            <td><input type="checkbox" class="checkbox" onclick="updateButtons()">
-                                            </td>
-                                            <td>1</td>
-                                            <td>Kiểm tra giữa kỳ</td>
-                                            <td>15/08/2023</td>
-                                            <td>Hoàn thành</td>
-                                            <td>8.5</td>
-                                            <td>Cần cải thiện phần tự luận</td>
-                                        </tr>
-
-                                        <tr class="course-row">
-                                            <td><input type="checkbox" class="checkbox" onclick="updateButtons()">
-                                            </td>
-                                            <td>1</td>
-                                            <td>Kiểm tra giữa kỳ</td>
-                                            <td>15/08/2023</td>
-                                            <td>Hoàn thành</td>
-                                            <td>8.5</td>
-                                            <td>Cần cải thiện phần tự luận</td>
-                                        </tr>
+                                        @foreach ($grades as $index => $grade)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $grade->exam->name ?? '---' }}</td>
+                                                <td>{{ $grade->exam->exam_date ?? '---' }}</td>
+                                                <td>{{ $grade->score }}</td>
+                                                <td>{{ $grade->exam->notes ?? '---' }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -686,9 +588,12 @@
                                 <input type="date" id="edit-ngay-lb" placeholder="Ngày làm bài">
                                 <input type="text" id="edit-diem" placeholder="Điểm">
                                 <textarea id="edit-ghi-chu" placeholder="Ghi chú"></textarea>
-                                <button onclick="">Lưu</button>
+                                <button onclick="">Sửa</button>
                             </div>
+
+
                         </div>
+
 
 
                     </div>
@@ -736,10 +641,6 @@
 
 </div>
 
-</div>
-
-
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const tabItems = document.querySelectorAll(".tab-item");
@@ -759,13 +660,6 @@
                 this.classList.add("active");
                 document.getElementById(this.dataset.tab).classList.add("active");
             });
-        });
-
-        editBtn.addEventListener("click", () => {
-            if (document.querySelector(".checkbox:checked")) {
-                editForm.classList.add("active");
-                loadEditData();
-            }
         });
 
         closeButton.addEventListener("click", () => editForm.classList.remove("active"));

@@ -51,5 +51,17 @@ class Classroom extends Model
     {
         return $this->hasMany(Enrollment::class, 'class_id', 'id');
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'class_id');
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'enrollments', 'class_id', 'student_id', 'id', 'student_id')
+                    ->withPivot('status', 'enrollment_date', 'payment_id')
+                    ->withTimestamps();
+    }
 }
 

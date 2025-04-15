@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AuthRequest;
 use Illuminate\Support\Facades\Auth;
 use Flasher\Laravel\Facade\Flasher;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -62,4 +64,24 @@ class AuthController extends Controller
         };
         
     }
+
+    public function register(Request $request)
+{
+    $request->validate([
+        'fullname' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6|confirmed',
+        'terms' => 'accepted',
+    ]);
+
+    $user = User::create([
+        'fullname' => $request->fullname,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    Auth::login($user); // đăng nhập tự động
+
+    return redirect()->route('student.dashboard')->with('success', 'Đăng ký thành công!');
+}
 }

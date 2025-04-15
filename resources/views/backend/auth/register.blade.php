@@ -46,6 +46,10 @@
     .form-group {
         text-align: start;
     }
+
+    .form-group input {
+        color: black;
+    }
 </style>
 
 <body class="gray-bg">
@@ -59,37 +63,56 @@
 
             </div>
             <h3>Register to SMART</h3>
-            <form class="m-t" role="form" action="login.html">
-                <div class="form-group">
-                    <label for="username" class="form-label">Username <span class="text-danger">(*)</span></label>
-                    <input type="text" class="form-control" placeholder="Name" required="">
-                </div>
+            <form class="m-t" role="form" action="{{ route('register.store') }}" method="POST">
+                @csrf
                 <div class="form-group">
                     <label for="fullname" class="form-label">Fullname</label>
-                    <input type="text" class="form-control" placeholder="Fullname" required="">
+                    <input type="text" name="fullname" class="form-control" placeholder="Fullname" required
+                        value="{{ old('fullname') }}">
+                    @error('fullname')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
+
                 <div class="form-group">
                     <label for="email" class="form-label">Email <span class="text-danger">(*)</span></label>
-                    <input type="email" class="form-control" placeholder="email" required="">
+                    <input type="email" name="email" class="form-control" placeholder="Email" required
+                        value="{{ old('email') }}">
+                    @error('email')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
+
                 <div class="form-group">
                     <label for="password" class="form-label">Mật khẩu <span class="text-danger">(*)</span></label>
-                    <input type="password" class="form-control" placeholder="Mật khẩu" required="">
+                    <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required>
+                    @error('password')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
+
                 <div class="form-group">
-                    <label for="re_password" class="form-label">Nhập lại mật khẩu <span
+                    <label for="password_confirmation" class="form-label">Nhập lại mật khẩu <span
                             class="text-danger">(*)</span></label>
-                    <input type="password" class="form-control" placeholder="Nhập lại mật khẩu" required="">
+                    <input type="password" name="password_confirmation" class="form-control"
+                        placeholder="Nhập lại mật khẩu" required>
                 </div>
+
                 <div class="form-group">
-                    <div class="checkbox i-checks"><label> <input type="checkbox"><i></i> Agree the terms and policy
+                    <div class="checkbox i-checks"><label>
+                            <input type="checkbox" name="terms" required> <i></i> Đồng ý điều khoản
                         </label></div>
+                    @error('terms')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
+
                 <button type="submit" class="btn btn-primary block full-width m-b">Register</button>
 
                 <p class="text-center" style="color: white;"><small>Already have an account?</small></p>
-                <a class="btn btn-sm btn-success btn-block" href="{{ route('auth.admin') }}">Login</a>
+                <a class="btn btn-sm btn-success btn-block" href="{{ route('login.form') }}">Login</a>
             </form>
+
             <hr />
             <p class="m-b font-bold"> <small>SMART English Center &copy; 2025</small>
             </p>

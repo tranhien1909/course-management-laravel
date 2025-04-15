@@ -1,7 +1,7 @@
     <!-- products sections starts -->
     <section class="products" id="products">
         <div class="overlay" id="overlay" onclick="toggleForm()"></div>
-        <h1 class="heading">latest <span>products</span></h1>
+        <h1 class="heading"><span>courses</span></h1>
         <div class="box-container">
             @foreach ($courses as $course)
                 <a href="{{ route('chitiet', $course->id) }}" class="box">
@@ -15,6 +15,7 @@
 
                         <div class="content">
                             <h3>{{ $course->course_name ?? 'Courses' }}</h3>
+                            <div class="stars">★★★★★</div>
                             <div class="price">{{ number_format($course->price, 0, ',', '.') }}
                                 <span>{{ number_format($course->price, 0, ',', '.') }}</span>
                             </div>

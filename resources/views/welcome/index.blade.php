@@ -7,18 +7,24 @@
     <div class="row">
         <div class="video-container">
             <video src="backend/img/why.mp4" loop autoplay muted></video>
-            <h3>best sellers</h3>
+            <h3>best English center</h3>
         </div>
 
         <div class="content">
             <h3>why choose us?</h3>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Unde fugiat, quas odio laborum neque nemo
-                sit ducimus molestiae enim. Ratione quidem assumenda provident quaerat ullam doloribus perspiciatis
-                numquam cupiditate ipsam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis assumenda culpa magni quam nisi
-                nostrum neque laborum, natus consequuntur quasi. Fuga harum et eaque quia nesciunt aliquid ratione
-                eligendi veniam!</p>
-            <a href="#" class="btn">learn more</a>
+            <p><strong style="font-size: 1.4rem; color:black;">Chương trình học đa dạng:</strong> SMART cung cấp các
+                khóa
+                học phù hợp với mọi trình độ, từ cơ
+                bản đến nâng cao,
+                bao gồm tiếng Anh giao tiếp, luyện thi IELTS/TOEIC, tiếng Anh cho trẻ em và doanh nghiệp.</p>
+            <p><strong style="font-size: 1.4rem; color:black;">Phương pháp giảng dạy tương tác:</strong> Ứng dụng công
+                nghệ AI, học qua dự án (Project-based
+                Learning) và mô hình
+                lớp học "Blended Learning" giúp học viên tiếp thu kiến thức một cách chủ động.</p>
+            <p><strong style="font-size: 1.4rem; color:black;">Cam kết đầu ra:</strong> Hỗ trợ học lại miễn phí nếu
+                không đạt mục tiêu, cùng các buổi thi thử và
+                đánh giá định
+                kỳ.</p>
 
         </div>
     </div>
@@ -63,7 +69,7 @@
 
 <!-- products sections starts -->
 <section class="products" id="products">
-    <h1 class="heading">latest <span>products</span></h1>
+    <h1 class="heading"><span>courses</span></h1>
     <div class="box-container">
         @foreach ($courses as $course)
             <a href="{{ route('chitiet', $course->id) }}" class="box">
@@ -77,6 +83,7 @@
 
                     <div class="content">
                         <h3>{{ $course->course_name ?? 'Courses' }}</h3>
+                        <div class="stars">★★★★★</div>
                         <div class="price">{{ number_format($course->price, 0, ',', '.') }}
                             <span>{{ number_format($course->price, 0, ',', '.') }}</span>
                         </div>
@@ -107,15 +114,14 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam saepe velit sunt, iste placeat
-                omnis, beatae ipsa veniam eligendi dolores fugiat ea itaque voluptate. Voluptate cupiditate ipsa
-                quod enim atque!</p>
+            <p>"Mình đã tăng 1.5 điểm IELTS chỉ sau 3 tháng nhờ lộ trình cá nhân hóa và sự hỗ trợ tận tình từ giáo viên
+                tại SMART!"</p>
             <div class="user">
                 <img src="https://images2.thanhnien.vn/zoom/686_429/528068263637045248/2023/2/6/edit-nguoi-dep-nguyen-thanh-ha-1675680175765990410434-90-0-1157-1707-crop-16756801988141842918415.png"
                     alt="">
                 <div class="user-info">
-                    <h3>Pham Mai</h3>
-                    <span>Happy student</span>
+                    <h3>Chị Nguyễn Thị Hà</h3>
+                    <span>Học viên lớp IELTS</span>
                 </div>
             </div>
             <span class="fas fa-quote-right"></span>
@@ -129,15 +135,14 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam saepe velit sunt, iste placeat
-                omnis, beatae ipsa veniam eligendi dolores fugiat ea itaque voluptate. Voluptate cupiditate ipsa
-                quod enim atque!</p>
+            <p>"Các thầy cô rất vui tính, dạy dễ hiểu. Lớp học ít người nên mình được sửa lỗi chi tiết, tự tin nói tiếng
+                Anh hơn hẳn."</p>
             <div class="user">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/528068263637045248/2023/2/6/edit-nguoi-dep-nguyen-thanh-ha-1675680175765990410434-90-0-1157-1707-crop-16756801988141842918415.png"
+                <img src="https://kenh14cdn.com/203336854389633024/2021/9/30/photo-1-1632993460966307206405.png"
                     alt="">
                 <div class="user-info">
-                    <h3>Pham Mai</h3>
-                    <span>Happy student</span>
+                    <h3>Bạn Trần Minh Anh</h3>
+                    <span>Học sinh cấp 3</span>
                 </div>
             </div>
             <span class="fas fa-quote-right"></span>
@@ -151,15 +156,14 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam saepe velit sunt, iste placeat
-                omnis, beatae ipsa veniam eligendi dolores fugiat ea itaque voluptate. Voluptate cupiditate ipsa
-                quod enim atque!</p>
+            <p>"I appreciate SMART’s professional approach. The business English course helped me improve my
+                presentation skills significantly."</p>
             <div class="user">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/528068263637045248/2023/2/6/edit-nguoi-dep-nguyen-thanh-ha-1675680175765990410434-90-0-1157-1707-crop-16756801988141842918415.png"
+                <img src="https://images.ctfassets.net/szez98lehkfm/10ecAFHwV8TykSpRliVwTC/047fb99405f70941eb07b5edd5d27e5e/MyIC_Inline_28632?fm=webp&w=500"
                     alt="">
                 <div class="user-info">
-                    <h3>Pham Mai</h3>
-                    <span>Happy student</span>
+                    <h3>Anh John Smith</h3>
+                    <span>Khoá Toeic</span>
                 </div>
             </div>
             <span class="fas fa-quote-right"></span>

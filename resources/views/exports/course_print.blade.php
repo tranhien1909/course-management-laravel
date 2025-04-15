@@ -73,6 +73,18 @@
         th {
             background-color: #549af6;
         }
+
+        /* Watermark Background */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.1;
+            /* Độ mờ */
+            z-index: -1;
+            /* Hiển thị phía sau nội dung */
+        }
     </style>
 </head>
 
@@ -80,9 +92,8 @@
 
     <div class="header-container">
         <div class="header-logo">
-            <img src="{{ public_path('backend/img/smart_logo.jpg') }}" alt="Logo" class="logo">
+            <img src="{{ public_path('backend/img/smart_logo_color.png') }}" alt="Logo" class="logo">
         </div>
-
         <div class="header-title">
             <h4>Cộng hòa xã hội chủ nghĩa Việt Nam</h4>
             <p>Độc lập - Tự do - Hạnh phúc</p>
@@ -124,6 +135,7 @@
             @endforeach
         </tbody>
     </table>
+    <img src="{{ public_path('backend/img/smart_logo_color.png') }}" class="watermark" width="400">
 </body>
 
 </html>

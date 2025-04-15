@@ -14,6 +14,8 @@ use App\Models\Enrollment;
 use App\Models\ClassSchedule;
 use App\Models\Payment;
 use App\Models\Attendance;
+use App\Models\CourseMaterial;
+use App\Models\Exam;
 
 
 class User extends Authenticatable
@@ -86,7 +88,9 @@ class User extends Authenticatable
 
     public function classes()
     {
-        return $this->hasMany(Classroom::class, 'teacher_id');
+        return $this->belongsToMany(Classroom::class, 'enrollments', 'student_id', 'class_id', 'student_id', 'id')
+                    ->withPivot('status', 'enrollment_date', 'payment_id')
+                    ->withTimestamps();
     }
 
     public function attendances()
@@ -95,7 +99,23 @@ class User extends Authenticatable
     }
 
     public function payments()
-{
-    return $this->hasMany(Payment::class, 'student_id', 'student_id');
-}
+    {
+        return $this->hasMany(Payment::class, 'student_id', 'student_id');
+    }
+
+    public function exams()
+    {
+        return $this->hasMany(Exam::class, 'uploaded_by', 'id');
+    }
+
+    public function classSchedules()
+    {
+        return $this->hasMany(ClassSchedule::class, 'teacher_id');
+    }
+
+    public function grades()
+    {
+        return $this->hasMany(StudentGrade::class, 'student_id');
+    }
+
 }

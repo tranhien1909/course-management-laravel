@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Frontend\Teacher\TeacherDashboardController;
 use App\Http\Controllers\Frontend\User\StudentDashboardController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\ScheduleController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\ClassController;
 use App\Http\Controllers\Backend\TeacherController;
@@ -41,7 +42,7 @@ Route::middleware([RedirectIfAuthenticated::class])->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 });
 
     // Logout route
@@ -161,3 +162,7 @@ Route::get('student-class', [StudentDashboardController::class, 'myClass'])
 
     Route::get('student-calendar', [StudentDashboardController::class, 'lichhoc']) 
     -> name('student.lichhoc');
+
+    Route::get('/class-schedule/week', [ScheduleController::class, 'loadWeek'])->name('schedule.week');
+
+    Route::get('/teacher-schedule/week', [ScheduleController::class, 'loadTeacherWeek']);

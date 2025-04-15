@@ -3,7 +3,7 @@
 <script src="{{ asset('backend/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('backend/js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
 <script src="{{ asset('backend/js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Flot -->
 <script src="{{ asset('backend/js/plugins/flot/jquery.flot.js') }}"></script>

@@ -28,4 +28,9 @@ class ClassSchedule extends Model
     {
         return $this->hasMany(Enrollment::class, 'schedule_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
 }

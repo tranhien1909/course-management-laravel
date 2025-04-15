@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('schedule_id')->constrained('class_schedules')->onDelete('cascade');
+            $table->string('class_id', 20); 
+            $table->date('date');
+            $table->enum('session', ['morning', 'afternoon']); // Buổi học     
             $table->enum('status', ['present', 'absent', 'late'])->default('present');
             $table->text('notes')->nullable();
             $table->timestamps();
+
+            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
         });
     }
 

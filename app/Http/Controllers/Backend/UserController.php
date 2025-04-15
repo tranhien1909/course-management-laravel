@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\StoreStudentRequest;
+use App\Models\Enrollment;
+use App\Models\Attendance;
+use App\Models\ClassSchedule;
+use App\Models\Classroom;
+use App\Models\Course;
+use App\Models\Payment;
+use App\Models\Teacher;
+use Carbon\Carbon;
 
 
 class UserController extends Controller
@@ -79,11 +87,56 @@ class UserController extends Controller
 
     public function detail($id)
     {
-        $user = User::with(['payments.course'])->findOrFail($id);
+        $user = User::with([
+            'grades.exam' 
+        ])->findOrFail($id);
+        $enrollments = Enrollment::with('class')->where('student_id', $id)->get();
         $payments = $user->payments;
+        $grades = $user->grades;
+
+        $attendances = $user->attendances;
+
+            // Tổng buổi nghỉ
+        $absentCount = Attendance::where('student_id', $id)
+        ->where('status', 'absent')
+        ->count();
+
+        // Tổng buổi đi muộn
+        $lateCount = Attendance::where('student_id', $id)
+            ->where('status', 'late')
+            ->count();
+
+        // Thống kê theo tháng hiện tại
+        $currentMonth = Carbon::now()->month;
+        $lastMonth = Carbon::now()->subMonth()->month;
+
+        $absentThisMonth = Attendance::whereMonth('date', $currentMonth)
+            ->where('student_id', $id)
+            ->where('status', 'absent')
+            ->count();
+
+        $absentLastMonth = Attendance::whereMonth('date', $lastMonth)
+            ->where('student_id', $id)
+            ->where('status', 'absent')
+            ->count();
+
+        $lateThisMonth = Attendance::whereMonth('date', $currentMonth)
+            ->where('student_id', $id)
+            ->where('status', 'late')
+            ->count();
+
+        $lateLastMonth = Attendance::whereMonth('date', $lastMonth)
+            ->where('student_id', $id)
+            ->where('status', 'late')
+            ->count();
 
         $template = 'backend.dashboard.home.chitiethocvien';
-        return view('backend.dashboard.layout', compact('template', 'user', 'payments'));
+        return view('backend.dashboard.layout', compact('template', 'user', 'payments', 'attendances', 'enrollments', 'absentCount', 'grades',
+        'lateCount',
+        'absentThisMonth',
+        'absentLastMonth',
+        'lateThisMonth',
+        'lateLastMonth'));
     }
 
     // Xóa 

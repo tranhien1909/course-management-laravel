@@ -11,6 +11,9 @@ use App\Http\Requests\StoreTeacherRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
+use App\Models\ClassSchedule;
+use Carbon\Carbon;
+use App\Models\Classroom;
 
 class TeacherController extends Controller
 {
@@ -39,8 +42,18 @@ class TeacherController extends Controller
     public function detail($id)
     {
         $teacher = Teacher::findOrFail($id);
+        $selectedDate = Carbon::parse(request('date', now()));
+        $weekStart = $selectedDate->copy()->startOfWeek(Carbon::MONDAY);
+    
+        // Lấy lịch dạy theo teacher_id
+        $classSchedules = ClassSchedule::with(['class.user'])
+            ->whereHas('class', function ($query) use ($id) {
+                $query->where('teacher_id', $id);
+            })
+            ->get();
+    
         $template = 'backend.dashboard.home.chitietgiangvien';
-        return view('backend.dashboard.layout', compact('template', 'teacher'));
+        return view('backend.dashboard.layout', compact('template', 'teacher', 'classSchedules', 'weekStart'));
     }
 
     public function store(StoreTeacherRequest $request)

@@ -139,59 +139,6 @@
         margin-bottom: 30px;
     }
 
-    .stu-list {
-        max-height: 300px;
-        /* hoặc chiều cao bạn muốn */
-        overflow-y: auto;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 50px;
-        margin-bottom: 10px;
-        margin-left: 40px;
-    }
-
-    .stu-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        background: #fff;
-        padding: 15px;
-        border-radius: 8px;
-        width: 310px;
-        position: relative;
-        border: 1px solid silver;
-        height: 83px;
-    }
-
-    .anh {
-        background: #eee;
-        border-radius: 5px;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-    }
-
-    .stu-info {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-left: 5px;
-        flex-grow: 1;
-    }
-
-    .stu-info h3 {
-        font-size: 14.5px;
-    }
-
-    .stu-info p {
-        font-size: 13px;
-        color: #555;
-    }
-
     .feedback-container {
         display: flex;
         gap: 40px;
@@ -331,7 +278,8 @@
                         </div>
                     </div>
                     <div class="button-container">
-                        <button class="save-button">Lưu</button>
+                        <button type="button" class="save-button" id="edit-btn">Sửa</button>
+                        <button type="submit" class="save-button" id="save-btn" style="display:none;">Lưu</button>
                     </div>
                 </div>
                 <div id="tab2" class="tab-content">
@@ -388,11 +336,10 @@
                     </div>
                 </div>
                 <div id="tab3" class="tab-content">
+                    <div class="filter-bar">
+                        <button class="add-btn" onclick="toggleForm()">+ Thêm Tài liệu</button>
+                    </div>
                     <div class="ibox-content">
-                        <div class="actions">
-                            <button id="approve-btn" onclick="approve(1)" style="display: none;">Duyệt</button>
-                            <button id="dele-btn" onclick="reject(1)" style="display: none;">Xóa</button>
-                        </div>
                         <div class="table-responsive">
                             <table>
                                 <thead>
@@ -431,6 +378,9 @@
                     </div>
                 </div>
                 <div id="tab4" class="tab-content">
+                    <div class="filter-bar">
+                        <button class="add-btn" onclick="toggleForm()">+ Thêm Bài thi</button>
+                    </div>
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -450,13 +400,13 @@
                                     <td>{{ $exam->course_id }}</td>
                                     <td>{{ $exam->name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($exam->exam_date)->format('d/m/Y') }}</td>
-                                    <td></td>
+                                    <td>{{ $exam->user->fullname ?? 'N/A' }}</td>
                                     <td style="padding: 1px 24px;">
-                                        <a href="{{ route('class.detail', $exam->id) }}" title="Xem chi tiết"><i
+                                        <a href="#" title="Xem chi tiết"><i
                                                 class="fa-solid fa-pen-to-square"></i></a>
                                     </td>
                                     <td>
-                                        <form action="{{ route('class.destroy', $class->id) }}" method="POST"
+                                        <form action="#" method="POST"
                                             class="delete-form">
                                             @csrf
                                             @method('DELETE')
@@ -558,3 +508,17 @@
         });
     });
 </script>
+
+<script>
+    document.getElementById('edit-btn').addEventListener('click', function () {
+        // Kích hoạt các input và textarea
+        var inputs = document.querySelectorAll('#edit-form input:not([type=button]), #edit-form textarea');
+        inputs.forEach(function(input) {
+            input.disabled = false;
+        });
+    
+        // Hiện nút Lưu
+        document.getElementById('save-btn').style.display = 'inline-block';
+        this.style.display = 'none';
+    });
+    </script>

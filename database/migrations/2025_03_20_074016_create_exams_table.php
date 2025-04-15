@@ -18,9 +18,11 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->dateTime('exam_date');
             $table->decimal('max_score', 5, 2);
+            $table->unsignedBigInteger('uploaded_by')->nullable();
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+            $table->foreign('uploaded_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

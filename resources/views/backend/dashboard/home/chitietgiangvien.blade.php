@@ -31,36 +31,12 @@
 
     .tab-content {
         display: none;
+        margin-top: 15px;
+
     }
 
     .tab-content.active {
         display: block;
-    }
-
-    .thongtinchung {
-        display: flex;
-        margin: auto;
-        gap: 20px;
-        width: 100%;
-    }
-
-    .left,
-    .right {
-        flex: 1;
-    }
-
-    .left {
-        border-right: 1px solid silver;
-        padding-right: 20px;
-    }
-
-    .form-row {
-        display: flex;
-        gap: 10px;
-    }
-
-    .form-row input {
-        flex: 1;
     }
 
     input,
@@ -71,197 +47,6 @@
         border-radius: 5px;
         margin-bottom: 15px;
         font-size: 15px;
-    }
-
-    .image-container {
-        display: flex;
-        gap: 30px;
-        margin-top: 12px;
-        margin-left: 20px;
-        margin-bottom: 12px;
-    }
-
-    .image-box {
-        width: 140px;
-        height: 140px;
-        border: 1px solid silver;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-    }
-
-    .image-box img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .image-actions {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        display: flex;
-        gap: 5px;
-    }
-
-    .image-input {
-        display: none !important;
-    }
-
-    .image-actions .edit-icon,
-    .image-actions .delete-icon {
-        background-color: rgba(0, 0, 0, 0.6);
-        color: white;
-        padding: 2px 5px;
-        font-size: 12px;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    .button-container {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 35px;
-        margin-right: 10px;
-        margin-bottom: -20px;
-    }
-
-    .button-container button {
-        padding: 8px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .save-button {
-        background-color: #3b6db3;
-        color: white;
-        margin-bottom: 30px;
-    }
-
-    .stu-list {
-        max-height: 300px;
-        /* hoặc chiều cao bạn muốn */
-        overflow-y: auto;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 50px;
-        margin-bottom: 10px;
-        margin-left: 40px;
-    }
-
-    .stu-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        background: #fff;
-        padding: 15px;
-        border-radius: 8px;
-        width: 310px;
-        position: relative;
-        border: 1px solid silver;
-        height: 83px;
-    }
-
-    .anh {
-        background: #eee;
-        border-radius: 5px;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-    }
-
-    .stu-info {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-left: 5px;
-        flex-grow: 1;
-    }
-
-    .stu-info h3 {
-        font-size: 14.5px;
-    }
-
-    .stu-info p {
-        font-size: 13px;
-        color: #555;
-    }
-
-    .feedback-container {
-        display: flex;
-        gap: 40px;
-        /* Khoảng cách giữa các feedback */
-        flex-wrap: wrap;
-        margin-left: 30px;
-    }
-
-    .feedback-card {
-        display: flex;
-        flex-direction: column;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px;
-        width: 46%;
-        /* Chia đôi hàng */
-        box-sizing: border-box;
-        /* Tính cả padding vào width */
-        background-color: white;
-    }
-
-    .feedback-header {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 12px;
-    }
-
-    .avatar {
-        width: 50px;
-        height: 50px;
-        background-color: #00bcd4;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        position: relative;
-        top: -10px;
-    }
-
-    .feedback-info h3 {
-        margin: 0;
-        font-size: 16px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .rating span {
-        color: #ff9800;
-        font-size: 15px;
-        margin-right: 10px;
-    }
-
-    .feedback-display {
-        width: 100%;
-        min-height: 80px;
-        resize: none;
-        white-space: pre-wrap;
-        /* Để xuống dòng giống textarea */
-        overflow-y: auto;
-    }
-</style>
-
-<style>
-    .tab-content {
-        margin-top: 15px;
     }
 </style>
 
@@ -369,7 +154,7 @@
 
                         <div class="row">
                             <div class="col-md-12 text-right">
-                                <button class="btn btn-success">Lưu</button>
+                                <button class="btn btn-success">Sửa</button>
                             </div>
                         </div>
                     </div>
@@ -378,8 +163,9 @@
 
                 <!-- Tab Lịch Giảng Dạy -->
                 <div id="schedule" class="tab-content">
-                    <h3>Lịch Giảng Dạy</h3>
-                    <table class="table table-bordered">
+                    <input type="date" id="datePicker" value="{{ now()->toDateString() }}">
+                    <input type="hidden" id="teacherId" value="{{ $teacher->id }}">
+                    {{-- <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>STT</th>
@@ -400,7 +186,14 @@
                                 <td>Chuẩn bị bài tập chương 1</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table> --}}
+
+                    <div id="scheduleContainer">
+                        @include('backend.dashboard.component.weekly_schedule', [
+                            'classSchedules' => $classSchedules,
+                            'weekStart' => $weekStart,
+                        ])
+                    </div>
                 </div>
             </div>
         </div>
@@ -423,5 +216,19 @@
                 document.getElementById(this.dataset.tab).classList.add("active");
             });
         });
+    });
+</script>
+
+<script>
+    document.getElementById('datePicker').addEventListener('change', function() {
+        const selectedDate = this.value;
+        const teacherId = document.getElementById('teacherId').value;
+
+        fetch(`/teacher-schedule/week?date=${selectedDate}&teacher_id=${teacherId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('scheduleContainer').innerHTML = data.html;
+            })
+            .catch(error => console.error('Error:', error));
     });
 </script>

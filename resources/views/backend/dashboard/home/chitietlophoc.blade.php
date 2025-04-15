@@ -1,4 +1,5 @@
 @include('backend.dashboard.home.style-table')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style>
     .tabs {
@@ -32,23 +33,6 @@
 
     .tab-content.active {
         display: block;
-    }
-
-    .tenlop {
-        display: flex;
-        justify-content: center;
-        /* Căn giữa theo chiều ngang */
-        align-items: center;
-        /* Căn giữa theo chiều dọc */
-        height: 30px;
-        /* Điều chỉnh chiều cao nếu cần */
-        margin-bottom: 20px;
-    }
-
-    .table-container {
-        width: 100%;
-        background: white;
-        margin-top: 20px;
     }
 
     table {
@@ -90,78 +74,6 @@
         cursor: pointer;
         margin-bottom: -5px;
         border: 1px solid silver;
-    }
-
-    .anhhv img {
-        width: 70px;
-        /* Định kích thước ảnh */
-        height: 70px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .stu-list {
-        max-height: 300px;
-        /* hoặc chiều cao bạn muốn */
-        overflow-y: auto;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        margin-bottom: 10px;
-    }
-
-    .addhv {
-        background: white;
-        color: #3b6db3;
-        font-size: 15px;
-        padding: 6px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-        margin-bottom: 20px;
-        border: 1px solid silver;
-    }
-
-    .stu-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        background: #fff;
-        padding: 15px;
-        border-radius: 8px;
-        width: 265px;
-        position: relative;
-        border: 1px solid silver;
-        height: 83px;
-    }
-
-    .anh {
-        background: #eee;
-        border-radius: 5px;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-    }
-
-    .stu-info {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-left: 5px;
-        flex-grow: 1;
-    }
-
-    .stu-info h3 {
-        font-size: 14.5px;
-    }
-
-    .stu-info p {
-        font-size: 13px;
-        color: #555;
     }
 
     button {
@@ -211,15 +123,6 @@
         padding-right: 30px;
     }
 
-    .form-row {
-        display: flex;
-        gap: 10px;
-    }
-
-    .form-row input {
-        flex: 1;
-    }
-
     input,
     textarea {
         width: 100%;
@@ -228,17 +131,6 @@
         border-radius: 5px;
         margin-bottom: 15px;
         font-size: 15px;
-    }
-
-    .tenlop {
-        display: flex;
-        justify-content: center;
-        /* Căn giữa theo chiều ngang */
-        align-items: center;
-        /* Căn giữa theo chiều dọc */
-        height: 30px;
-        /* Điều chỉnh chiều cao nếu cần */
-        margin-bottom: 20px;
     }
 
     .button-container {
@@ -261,11 +153,6 @@
         background-color: #3b6db3;
         color: white;
         margin-bottom: 30px;
-    }
-
-    .edit-button {
-        background-color: #008CBA;
-        color: white;
     }
 
     .edit-form {
@@ -365,7 +252,7 @@
         text-align: center;
         vertical-align: top;
         padding: 8px;
-        height: 120px;
+        height: 60px;
     }
 
     .schedule-box {
@@ -375,6 +262,14 @@
         border-radius: 5px;
         font-size: 13px;
         margin-bottom: 5px;
+    }
+
+    .filter-bar form {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 10px;
     }
 </style>
 
@@ -435,91 +330,24 @@
                         </div>
                     </div>
                     <div class="button-container">
-                        <button class="save-button">Lưu</button>
+                        <button class="save-button">Sửa</button>
                     </div>
                 </div>
                 <div id="tab2" class="tab-content">
                     <div class="filter-bar">
-                        <button class="add-btn" onclick="toggleForm()">+ Thêm Giảng Viên</button>
+                        <button class="add-btn" onclick="toggleForm()">+ Thêm Lịch học</button>
+                        <input style="width: 60%; margin-top: 20px;" class="" type="date" id="datePicker"
+                            value="{{ now()->toDateString() }}">
+                        <input type="hidden" id="classId" value="{{ $class->id }}">
+
                     </div>
 
                     <div class="table-responsive">
-                        <div class="actions">
-                            <button id="edit-btn" style="display: none;">Sửa</button>
-                            <button id="delete-btn" style="display: none;">Xóa</button>
+                        <div id="scheduleContainer">
+                            @include('backend.dashboard.component.weekly_schedule', [
+                                'classSchedules' => $classSchedules,
+                            ])
                         </div>
-                        @php
-                            use Carbon\Carbon;
-
-                            // Nhận ngày từ request hoặc hôm nay
-                            $selectedDate = Carbon::parse(request('date', now()));
-
-                            // Xác định ngày đầu tuần (THỨ 2)
-                            $weekStart = $selectedDate->copy()->startOfWeek(Carbon::MONDAY);
-
-                            // Mảng các ngày trong tuần từ Thứ 2 đến Chủ Nhật
-                            $daysOfWeek = [
-                                'Monday',
-                                'Tuesday',
-                                'Wednesday',
-                                'Thursday',
-                                'Friday',
-                                'Saturday',
-                                'Sunday',
-                            ];
-
-                            // Tạo danh sách ngày tương ứng với từng thứ
-                            $weekDates = collect($daysOfWeek)->map(function ($day, $i) use ($weekStart) {
-                                return $weekStart->copy()->addDays($i);
-                            });
-
-                            function isMorning($time)
-                            {
-                                return Carbon::parse($time)->format('H:i') < '12:00';
-                            }
-                        @endphp
-
-
-                        <table class="schedule-table">
-                            <thead>
-                                <tr>
-                                    <th>Buổi</th>
-                                    @foreach ($weekDates as $date)
-                                        <th>{{ $date->translatedFormat('l') }}<br>{{ $date->format('d/m/Y') }}</th>
-                                    @endforeach
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (['Sáng', 'Chiều'] as $period)
-                                    <tr>
-                                        <td>{{ $period }}</td>
-                                        @foreach ($weekDates as $date)
-                                            <td>
-                                                @foreach ($classSchedules as $schedule)
-                                                    @php
-                                                        $dayMatch = $schedule->day_of_week === $date->englishDayOfWeek;
-                                                        $isMorningSession = isMorning($schedule->start_time);
-                                                        $showInThisCell =
-                                                            ($period == 'Sáng' && $isMorningSession) ||
-                                                            ($period == 'Chiều' && !$isMorningSession);
-                                                    @endphp
-
-                                                    @if ($dayMatch && $showInThisCell)
-                                                        <div class="schedule-box green">
-                                                            <strong>{{ $schedule->class_id ?? '---' }}</strong><br>
-                                                            {{ Carbon::parse($schedule->start_time)->format('H:i') }} -
-                                                            {{ Carbon::parse($schedule->end_time)->format('H:i') }}<br>
-                                                            Phòng: {{ $schedule->room ?? 'Online' }}<br>
-                                                            GV: {{ $schedule->class->user->fullname ?? '---' }}
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </td>
-                                        @endforeach
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
 
 
                     </div>
@@ -527,6 +355,7 @@
                 <div id="tab3" class="tab-content">
                     <div class="filter-bar">
                         <button>Export</button>
+                        <button class="add-btn" onclick="toggleForm()">+ Thêm Học viên</button>
                     </div>
                     <div class="table-responsive">
                         <table>
@@ -700,5 +529,19 @@
             });
             updateButtons();
         });
+    });
+</script>
+
+<script>
+    document.getElementById('datePicker').addEventListener('change', function() {
+        const selectedDate = this.value;
+        const classId = document.getElementById('classId').value;
+
+        fetch(`/class-schedule/week?date=${selectedDate}&class_id=${classId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('scheduleContainer').innerHTML = data.html;
+            })
+            .catch(error => console.error('Error:', error));
     });
 </script>

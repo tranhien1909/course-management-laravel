@@ -22,7 +22,7 @@
 
                 <!-- Cột 2: Shopee Việt Nam -->
                 <div class="col-md-3">
-                    <h4 class="fw-bold mb-5">SHOPEE VIỆT NAM</h4>
+                    <h4 class="fw-bold mb-5">SMART VIỆT NAM</h4>
                     <ul class="list-unstyled">
                         <li class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"><a
                                 href="#">Điều Khoản SMART</a></li>

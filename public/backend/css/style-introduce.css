@@ -285,6 +285,12 @@
     padding: 2rem;
     text-align: center;
   }
+
+  .stars {
+    color: #f39c12;
+    font-size: 18px;
+    margin-right: 10px;
+}
   
   .products .box-container .box .content h3 {
     font-size: 2.5rem;

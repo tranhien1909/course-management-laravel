@@ -42,7 +42,8 @@ class CourseController extends Controller
     // Lấy course và load trước quan hệ classes + user
     $course = Course::with([
         'classes.user:id,fullname',
-        'exams'
+        'exams.user',
+        'courseMaterials'
     ])->findOrFail($id);
 
     // Lấy danh sách lớp từ quan hệ đã load sẵn
@@ -99,15 +100,6 @@ class CourseController extends Controller
         ]);
     }
 
-    // Cập nhật khóa học
-    public function update(Request $request, $id)
-    {
-        $course = Course::findOrFail($id);
-        $course->update($request->all());
-    
-        return response()->json(['success' => 'Khóa học đã được cập nhật!', 'course' => $course]);
-    }
-
     // Xóa khóa học
     public function destroy($id)
     {
@@ -120,6 +112,42 @@ class CourseController extends Controller
             return redirect()->route('course.index')->with('error', 'Không thể xoá khoá học');
         }
     }
+
+    public function update(Request $request, $id)
+{
+    $course = Course::findOrFail($id);
+
+    $request->validate([
+        'course_name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'level' => 'nullable|string|max:100',
+        'lessons' => 'nullable|integer',
+        'created_at' => 'nullable|date',
+        'price' => 'nullable|numeric',
+        'status' => 'nullable|string|max:100',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    $course->course_name = $request->course_name;
+    $course->description = $request->description;
+    $course->level = $request->level;
+    $course->lessons = $request->lessons;
+    $course->created_at = $request->created_at;
+    $course->price = $request->price;
+    $course->status = $request->status;
+
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('public/course_images', $filename);
+        $course->image = 'storage/course_images/' . $filename;
+    }
+
+    $course->save();
+
+    return redirect()->back()->with('success', 'Cập nhật khóa học thành công!');
+}
+
 
     // In pdf
     public function exportPDF()

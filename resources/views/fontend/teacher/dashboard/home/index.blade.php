@@ -17,42 +17,95 @@
     }
 </style>
 
+
 <div class="wrapper wrapper-content">
     <div class="row">
+        <div class="overlay" id="overlay" onclick="toggleForm()"></div>
+        <div class="ibox float-e-margins">
 
-        <div class="ibox-content card">
-            <div class="profile-image">
-                <img src="{{ Auth::check() ? Auth::user()->avatar : 'Khách' }}" class="img-circle circle-border m-b-md"
-                    alt="profile">
-            </div>
+            {{-- User Profile  --}}
+            <div class="col-lg-12">
 
-            <div class="sidebar-sticky">
-                <h2 class="mt-3"><strong>Hello, {{ Auth::check() ? Auth::user()->fullname : 'Khách' }} </strong>
-                    <img src="https://www.svgrepo.com/show/433961/waving-hand.svg"
-                        style="width: 35px; padding-bottom: 15px;" alt="">
-                </h2>
-                <p>Nice to have you back, what an exciting day!</p>
-                <p>Get ready and continue your lesson today.</p>
-            </div>
-        </div>
+                <div class="ibox-content card">
 
-
-        <div class="ibox-content card">
-            <h2 class="card-header">
-                Frofile
-            </h2>
-            <div class="col-12">
-                <div class="card-body">
-                    <p>Họ tên: <strong>{{ Auth::check() ? Auth::user()->fullname : 'N/A' }}</strong></p>
-                    <p>Ngày sinh: <strong>{{ Auth::check() ? Auth::user()->birthday : 'N/A' }}</strong></p>
-                    <p>Email: <strong>{{ Auth::check() ? Auth::user()->email : 'N/A' }}</strong></p>
-                    <p>Phone: <strong>{{ Auth::check() ? Auth::user()->phone : 'N/A' }}</strong></p>
-                    <p>Giới thiệu: 900 Toeic, 8.0 Ielts</p>
-                    <p>Bằng cấp: Th.S Ngành Ngôn Ngữ Học NeU</p>
+                    <div class="sidebar-sticky" style="margin-left: 20px;">
+                        <h2 class="mt-3"><strong>Hello,
+                                {{ Auth::check() ? Auth::user()->fullname : 'Khách' }}</strong> <img
+                                src="https://www.svgrepo.com/show/433961/waving-hand.svg"
+                                style="width: 35px; padding-bottom: 15px;" alt=""></h2>
+                        <p>Nice to have you back, what an exciting day!</p>
+                        <p>Get ready and continue your lesson today.</p>
+                    </div>
                 </div>
+
+
+                <div class="ibox-content card" style="height: 420px;">
+                    <h2 class="card-header">
+                        Frofile
+                    </h2>
+
+                    <!-- Cột ảnh học viên -->
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                            <img src="{{ Auth::check() ? Auth::user()->avatar : 'N/A' }}" alt="Ảnh Học Viên"
+                                class="img-responsive" style="width: 200px;">
+                        </div>
+                        <button
+                            class="btn btn-default btn-block mb-10">{{ Auth::check() ? Auth::user()->teacher->id : 'N/A' }}</button>
+                    </div>
+
+                    <!-- Cột thông tin học viên -->
+                    <div class="col-md-9">
+                        <div class="row mb-10">
+                            <div class="col-md-6">
+                                <label for="student_name">Họ và tên:</label>
+                                <input type="text" id="student_name" class="form-control" placeholder="Họ và tên"
+                                    value="{{ Auth::check() ? Auth::user()->fullname : 'N/A' }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" class="form-control" placeholder="Email"
+                                    value="{{ Auth::check() ? Auth::user()->email : 'N/A' }}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row mb-10">
+                            <div class="col-md-6">
+                                <label for="birthday">Ngày sinh:</label>
+                                <input type="date" id="birthday" class="form-control" placeholder="Ngày sinh"
+                                    value="{{ Auth::check() && Auth::user()->birthday ? date('Y-m-d', strtotime(Auth::user()->birthday)) : '' }}"
+                                    disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone">Số điện thoại:</label>
+                                <input type="number" id="phone" class="form-control" placeholder="Phone"
+                                    value="{{ Auth::check() ? Auth::user()->phone : 'N/A' }}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row mb-10">
+                            <div class="col-md-6">
+                                <label for="gender">Giới tính:</label>
+                                <input type="text" id="gender" class="form-control" placeholder="Giới tính"
+                                    value="{{ Auth::check() ? Auth::user()->gender : 'N/A' }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="address">Địa chỉ:</label>
+                                <input type="text" id="address" class="form-control" placeholder="Address"
+                                    value="{{ Auth::check() ? Auth::user()->address : 'N/A' }}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row mb-10">
+                            <div class="col-md-12 text-right">
+                                <button class="btn btn-success" style="margin-top: 30px;">Sửa</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
             </div>
         </div>
-
-    </div>
-
-</div>

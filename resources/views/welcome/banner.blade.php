@@ -4,9 +4,12 @@
     <div class="content">
         <h3>smart english</h3>
         <span>uy tín & chất lượng</span>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt optio, placeat corporis ex nesciunt
-            culpa repellendus necessitatibus cum laborum aliquid asperiores qui vel officia porro doloribus neque
-            sint mollitia. Laborum.</p>
+        <p>Phương pháp giảng dạy hiện đại, kết hợp công nghệ 4.0 cùng đội ngũ giáo viên giàu kinh
+            nghiệm. Với phương châm <strong>"Học thông minh - Giao tiếp tự tin"</strong>, SMART cam kết mang lại hiệu
+            quả học tập tối ưu cho mọi
+            học viên.</p>
+
+
         <a href="#" class="btn">Đăng kí ngay</a>
     </div>
 </section>

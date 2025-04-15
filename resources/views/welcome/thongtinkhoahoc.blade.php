@@ -304,7 +304,7 @@
             <div class="col-12 col-md-8">
                 <div class="course-title">{{ $course->course_name }} [Mã khoá học: {{ $course->id }}]</div>
                 <div class="rating">
-                    <div class="stars">5.0 ★★★★</div>
+                    <div class="stars">5.0 ★★★★★</div>
                     <div class="students">(260 Đánh giá) 36,603 Học viên</div>
                 </div>
                 <div class="highlights">

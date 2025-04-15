@@ -71,9 +71,15 @@
                         chi</span>
                 </a>
             </li>
-            <li>
-                <a href="metrics.html"><i class="fa-solid fa-chart-line"></i> <span class="nav-label">Báo cáo & Thống
+            <li class="{{ request()->routeIs('dashboard.thongke') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.thongke') }}"><i class="fa-solid fa-chart-line"></i> <span
+                        class="nav-label">Báo cáo & Thống
                         kê</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('admin.notifications.create') ? 'active' : '' }}">
+                <a href="{{ route('admin.notifications.create') }}"><i class="fa-solid fa-bell"></i> <span
+                        class="nav-label">Thông báo</span>
                 </a>
             </li>
             <li class="{{ request()->routeIs('dashboard.profile') ? 'active' : '' }}">

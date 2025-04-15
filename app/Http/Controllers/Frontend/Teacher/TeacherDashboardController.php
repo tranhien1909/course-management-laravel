@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Classroom;
+use Illuminate\Support\Collection;
 
 class TeacherDashboardController extends Controller
 {
@@ -29,7 +30,7 @@ class TeacherDashboardController extends Controller
     public function myClass()
     {
         $user = Auth::user();
-        $classes = $user->classes()->with('course')->get(); // nếu muốn kèm khóa học liên quan
+        $classes = $user->classes()->with(['course', 'user'])->get();
         $template = 'fontend.teacher.dashboard.home.myclass';
     
         return view('fontend.teacher.dashboard.layout', compact('template', 'classes'));
@@ -40,9 +41,50 @@ class TeacherDashboardController extends Controller
     {
         $user = Auth::user();
         // Lấy lớp học với các quan hệ cần thiết
-        $class = Classroom::with(['classSchedules'])->findOrFail($id);
+        $class = Classroom::with([
+            'course',                               // Tên khóa học
+            'user',                                 // Giảng viên phụ trách
+            'enrollments.student', 
+            'classSchedules'
+            
+        ])->findOrFail($id);
     
-        $template = 'fontend.teacher.dashboard.home.chitietlophoc';
+        $template = 'fontend.teacher.dashboard.home.chitietloptoi';
         return view('fontend.teacher.dashboard.layout', compact('template', 'class'));
+    }
+
+    public function teachingSchedule()
+    {
+        $user = Auth::user();
+    
+        // Lấy các lớp của giáo viên có kèm course và lịch học
+        $classes = $user->classes()->with(['classSchedules', 'course', 'user'])->get();
+    
+        // Gom toàn bộ lịch học từ các lớp lại thành 1 danh sách chung
+        $classSchedules = $classes->flatMap(function ($class) {
+            return $class->classSchedules->map(function ($schedule) use ($class) {
+                $schedule->class = $class; // gán thêm class để tiện dùng trong view
+                return $schedule;
+            });
+        });
+    
+        $template = 'fontend.teacher.dashboard.home.lichday';
+        return view('fontend.teacher.dashboard.layout', compact('template', 'classes', 'classSchedules'));
+    }
+
+    public function nhapdiem($id)
+    {
+        $user = Auth::user();
+        // Lấy lớp học với các quan hệ cần thiết
+        $class = Classroom::with([
+            'course',                               // Tên khóa học
+            'user',                                 // Giảng viên phụ trách
+            'enrollments.student'
+            
+        ])->findOrFail($id);
+    
+        $template = 'fontend.teacher.dashboard.home.nhapdiem';
+        return view('fontend.teacher.dashboard.layout', compact('template', 'class'));
+
     }
 }

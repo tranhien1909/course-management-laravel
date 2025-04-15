@@ -9,6 +9,9 @@ use App\Models\User;
 use App\Models\Enrollment;
 use App\Models\ClassSchedule;
 use App\Models\Payment;
+use App\Models\courseMaterial;
+use App\Models\Exam;
+use App\Models\Review;
 
 class Course extends Model
 {
@@ -48,6 +51,11 @@ class Course extends Model
     public function exams()
     {
         return $this->hasMany(Exam::class, 'course_id', 'id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'course_id');
     }
 
 }

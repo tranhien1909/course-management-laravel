@@ -4,9 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\NotificationController;
+use App\Http\Controllers\Backend\NotificationTargetController;
 use App\Http\Controllers\Frontend\Teacher\TeacherDashboardController;
 use App\Http\Controllers\Frontend\User\StudentDashboardController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\AdminTaskController;
+use App\Http\Controllers\Frontend\AttendanceController;
 use App\Http\Controllers\Backend\ScheduleController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\ClassController;
@@ -30,6 +34,10 @@ Route::get('/detail/{id}', [WelcomeController::class, 'detail'])
 
 Route::get('profile', [DashboardController::class, 'profile']) 
     -> name('dashboard.profile')
+    ->middleware(AdminMiddleware::class);
+
+    Route::get('statistical', [DashboardController::class, 'thongke']) 
+    -> name('dashboard.thongke')
     ->middleware(AdminMiddleware::class);
 
 // Auth routes - không yêu cầu đăng nhập
@@ -139,6 +147,24 @@ Route::get('spending/detail', [SpendingController::class, 'detail'])
 -> name('spending.detail')
 ->middleware(AdminMiddleware::class);
 
+// Quản lý thông báo
+// Route::prefix('admin')->middleware(['auth', 'can:admin'])->group(function () {
+    // Hiển thị form gửi thông báo
+    Route::get('/notifications/create', [NotificationController::class, 'create'])->name('admin.notifications.create');
+
+    // Gửi thông báo
+    Route::post('/notifications/send', [NotificationController::class, 'send'])->name('admin.notifications.send');
+
+    // Danh sách tất cả thông báo (quản lý)
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+// });
+
+// QL Admin Task
+Route::post('/admin/tasks/add', [DashboardController::class, 'addTask'])->name('admin.tasks.add');
+Route::post('/admin/tasks/toggle/{id}', [DashboardController::class, 'toggleTask'])->name('admin.tasks.toggle');
+Route::delete('/admin/tasks/{id}', [AdminTaskController::class, 'destroy'])->name('admin.tasks.destroy');
+
+
 
 // Frontend Routes
 Route::get('my-class', [TeacherDashboardController::class, 'myClass']) 
@@ -146,6 +172,9 @@ Route::get('my-class', [TeacherDashboardController::class, 'myClass'])
 
     Route::get('my-class/{id}', [TeacherDashboardController::class, 'detail']) 
     -> name('myclass.detail');
+
+    Route::get('my-calendar', [TeacherDashboardController::class, 'teachingSchedule']) 
+    -> name('teacher.lichhoc');
 
     Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
 

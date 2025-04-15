@@ -373,50 +373,14 @@
 
         <div class="ibox float-e-margins" style="background: white">
             <div class="tabs">
-                <div class="tab-item active" data-tab="tab1">Lịch Học</div>
-                <div class="tab-item" data-tab="tab2">Danh Sách Học Viên</div>
-                <div class="tab-item" data-tab="tab3">Tài Liệu Học Tập</div>
+                <div class="tab-item active" data-tab="tab1">Danh sách học viên</div>
+                <div class="tab-item" data-tab="tab2">Tài liệu học tập</div>
+                <div class="tab-item" data-tab="tab3">Bài thi</div>
             </div>
 
             <div class="tab-content-container">
                 <div id="tab1" class="tab-content active">
-                    <div class="filter-bar">
-                        <button class="add-btn" onclick="toggleForm()">+ Thêm lịch học</button>
-                    </div>
 
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style="width: 50px;">STT</th>
-                                    <th style="width: 90px;">Ngày trong tuần</th>
-                                    <th style="width: 110px;">Thời gian học</th>
-                                    <th style="width: 230px;">Phòng học</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($class->classSchedules as $index => $classSchedule)
-                                    <tr class="course-row">
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($classSchedule->day_of_week)->translatedFormat('l') }}
-                                        </td>
-                                        <td>{{ $classSchedule->start_time }} - {{ $classSchedule->end_time }}</td>
-                                        <td><a href="{{ $classSchedule->room }}"
-                                                target="_blank">{{ $classSchedule->room ?? 'Online' }}</a></td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4">Chưa có lịch học nào cho lớp này.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="tab2" class="tab-content">
-                    <div class="filter-bar">
-                        <button>Export</button>
-                    </div>
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -429,7 +393,7 @@
                                     <th>Ngày sinh</th>
                                     <th>Email</th>
                                     <th>SĐT</th>
-                                    <th colspan="2">Thao tác</th>
+                                    <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -445,14 +409,11 @@
                                             <td>{{ date('d/m/Y', strtotime($user->birthday)) }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->phone }}</td>
-                                            <td style="padding: 1px 24px;">
+                                            <td>
                                                 <a href="{{ route('student.detail', $user->id) }}"
-                                                    title="Xem chi tiết">
+                                                    title="Kết quả học tập">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </a>
-                                            </td>
-                                            <td>
-                                                <a href="#"><i class="fa-solid fa-trash" title="Xoá"></i></a>
                                             </td>
                                         </tr>
                                     @endif
@@ -466,22 +427,21 @@
                         </table>
                     </div>
                 </div>
-                <div id="tab3" class="tab-content">
+                <div id="tab2" class="tab-content">
                     <div class="filter-bar">
-                        <button class="add-btn" onclick="toggleForm()">+ Thêm tài liệu</button>
+                        <button class="add-btn" onclick="toggleForm()">+ Thêm Tài liệu</button>
                     </div>
-
                     <div class="ibox-content">
                         <div class="table-responsive">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width: 50px;">STT</th>
-                                        <th style="width: 200px;">File/Link tài liệu</th>
-                                        <th style="width: 200px;">Giáo viên phụ trách</th>
-                                        <th style="width: 120px;">Ngày tải lên</th>
-                                        <th style="width: 120px;">Trạng thái</th>
-                                        <th style="width: 120px;">Thao tác</th>
+                                        <th>STT</th>
+                                        <th>File/Link tài liệu</th>
+                                        <th>Giáo viên phụ trách</th>
+                                        <th>Ngày tải lên</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -502,7 +462,8 @@
                                             <td>{{ $material->created_at->format('d/m/Y') }}</td>
                                             <td>Đã duyệt</td>
                                             <td>
-                                                <a href="#"><i class="fa-solid fa-trash" title="Xoá"></i></a>
+                                                <a href="#"><i class="fas fa-trash text-danger"
+                                                        title="Xoá"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -511,6 +472,52 @@
 
                         </div>
 
+                    </div>
+
+                </div>
+                <div id="tab3" class="tab-content">
+                    <div class="filter-bar">
+                        <button class="add-btn" onclick="toggleForm()">+ Thêm Bài thi</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã khoá học</th>
+                                    <th>Tên kỳ thi</th>
+                                    <th>Ngày thi</th>
+                                    <th>Giáo viên phụ trách</th>
+                                    <th colspan="2">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($class->course->exams as $index => $exam)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $exam->course_id }}</td>
+                                        <td>{{ $exam->name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($exam->exam_date)->format('d/m/Y') }}</td>
+                                        <td>{{ $exam->user->fullname ?? 'N/A' }}</td>
+                                        <td style="padding: 1px 24px;">
+                                            <a href="#" title="Nhập điểm"><i
+                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                        </td>
+                                        <td>
+                                            <form action="#" method="POST" class="delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link p-0" style="border: none;"
+                                                    title="Xoá">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+
+                        </table>
                     </div>
                 </div>
             </div>

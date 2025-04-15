@@ -43,13 +43,17 @@ class CourseController extends Controller
     $course = Course::with([
         'classes.user:id,fullname',
         'exams.user',
-        'courseMaterials'
+        'courseMaterials',
+        'reviews'
     ])->findOrFail($id);
+
+    $averageRating = round($course->reviews->avg('rating'), 1);
+    $totalReviews = $course->reviews->count();
 
     // Lấy danh sách lớp từ quan hệ đã load sẵn
     $classes = $course->classes;
 
-        return view('backend.dashboard.layout', compact('template', 'course', 'classes'));
+        return view('backend.dashboard.layout', compact('template', 'course', 'classes', 'averageRating', 'totalReviews'));
     }
 
     public function store(StoreCourseRequest $request)

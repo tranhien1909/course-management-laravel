@@ -52,14 +52,10 @@
                         tôi</span>
                 </a>
             </li>
-            <li>
-                <a href="metrics.html"><i class="fa-solid fa-calendar-days"></i> <span class="nav-label">Lịch dạy
+            <li class="{{ request()->routeIs('teacher.lichhoc') ? 'active' : '' }}">
+                <a href="{{ route('teacher.lichhoc') }}"><i class="fa-solid fa-calendar-days"></i> <span
+                        class="nav-label">Lịch dạy
                         học</span>
-                </a>
-            </li>
-            <li>
-                <a href="metrics.html"><i class="fa-solid fa-chart-line"></i> <span class="nav-label">Báo cáo & Thống
-                        kê</span>
                 </a>
             </li>
             <li>

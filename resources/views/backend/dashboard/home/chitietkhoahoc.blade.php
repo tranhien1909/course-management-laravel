@@ -424,42 +424,35 @@
                     </div>
                 </div>
                 <div id="tab5" class="tab-content">
-                    <div class="feedback-container">
-                        <div class="feedback-card">
-                            <div class="feedback-header">
-                                <div class="avatar">
-                                    <span class="initials">ÁN H</span>
-                                </div>
-                                <div class="feedback-info">
-                                    <h3>Nguyễn Văn A</h3>
-                                    <div class="rating">
-                                        <span>★★★★★</span> – <span style="margin-left: 10px; color: black;">thời
-                                            gian</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="feedback-content">
-                                <div class="feedback-display">Phản hồi của người dùng sẽ hiển thị ở đây...</div>
-                            </div>
+                    <div class="filter-bar">
+        
+                        <div class="search-container">
+                            <form action="" method="GET">
+                                <input type="text" name="search" class="form-control"
+                                    placeholder="Tìm kiếm theo mã hoặc số ⭐" value="{{ request('search') }}">
+                                <button type="submit" class="search-icon"
+                                    style="background-color: white; left: 8px; padding: 6px; top: 17px;"><i
+                                        class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
+                            </form>
                         </div>
-                        <div class="feedback-card">
-                            <div class="feedback-header">
-                                <div class="avatar">
-                                    <span class="initials">ÁN H</span>
-                                </div>
-                                <div class="feedback-info">
-                                    <h3>Nguyễn Văn A</h3>
-                                    <div class="rating">
-                                        <span>★★★★★</span> – <span style="margin-left: 10px; color: black;">thời
-                                            gian</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="feedback-content">
-                                <div class="feedback-display">Phản hồi của người dùng sẽ hiển thị ở đây...</div>
-                            </div>
-                        </div>
+        
                     </div>
+                    <div class="ibox-content">
+                        <p>Đánh giá trung bình: {{ $averageRating }} ⭐ ({{ $totalReviews }} đánh giá)</p>
+                    </div>
+
+                    <ul>
+                    @foreach ($course->reviews as $review)
+                    <div class="ibox-content">
+                        <li>
+                            <strong>{{ $review->student->fullname }} (</strong> 
+                            <strong>{{ $review->student->student_id }}): </strong> 
+                            {{ $review->rating }}⭐<br>
+                            <em>{{ $review->comment }}</em>
+                        </li>
+                    </div>
+                    @endforeach
+                    </ul>
                 </div>
             </div>
         </div>

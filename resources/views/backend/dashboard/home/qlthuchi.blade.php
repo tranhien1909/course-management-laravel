@@ -126,11 +126,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($user->payments as $index => $payment)
+                            @forelse ($payments as $index => $payment)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d/m/Y H:i') }}</td>
-                                    <td>{{ $payment->student_id }}</td>
+                                    <td>{{ $payment->student->student_id }}</td>
                                     <td>{{ $payment->course->course_name ?? $payment->course_id }}</td>
                                     <td>{{ number_format($payment->amount, 0, ',', '.') }}</td>
                                     <td>{{ ucfirst($payment->payment_method) }}</td>

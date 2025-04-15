@@ -41,7 +41,7 @@
 
                 <div class="ibox-content card" style="height: 620px;">
                     <h2 class="card-header">
-                        Frofile
+                        Profile
                     </h2>
 
                     <!-- Cột ảnh học viên -->

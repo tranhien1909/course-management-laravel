@@ -104,7 +104,7 @@
                                 <textarea name="message" required></textarea>
                             </div>
                             <div class="form-group">
-                                <button type="submit">Gửi thông báo</button>
+                                <button class="btn-success" type="submit">Gửi thông báo</button>
                             </div>
                         </form>
                     </div>
@@ -126,9 +126,36 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="course-row">
+                                        @foreach ($notifications as $index => $notification)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $notification->created_at->format('d/m/Y H:i') }}</td>
+                                                <td>
+                                                    @switch($notification->type)
+                                                        @case('all')
+                                                            Tất cả người dùng
+                                                        @break
 
-                                        </tr>
+                                                        @case('user')
+                                                            Người dùng cụ thể
+                                                        @break
+
+                                                        @case('class')
+                                                            Theo lớp học
+                                                        @break
+
+                                                        @case('course')
+                                                            Theo khoá học
+                                                        @break
+
+                                                        @default
+                                                            Hệ thống
+                                                    @endswitch
+                                                </td>
+                                                <td>{{ $notification->title }}</td>
+                                                <td>{{ Str::limit($notification->message, 100) }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

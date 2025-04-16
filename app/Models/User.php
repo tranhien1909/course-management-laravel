@@ -116,4 +116,11 @@ class User extends Authenticatable
         return $this->hasMany(StudentGrade::class, 'student_id');
     }
 
+    public function myclasses()
+{
+    return $this->belongsToMany(Classroom::class, 'enrollments', 'student_id', 'class_id', 'id', 'id')
+                ->withTimestamps()
+                ->withPivot(['enrollment_date', 'status', 'payment_id']);
+}
+
 }

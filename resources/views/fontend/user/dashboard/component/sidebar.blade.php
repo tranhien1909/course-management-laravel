@@ -69,11 +69,6 @@
                 </a>
             </li>
             <li>
-                <a href="metrics.html"><i class="fa-solid fa-money-check-dollar"></i> <span class="nav-label">Công
-                        nợ</span>
-                </a>
-            </li>
-            <li>
                 <form method="POST" action="{{ route('auth.logout') }}" style="margin: 0;">
                     @csrf
                     <button type="submit" class="btn-logout">

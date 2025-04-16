@@ -18,24 +18,13 @@
                 </div>
             </div>
 
-            <div class="filter-bar">
-                <div class="search-container">
-                    <form action="" method="GET">
-                        <input type="text" name="search" class="form-control"
-                            placeholder="Tìm kiếm theo mã lớp hoặc tên khóa học" value="{{ request('search') }}">
-                        <button type="submit" class="search-icon"
-                            style="background-color: white; left: 8px; padding: 6px;"><i
-                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
-                    </form>
-                </div>
-            </div>
             <div class="ibox-content">
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
                                 <th rowspan="2">Mã lớp học</th>
-                                <th rowspan="2">Tên lớp học</th>
+                                <th rowspan="2">Tên khoá học</th>
                                 <th rowspan="2">Chuyên cần</th>
                                 <th colspan="3">Điểm kiểm tra</th>
                                 <th rowspan="2">Điểm tổng kết</th>
@@ -49,24 +38,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>IIG1</td>
-                                <td>Tin cơ sở</td>
+                                <td>CL005</td>
+                                <td>Advanced English</td>
                                 <td>10</td>
-                                <td>2</td>
-                                <td>6,00</td>
+                                <td>7,00</td>
+                                <td>7,00</td>
                                 <td>7,00</td>
                                 <td>7,00</td>
                             </tr>
 
-                            <tr>
-                                <td>IIG2</td>
-                                <td>Logic học</td>
-                                <td>9</td>
-                                <td>2</td>
-                                <td>6,00</td>
-                                <td>7,00</td>
-                                <td>7,00</td>
-                            </tr>
                             {{-- @if (isset($classes) && is_object($classes))
                                 @foreach ($classes as $index => $class)
                                     <tr class="course-row">

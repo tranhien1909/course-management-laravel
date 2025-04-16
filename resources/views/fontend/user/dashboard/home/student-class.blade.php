@@ -18,68 +18,59 @@
                 </div>
             </div>
 
-            <div class="filter-bar">
-
-                <div class="search-container">
-                    <form action="" method="GET">
-                        <input type="text" name="search" class="form-control"
-                            placeholder="Tìm kiếm theo mã lớp hoặc tên khóa học" value="{{ request('search') }}">
-                        <button type="submit" class="search-icon"
-                            style="background-color: white; left: 8px; padding: 6px;"><i
-                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
-                    </form>
-                </div>
-            </div>
             <div class="ibox-content">
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
+                                <th>STT</th>
                                 <th>Mã lớp học</th>
-                                <th>Tên lớp học</th>
+                                <th>Tên khoá học</th>
                                 <th>Ngày khai giảng</th>
                                 <th>Ngày kết thúc</th>
-                                <th>Giáo viên phụ trách</th>
                                 <th>Sĩ số</th>
                                 <th>Phòng học</th>
                                 <th>Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            {{-- @if (isset($classes) && is_object($classes))
-                                @foreach ($classes as $index => $class)
-                                    <tr class="course-row">
-                                        <td><input type='checkbox' class='row-checkbox'></td>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $class->id }}</td>
-                                        <td>{{ $class->class_name }}</td>
-                                        <td>{{ date('d/m/Y', strtotime($class->start_date)) }}</td>
-                                        <td>{{ date('d/m/Y', strtotime($class->end_date)) }}</td>
-                                        <td></td> --}}
-                            {{-- <td>{{ $class->teacherUser->fullname ?? 'N/A' }}</td> --}}
-                            {{-- <td>{{ $class->number_of_student }}</td>
-                                        <td>{{ $class->room }}</td>
-                                        <td>{{ $class->status }}</td>
-                                    </tr>
-                                @endforeach
-                            @else
+                            @foreach ($classes as $index => $enrollment)
                                 <tr>
-                                    <td colspan="10">Không có khóa học nào.</td>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $enrollment->class->id }}</td>
+                                    <td>{{ $enrollment->class->course->course_name ?? 'N/A' }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($enrollment->class->start_date)->format('d/m/Y') }}
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($enrollment->class->end_date)->format('d/m/Y') }}</td>
+                                    <td>{{ $enrollment->class->number_of_student }}</td>
+                                    <td>
+                                        @php
+                                            $rooms = $enrollment->class->classSchedules
+                                                ->pluck('room')
+                                                ->unique()
+                                                ->filter()
+                                                ->implode(', ');
+                                        @endphp
+                                        {{ $rooms ?: 'Chưa xếp lịch' }}
+                                    </td>
+                                    <td>
+                                        @php
+                                            $status = $enrollment->status;
+                                            $label = match ($status) {
+                                                'pending' => 'Chờ duyệt',
+                                                'active' => 'Đang học',
+                                                'completed' => 'Hoàn thành',
+                                                'cancelled' => 'Huỷ',
+                                            };
+                                        @endphp
+                                        {{ $label }}
+                                    </td>
                                 </tr>
-                            @endif --}}
+                            @endforeach
                         </tbody>
+
                     </table>
-                    {{-- {{ $classes->links('pagination::bootstrap-4') }} --}}
+
                 </div>
             </div>
         </div>

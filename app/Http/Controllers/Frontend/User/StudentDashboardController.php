@@ -35,7 +35,8 @@ class StudentDashboardController extends Controller
     public function myClass()
     {
         $user = Auth::user();
-        $classes = $user->classes()->with('course')->get(); // nếu muốn kèm khóa học liên quan
+        $classes = $user->enrollments()->with(['class.course', 'class.classSchedules'])->get();
+
         $template = 'fontend.user.dashboard.home.student-class';
     
         return view('fontend.user.dashboard.layout', compact('template', 'classes'));
@@ -55,11 +56,20 @@ class StudentDashboardController extends Controller
     public function lichhoc()
     {
         $user = Auth::user();
-        $classes = $user->classes()->with('course')->get(); // nếu muốn kèm khóa học liên quan
-        $template = 'fontend.user.dashboard.home.calendar';
     
-        return view('fontend.user.dashboard.layout', compact('template', 'classes'));
-
+        // Lấy các lớp của học viên có kèm course và lịch học
+        $classes = $user->myclasses()->with(['classSchedules', 'course', 'students', 'user'])->get();
+    
+        // Gom toàn bộ lịch học từ các lớp lại thành 1 danh sách chung
+        $classSchedules = $classes->flatMap(function ($class) {
+            return $class->classSchedules->map(function ($schedule) use ($class) {
+                $schedule->class = $class; // gán thêm class để tiện dùng trong view
+                return $schedule;
+            });
+        });
+    
+        $template = 'fontend.user.dashboard.home.calendar';
+        return view('fontend.user.dashboard.layout', compact('template', 'classes', 'classSchedules'));
     }
 
     public function kqHT()

@@ -18,36 +18,23 @@
                 </div>
             </div>
 
-            <div class="filter-bar">
-                <div class="search-container">
-                    <form action="" method="GET">
-                        <input type="text" name="search" class="form-control"
-                            placeholder="Tìm kiếm theo mã lớp hoặc tên khóa học" value="{{ request('search') }}">
-                        <button type="submit" class="search-icon"
-                            style="background-color: white; left: 8px; padding: 6px;"><i
-                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
-                    </form>
-                </div>
-            </div>
             <div class="ibox-content">
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
                                 <th>Mã lớp học</th>
-                                <th>Tên lớp học</th>
-                                <th>Giáo viên phụ trách</th>
+                                <th>Tên khoá học</th>
                                 <th>Số tiết nghỉ có phép</th>
                                 <th>Số tiết nghỉ không phép</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>CL005</td>
+                                <td>Advanced English</td>
+                                <td>1</td>
+                                <td>0</td>
                             </tr>
                             {{-- @if (isset($classes) && is_object($classes))
                                 @foreach ($classes as $index => $class)

@@ -1,18 +1,4 @@
-{{-- <link href="backend/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
-<link href="backend/css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'> --}}
 @include('backend.dashboard.home.style-table')
-
-
-{{-- Thêm --}}
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.print.css" rel="stylesheet" media="print">
-
-<style>
-    #calendar {
-        max-width: 100%;
-        margin: 0 auto;
-    }
-</style>
 
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -23,7 +9,7 @@
                 <div class="col-lg-10">
                     <ol class="breadcrumb">
                         <li>
-                            <a href="{{ route('student.dashboard') }}">Trang chủ</a>
+                            <a href="{{ route('teacher.dashboard') }}">Trang chủ</a>
                         </li>
                         <li class="active">
                             <strong>Lịch học</strong>
@@ -31,90 +17,80 @@
                     </ol>
                 </div>
             </div>
+
+            <div class="ibox-content">
+                <div class="filter-bar">
+                    <input style="width: 97%; margin-top: 20px;" class="" type="date" id="datePicker"
+                        value="{{ now()->toDateString() }}">
+
+                </div>
+                <div class="table-responsive">
+                    @php
+                        use Carbon\Carbon;
+
+                        // Nếu có biến $weekStart từ controller thì dùng, nếu không thì lấy từ request
+                        $weekStart = isset($weekStart)
+                            ? Carbon::parse($weekStart)
+                            : Carbon::parse(request('date', now()))->startOfWeek(Carbon::MONDAY);
+
+                        $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+                        $weekDates = collect($daysOfWeek)->map(function ($day, $i) use ($weekStart) {
+                            return $weekStart->copy()->addDays($i);
+                        });
+
+                        function isMorning($time)
+                        {
+                            return Carbon::parse($time)->format('H:i') < '12:00';
+                        }
+                    @endphp
+
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Buổi</th>
+                                @foreach ($weekDates as $date)
+                                    <th>{{ $date->translatedFormat('l') }}<br>
+                                        {{ $date->format('d/m/Y') }}
+                                    </th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (['Sáng', 'Chiều'] as $period)
+                                <tr>
+                                    <td>{{ $period }}</td>
+                                    @foreach ($weekDates as $date)
+                                        <td>
+                                            @foreach ($classSchedules as $schedule)
+                                                @php
+                                                    $dayMatch = $schedule->day_of_week === $date->englishDayOfWeek;
+                                                    $isMorningSession = isMorning($schedule->start_time);
+                                                    $showInThisCell =
+                                                        ($period == 'Sáng' && $isMorningSession) ||
+                                                        ($period == 'Chiều' && !$isMorningSession);
+                                                @endphp
+
+                                                @if ($dayMatch && $showInThisCell)
+                                                    <div class="schedule-box green">
+                                                        <strong>{{ $schedule->class_id ?? '---' }}</strong><br>
+                                                        {{ Carbon::parse($schedule->start_time)->format('H:i') }} -
+                                                        {{ Carbon::parse($schedule->end_time)->format('H:i') }}<br>
+                                                        Phòng: {{ $schedule->room ?? 'Online' }}<br>
+                                                        GV: {{ $schedule->class->user->fullname ?? '---' }}
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
         </div>
+
+
     </div>
-
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-        </div>
-        <div class="ibox-content">
-            <div id="calendar"></div>
-        </div>
-    </div>
-
-</div>
-
-<!-- Full Calendar -->
-{{-- <script src="backend/js/plugins/fullcalendar/fullcalendar.min.js"></script> --}}
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
-
-
-<script>
-    $(document).ready(function() {
-
-        /* initialize the calendar
-         -----------------------------------------------------------------*/
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-
-        $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-            editable: true,
-            droppable: true, // this allows things to be dropped onto the calendar
-            events: [{
-                    title: 'All Day Event',
-                    start: new Date(y, m, 1)
-                },
-                {
-                    title: 'Long Event',
-                    start: new Date(y, m, d - 5),
-                    end: new Date(y, m, d - 2)
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: new Date(y, m, d - 3, 16, 0),
-                    allDay: false
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: new Date(y, m, d + 4, 16, 0),
-                    allDay: false
-                },
-                {
-                    title: 'Meeting',
-                    start: new Date(y, m, d, 10, 30),
-                    allDay: false
-                },
-                {
-                    title: 'Lunch',
-                    start: new Date(y, m, d, 12, 0),
-                    end: new Date(y, m, d, 14, 0),
-                    allDay: false
-                },
-                {
-                    title: 'Birthday Party',
-                    start: new Date(y, m, d + 1, 19, 0),
-                    end: new Date(y, m, d + 1, 22, 30),
-                    allDay: false
-                },
-                {
-                    title: 'Click for Google',
-                    start: new Date(y, m, 28),
-                    end: new Date(y, m, 29),
-                    url: 'http://google.com/'
-                }
-            ]
-        });
-    });
-</script>

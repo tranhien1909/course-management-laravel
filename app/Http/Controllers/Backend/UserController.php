@@ -27,6 +27,9 @@ class UserController extends Controller
     }
 
     public function index(Request $request) {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
 
         $search = $request->input('search');
 
@@ -40,7 +43,7 @@ class UserController extends Controller
             ->paginate(5);
 
         $template = 'backend.dashboard.home.qlhocvien';
-        return view('backend.dashboard.layout', compact('template', 'users'));
+        return view('backend.dashboard.layout', compact('thongKe', 'template', 'users'));
     }
 
     public function store(StoreStudentRequest $request)
@@ -51,9 +54,17 @@ class UserController extends Controller
             DB::beginTransaction();
 
             // Xử lý avatar
-            $avatarPath = $request->hasFile('avatar') 
-                ? $request->file('avatar')->store('avatars', 'public') 
-                : null;
+            $avatarPath = null;
+
+            if ($request->hasFile('avatar')) {
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            } elseif ($request->filled('avatar_temp')) {
+                // Di chuyển ảnh từ thư mục temp sang thư mục avatars
+                $tempPath = storage_path('app/public/' . $request->input('avatar_temp'));
+                $newPath = 'avatars/' . basename($tempPath);
+                Storage::disk('public')->move($request->input('avatar_temp'), $newPath);
+                $avatarPath = $newPath;
+            }
 
             // Tạo user
             $user = User::create([
@@ -137,6 +148,51 @@ class UserController extends Controller
         'absentLastMonth',
         'lateThisMonth',
         'lateLastMonth'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+    
+        $request->validate([
+            'student_name' => 'required|string|max:255',
+            'birthday' => 'required|date',
+            'gender' => 'required',
+            'address' => 'nullable|string',
+            'phone' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+    
+        $user->fullname = $request->student_name;
+        $user->birthday = $request->birthday;
+        $user->gender = $request->gender;
+        $user->address = $request->address;
+        $user->updated_at = now();
+        $user->phone = $request->phone;
+    
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/avatars', $filename); // lưu đúng chỗ
+            $user->avatar = 'avatars/' . $filename;
+        }
+    
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Cập nhật học viên thành công!');
+    }
+
+    public function uploadTempImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $path = $request->file('image')->store('temp', 'public');
+        
+        return response()->json([
+            'path' => $path
+        ]);
     }
 
     // Xóa 

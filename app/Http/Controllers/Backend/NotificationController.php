@@ -20,29 +20,38 @@ class NotificationController extends Controller
     }
 
     public function index() {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
 
-        $template = 'backend.dashboard.home.qlthuchi';
+        $template = 'backend.dashboard.home.guithongbao';
         $payments = Payment::all();
-        return view('backend.dashboard.layout', compact('template', 'payments'));
+        return view('backend.dashboard.layout', compact('thongKe', 'template', 'payments'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        // Lấy danh sách giáo viên và học viên để gửi thông báo cá nhân
         $teachers = User::where('role', 'teacher')->get();
         $students = User::where('role', 'student')->get();
-
-        // Lấy danh sách lớp học
         $classes = Classroom::all(); 
-
-        // Lấy danh sách khoá học
         $courses = Course::all();
-
-        $notifications = Notification::latest()->get(); // Lấy thông báo đã gửi
+        $notifications = Notification::latest()->get(); 
         $template = 'backend.dashboard.home.guithongbao';
-
-
-        return view('backend.dashboard.layout', compact('template', 'teachers', 'students', 'classes', 'courses', 'notifications'));
+    
+        $editNotification = null;
+        if ($request->has('edit')) {
+            $editNotification = Notification::find($request->edit);
+        }
+    
+        return view('backend.dashboard.layout', compact(
+            'template',
+            'teachers',
+            'students',
+            'classes',
+            'courses',
+            'notifications',
+            'editNotification'
+        ));
     }
 
     public function send(Request $request)
@@ -95,6 +104,33 @@ class NotificationController extends Controller
     
         return back()->with('success', 'Thông báo đã được gửi!');
     }
+
+    // Cập nhật thông báo
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+    
+        $notification = Notification::findOrFail($id);
+        $notification->title = $request->title;
+        $notification->message = $request->message;
+        $notification->save();
+    
+        return redirect()->route('admin.notifications.create')->with('success', 'Cập nhật thông báo thành công.');
+    }
+    
+
+    // Xoá thông báo
+    public function destroy($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->delete();
+    
+        return redirect()->route('admin.notifications.create')->with('success', 'Đã xoá thông báo.');
+    }
+
     
 
 }

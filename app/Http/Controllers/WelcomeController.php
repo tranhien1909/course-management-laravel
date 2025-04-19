@@ -16,8 +16,9 @@ class WelcomeController extends Controller
     public function index()
     {
         $courses = Course::take(3)->get();
+        $tuvans = Course::all();
         $template = 'welcome.index';
-        return view('welcome.layout', compact('template', 'courses'));
+        return view('welcome.layout', compact('template', 'courses', 'tuvans'));
     }
 
     public function all()

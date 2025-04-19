@@ -34,23 +34,6 @@
         display: block;
     }
 
-    .thongtinchung {
-        display: flex;
-        margin: auto;
-        gap: 20px;
-        width: 100%;
-    }
-
-    .left,
-    .right {
-        flex: 1;
-    }
-
-    .left {
-        border-right: 1px solid silver;
-        padding-right: 20px;
-    }
-
     .form-row {
         display: flex;
         gap: 10px;
@@ -107,8 +90,7 @@
         display: none !important;
     }
 
-    .image-actions .edit-icon,
-    .image-actions .delete-icon {
+    .image-actions .edit-icon {
         background-color: rgba(0, 0, 0, 0.6);
         color: white;
         padding: 2px 5px;
@@ -201,9 +183,11 @@
         /* Để xuống dòng giống textarea */
         overflow-y: auto;
     }
+
 </style>
 <div class="wrapper wrapper-content">
     <div class="row">
+        <div class="overlay" id="overlay" onclick="toggleForm()" onclick="toggleFormQuiz()"></div>
         <div class="row wrapper border-bottom white-bg page-heading" style="margin-left: -9px; margin-bottom: 20px;">
             <div class="col-lg-10">
                 <ol class="breadcrumb">
@@ -230,56 +214,74 @@
                 <div class="tab-item" data-tab="tab5">Đánh Giá Của Học Viên</div>
             </div>
             <div class="tab-content-container">
-                <div id="tab1" class="tab-content active">
-                    <div class="thongtinchung">
-                        <div class="left">
-                            <label for="course-name"><strong>Tên khoá học:</strong></label>
-                            <input type="text" id="course-name" placeholder="Tên khoá học" value="{{$course->course_name}}" disabled>
-                            <label for="description"><strong>Mô tả:</strong></label>
-                            <textarea id="description" rows="5" placeholder="Mô tả" disabled>{{$course->description}}</textarea>
-                            <label for="course-images">Ảnh Khóa Học:</label>
-                            <div class="image-container">
-                                <div class="image-box">
-                                    <div class="image-actions">
-                                        <span class="edit-icon"><i class="fa-solid fa-wrench"></i></span>
-                                        <span class="delete-icon"><i class="fa-solid fa-x"></i></i></span>
+                <div id="tab1" class="tab-content active" style="min-height: 100vh;">
+                    <div class="ibox-content">
+                        <form id="edit-form" method="POST" action="{{ route('course.update', $course->id) }}" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="col-md-6">
+                                <label for="course_name"><strong>Tên khoá học:</strong></label>
+                                <input name="course_name" type="text" id="course-name" placeholder="Tên khoá học" value="{{$course->course_name}}" disabled>
+                                <label for="description"><strong>Mô tả:</strong></label>
+                                <textarea name="description" id="description" rows="5" placeholder="Mô tả" disabled>{{$course->description}}</textarea>
+                                <label for="course-images">Ảnh Khóa Học:</label>
+                                <div class="image-container">
+                                    <div class="image-box">
+                                        <div class="image-actions">
+                                            <span class="edit-icon"><i class="fa-solid fa-wrench"></i></span>
+                                        </div>
+                                        <input name="image" type="file" class="image-input" accept="image/*">
+                                        <img src="{{ asset('storage/' . $course->image) }}" alt="Course Image" class="image-preview">
+
                                     </div>
-                                    <input type="file" class="image-input" accept="image/*">
-                                    <img src="{{ $course->image }}" alt="Course Image" class="image-preview">
                                 </div>
                             </div>
-                        </div>
-                        <div class="right">
-                            <div class="form-row">
-                                    <label for="course-id" class="right"><strong>Mã khoá học:</strong></label>
-                                    <label for="level" class="right"><strong>Level:</strong></label>
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                        <label for="course_id" class="right"><strong>Mã khoá học:</strong></label>
+                                        <label for="level" class="right"><strong>Level:</strong></label>
+                                </div>
+                                <div class="form-row">
+                                    <input type="text" id="course-id" placeholder="Mã khoá học" value="{{$course->id}}" disabled readonly>
+                                    <select name="level" id="level" disabled style="width: 50%; height: 43px;">
+                                        <option value="{{$course->level}}" selected>{{$course->level}}</option>
+                                        @foreach (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as $level)
+                                            <option value="{{ $level }}">
+                                                {{ $level }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <label for="lessons" class="right"><strong>Số buổi học:</strong></label>
+                                    <label for="start-date" class="right"><strong>Ngày tạo:</strong></label>
+                                </div>
+                                <div class="form-row">
+                                    <input name="lessons" type="number" id="lessons" placeholder="Số buổi học" value="{{$course->lessons}}" disabled>
+                                    <input type="date" id="start-date" value="{{ \Carbon\Carbon::parse($course->created_at)->format('Y-m-d') }}" disabled readonly>
+    
+                                </div>
+                                <div class="form-row">
+                                    <label for="price" class="right"><strong>Học phí:</strong></label>
+                                    <label for="status" class="right"><strong>Trạng thái:</strong></label>
+                                </div>
+                                <div class="form-row">
+                                    <input name="price" type="number" id="price" value="{{ $course->price }}" disabled>
+                                    <select name="status" id="status" disabled style="width: 50%; height: 43px;">
+                                        <option value="{{$course->status}}" selected>{{$course->status}}</option>
+                                        @foreach (['Active', 'Inactive'] as $status)
+                                            <option value="{{ $status }}">
+                                                {{ $status }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="button-container">
+                                    <button type="button" class="save-button" id="edit-btn">Sửa</button>
+                                    <button type="submit" class="save-button" id="save-btn" style="display:none;">Lưu</button>
+                                </div>
                             </div>
-                            <div class="form-row">
-                                <input type="text" id="course-id" placeholder="Mã khoá học" value="{{$course->id}}" disabled>
-                                <input type="text" id="level" placeholder="Level" value="{{$course->level}}" disabled>
-                            </div>
-                            <div class="form-row">
-                                <label for="lessons" class="right"><strong>Số buổi học:</strong></label>
-                                <label for="start-date" class="right"><strong>Ngày tạo:</strong></label>
-                            </div>
-                            <div class="form-row">
-                                <input type="number" id="lessons" placeholder="Số buổi học" value="{{$course->lessons}}" disabled>
-                                <input type="date" id="start-date" value="{{ \Carbon\Carbon::parse($course->created_at)->format('Y-m-d') }}" disabled>
-
-                            </div>
-                            <div class="form-row">
-                                <label for="price" class="right"><strong>Học phí:</strong></label>
-                                <label for="status" class="right"><strong>Trạng thái:</strong></label>
-                            </div>
-                            <div class="form-row">
-                                <input type="text" id="price" value="{{ number_format($course->price, 0, ',', '.') }} đ" disabled>
-                                <input type="text" id="status" placeholder="Trạng thái" value="{{$course->status}}" disabled>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="button-container">
-                        <button type="button" class="save-button" id="edit-btn">Sửa</button>
-                        <button type="submit" class="save-button" id="save-btn" style="display:none;">Lưu</button>
+                        </form>
                     </div>
                 </div>
                 <div id="tab2" class="tab-content">
@@ -344,42 +346,44 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width: 50px;">STT</th>
-                                        <th style="width: 200px;">File/Link tài liệu</th>
-                                        <th style="width: 200px;">Giáo viên phụ trách</th>
-                                        <th style="width: 120px;">Ngày tải lên</th>
-                                        <th style="width: 120px;">Trạng thái</th>
+                                        <th>STT</th>
+                                        <th>File/Link tài liệu</th>
+                                        <th>Giáo viên phụ trách</th>
+                                        <th>Ngày tải lên</th>
+                                        <th>Trạng thái</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($class->course->courseMaterials as $material)
-                                        @php
-                                            $teacher = $material->teacher;
-                                            $user = $teacher ? $teacher->user : null; // Kiểm tra nếu có giáo viên phụ trách
-                                        @endphp
+                                    @if ($course->courseMaterials->count() > 0)
+                                        @foreach ($course->courseMaterials as $index => $material)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    <a href="{{ Str::startsWith($material->file_url, 'http') ? $material->file_url : asset('storage/' . $material->file_url) }}"
+                                                        target="_blank">
+                                                        {{ $material->title }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ $material->teacher->user->fullname ?? 'N/A' }}</td>
+                                                <td>{{ $material->created_at->format('d/m/Y') }}</td>
+                                                <td>Đã duyệt</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>
-                                                <a href="{{ Str::startsWith($material->file_url, 'http') ? $material->file_url : asset('storage/' . $material->file_url) }}"
-                                                    target="_blank">
-                                                    {{ $material->title }}
-                                                </a>
-                                            </td>
-                                            <td>{{ $class->user->fullname ?? 'N/A' }}</td>
-                                            <td>{{ $material->created_at->format('d/m/Y') }}</td>
-                                            <td>Đã duyệt</td>
+                                            <td colspan="5">Không có tài liệu nào thuộc khóa học này.</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
-
                         </div>
+                        
 
                     </div>
                 </div>
                 <div id="tab4" class="tab-content">
                     <div class="filter-bar">
-                        <button class="add-btn" onclick="toggleForm()">+ Thêm Bài thi</button>
+                        <button class="add-btn" onclick="toggleFormQuiz()">+ Thêm Bài thi</button>
                     </div>
                     <div class="table-responsive">
                         <table>
@@ -394,30 +398,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($course->exams as $index => $exam)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $exam->course_id }}</td>
-                                    <td>{{ $exam->name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($exam->exam_date)->format('d/m/Y') }}</td>
-                                    <td>{{ $exam->user->fullname ?? 'N/A' }}</td>
-                                    <td style="padding: 1px 24px;">
-                                        <a href="#" title="Xem chi tiết"><i
-                                                class="fa-solid fa-pen-to-square"></i></a>
-                                    </td>
-                                    <td>
-                                        <form action="#" method="POST"
-                                            class="delete-form">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-link p-0" style="border: none;"
-                                                title="Xoá">
-                                                <i class="fas fa-trash text-danger"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                @if ($course->quizzes->count() > 0)
+                                    @foreach ($course->quizzes as $index => $quizz)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $quizz->course_id }}</td>
+                                        <td>{{ $quizz->title }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($quizz->available_from)->format('d/m/Y') }}</td>
+                                        <td>{{ $quizz->user->fullname ?? 'N/A' }}</td>
+                                        <td style="padding: 1px 24px;">
+                                            <a href="{{route('questions.create', $quizz->id)}}" title="Tạo câu hỏi"><i
+                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('quizzes.destroy', $quizz->id) }}" method="POST" class="delete-form"
+                                                onsubmit="return confirm('Bạn có chắc muốn xoá bài thi này không?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link p-0" style="border: none;" title="Xoá">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="7">Chưa có bài thi nào thuộc khóa học này.</td>
+                                    </tr>
+                                @endif
                             </tbody>
                             
                         </table>
@@ -458,6 +467,169 @@
         </div>
     </div>
 </div>
+
+<div class="form-container" id="addForm">
+    <button class="closebtn" onclick="toggleForm()">X</button>
+    <h2 class="text-center">THÊM TÀI LIỆU</h2>
+
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <form method="POST" action="{{ route('course-materials.store') }}" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="course_id" value="{{ $course->id }}">
+    
+        <div class="form-group">
+            <label for="title">Tên tài liệu</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="description">Mô tả</label>
+            <textarea name="description" class="form-control"></textarea>
+        </div>
+    
+        <div class="form-group">
+            <label for="file">Tài liệu (file hoặc link)</label>
+            <div class="file-upload-container">
+                <div class="form-group">
+                    <input type="file" name="file" id="file" class="form-control-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar">
+                    <small class="form-text text-muted">Chấp nhận file: PDF, Word, Excel, PowerPoint, ZIP (Tối đa 10MB)</small>
+                </div>
+                <div class="or-separator">HOẶC</div>
+                <div class="form-group">
+                    <input type="url" name="file_url" class="form-control" placeholder="Nhập URL tài liệu">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="uploaded_by">Người tải</label>
+            <select name="uploaded_by" id="uploaded_by" class="form-control" required>
+                <option value="" disabled>-- Chọn giáo viên --</option>
+                @foreach ($teachers as $teacher)
+                    <option value="{{ $teacher->id }}">{{ $teacher->fullname }}</option>
+                @endforeach
+            </select>
+        </div>
+    
+        <div class="form-footer">
+            <button type="submit" class="save-btn">Lưu</button>
+        </div>
+    </form>
+    
+</div>
+
+<div class="form-container" id="addFormQuiz">
+    <button class="closebtn" onclick="toggleFormQuiz()">X</button>
+    <h2 class="text-center">THÊM BÀI THI</h2>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('quizzes.store') }}" method="POST">
+        @csrf
+
+        <input type="hidden" name="course_id" value="{{ $course->id }}">
+        <input type="hidden" name="uploaded_by" value="{{ auth()->id() }}">
+
+        <div class="form-group">
+            <label for="title">Tên bài thi</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="instructions">Hướng dẫn</label>
+            <textarea name="instructions" class="form-control" rows="3" placeholder="Nhập hướng dẫn nếu có..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Thời gian làm bài (phút)</label>
+            <input type="number" name="time_limit" class="form-control" min="1" value="30" required>
+        </div>
+
+        <div class="form-group">
+            <label>Điểm đạt (%)</label>
+            <input type="number" name="passing_score" class="form-control" min="0" max="100" value="70" required>
+        </div>
+
+        <div class="form-group">
+            <label>Số lần làm tối đa</label>
+            <input type="number" name="max_attempts" class="form-control" min="1" value="1">
+        </div>
+
+        <div class="form-group d-flex align-items-center gap-2">
+            <label>Xáo trộn câu hỏi?</label><br>
+                <span class="d-flex align-items-center" style="margin-bottom: 6px; display: inline-block; width: 27px;">
+                    <input style="padding: 6px" type="checkbox" class="form-check-input"
+                        id="is_shuffle_questions" name="is_shuffle_questions">
+                </span>
+                <label class="form-check-label fw-bold" for="is_shuffle_questions" style="color: black; display: contents">Có</label>
+        </div>
+
+        <div class="form-group">
+            <label>Thời gian mở bài thi</label>
+            <input type="datetime-local" name="available_from" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Thời gian đóng bài thi</label>
+            <input type="datetime-local" name="available_to" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tạo bài thi</button>
+        <a href="{{ route('course.detail', $course->id) }}" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>
+
+<script>
+    function toggleForm() {
+        var form = document.getElementById("addForm");
+        var overlay = document.getElementById("overlay");
+        var mainContent = document.getElementById("mainContent");
+
+        if (form.classList.contains("active")) {
+            form.classList.remove("active");
+            overlay.classList.remove("active");
+        } else {
+            form.classList.add("active");
+            overlay.classList.add("active");
+            mainContent.style.filter = "blur(5px)";
+        }
+    }
+</script>
+
+<script>
+    function toggleFormQuiz() {
+        var form = document.getElementById("addFormQuiz");
+        var overlay = document.getElementById("overlay");
+        var mainContent = document.getElementById("mainContent");
+
+        if (form.classList.contains("active")) {
+            form.classList.remove("active");
+            overlay.classList.remove("active");
+        } else {
+            form.classList.add("active");
+            overlay.classList.add("active");
+            mainContent.style.filter = "blur(5px)";
+        }
+    }
+</script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const tabItems = document.querySelectorAll(".tab-item");
@@ -479,33 +651,13 @@
             imageInput.click();
         });
     });
-
-    document.querySelectorAll(".image-input").forEach((input) => {
-        input.addEventListener("change", function() {
-            let file = this.files[0];
-            if (file) {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                    let imagePreview = this.closest(".image-box").querySelector(".image-preview");
-                    imagePreview.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-
-    document.querySelectorAll(".delete-icon").forEach((icon) => {
-        icon.addEventListener("click", function(event) {
-            event.stopPropagation();
-            this.closest(".image-box").remove();
-        });
-    });
 </script>
 
 <script>
     document.getElementById('edit-btn').addEventListener('click', function () {
         // Kích hoạt các input và textarea
-        var inputs = document.querySelectorAll('#edit-form input:not([type=button]), #edit-form textarea');
+        var inputs = document.querySelectorAll('#edit-form input:not([type=button]), #edit-form textarea, #edit-form select' );
+        
         inputs.forEach(function(input) {
             input.disabled = false;
         });
@@ -514,4 +666,30 @@
         document.getElementById('save-btn').style.display = 'inline-block';
         this.style.display = 'none';
     });
-    </script>
+
+    document.getElementById('save-btn').addEventListener('click', function () {
+    // Sau khi submit, disable lại tất cả input
+        setTimeout(() => {
+            const inputs = document.querySelectorAll('#edit-form input, #edit-form textarea');
+            inputs.forEach(input => {
+                if (input.type !== 'button') {
+                    input.disabled = true;
+                }
+            });
+            document.getElementById('edit-btn').style.display = 'inline-block';
+            this.style.display = 'none';
+        }, 500);
+    });
+</script>
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+    const fileInput = document.getElementById('file');
+    const urlInput = document.querySelector('input[name="file_url"]');
+    
+    if (!fileInput.files.length && !urlInput.value.trim()) {
+        e.preventDefault();
+        alert('Vui lòng chọn file hoặc nhập URL tài liệu');
+    }
+});
+</script>
+

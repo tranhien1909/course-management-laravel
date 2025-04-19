@@ -354,6 +354,7 @@
 
 <div class="wrapper wrapper-content">
     <div class="row">
+        <div class="overlay" id="overlay" onclick="toggleForm()" onclick="toggleFormQuizz()"></div>
         <div class="row wrapper border-bottom white-bg page-heading" style="margin-left: -9px; margin-bottom: 20px;">
             <div class="col-lg-10">
                 <ol class="breadcrumb">
@@ -445,28 +446,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($class->course->courseMaterials as $material)
-                                        @php
-                                            $teacher = $material->teacher;
-                                            $user = $teacher ? $teacher->user : null; // Kiểm tra nếu có giáo viên phụ trách
-                                        @endphp
+                                    @if ($class->course->courseMaterials->count() > 0)
+                                        @foreach ($class->course->courseMaterials as $material)
+                                            @php
+                                                $teacher = $material->teacher;
+                                                $user = $teacher ? $teacher->user : null; // Kiểm tra nếu có giáo viên phụ trách
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>
+                                                    <a href="{{ Str::startsWith($material->file_url, 'http') ? $material->file_url : asset('storage/' . $material->file_url) }}"
+                                                        target="_blank">
+                                                        {{ $material->title }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ $class->user->fullname ?? 'N/A' }}</td>
+                                                <td>{{ $material->created_at->format('d/m/Y') }}</td>
+                                                <td>Đã duyệt</td>
+                                                <td>
+                                                    <a href="#"><i class="fas fa-trash text-danger"
+                                                            title="Xoá"></i></a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>
-                                                <a href="{{ Str::startsWith($material->file_url, 'http') ? $material->file_url : asset('storage/' . $material->file_url) }}"
-                                                    target="_blank">
-                                                    {{ $material->title }}
-                                                </a>
-                                            </td>
-                                            <td>{{ $class->user->fullname ?? 'N/A' }}</td>
-                                            <td>{{ $material->created_at->format('d/m/Y') }}</td>
-                                            <td>Đã duyệt</td>
-                                            <td>
-                                                <a href="#"><i class="fas fa-trash text-danger"
-                                                        title="Xoá"></i></a>
-                                            </td>
+                                            <td colspan="6">Chưa có tài liệu</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
 
@@ -477,7 +484,7 @@
                 </div>
                 <div id="tab3" class="tab-content">
                     <div class="filter-bar">
-                        <button class="add-btn" onclick="toggleForm()">+ Thêm Bài thi</button>
+                        <button class="add-btn" onclick="toggleFormQuiz()">+ Thêm Bài thi</button>
                     </div>
                     <div class="table-responsive">
                         <table>
@@ -492,29 +499,36 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($class->course->exams as $index => $exam)
+                                @if ($class->course->quizzes->count() > 0)
+                                    @foreach ($class->course->quizzes as $index => $quizz)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $quizz->course_id }}</td>
+                                            <td>{{ $quizz->title }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($quizz->available_from)->format('d/m/Y') }}
+                                            </td>
+                                            <td>{{ $quizz->user->fullname ?? 'N/A' }}</td>
+                                            <td style="padding: 1px 24px;">
+                                                <a href="{{ route('questions.create', $quizz->id) }}"
+                                                    title="Tạo câu hỏi"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            </td>
+                                            <td>
+                                                <form action="#" method="POST" class="delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-link p-0"
+                                                        style="border: none;" title="Xoá">
+                                                        <i class="fas fa-trash text-danger"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $exam->course_id }}</td>
-                                        <td>{{ $exam->name }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($exam->exam_date)->format('d/m/Y') }}</td>
-                                        <td>{{ $exam->user->fullname ?? 'N/A' }}</td>
-                                        <td style="padding: 1px 24px;">
-                                            <a href="#" title="Nhập điểm"><i
-                                                    class="fa-solid fa-pen-to-square"></i></a>
-                                        </td>
-                                        <td>
-                                            <form action="#" method="POST" class="delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-link p-0" style="border: none;"
-                                                    title="Xoá">
-                                                    <i class="fas fa-trash text-danger"></i>
-                                                </button>
-                                            </form>
-                                        </td>
+                                        <td colspan="7">Chưa có tài liệu</td>
                                     </tr>
-                                @endforeach
+                                @endif
                             </tbody>
 
                         </table>
@@ -523,21 +537,129 @@
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <div id="edit-form" class="edit-form">
-            <span class="close">&times;</span>
-            <p>CHỈNH SỬA LỊCH HỌC</p>
-            <input type="hidden" id="edit-row-index">
-            <input type="text" id="edit-buoi-hoc" placeholder="Buổi học">
-            <input type="text" id="edit-noi-dung" placeholder="Nội dung">
-            <input type="date" id="edit-ngay-day" placeholder="Ngày dạy">
-            <input type="text" id="edit-thoi-gian" placeholder="Thời gian (hh:mm - hh:mm)">
-            <textarea id="edit-phong-hoc" placeholder="Phòng học"></textarea>
-            <button onclick="">Lưu</button>
+<div class="form-container" id="addForm">
+    <button class="closebtn" onclick="toggleForm()">X</button>
+    <h2 class="text-center">THÊM TÀI LIỆU</h2>
+
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <form method="POST" action="{{ route('course-materials.store') }}" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="course_id" value="{{ $class->course_id }}">
+        <input type="hidden" name="uploaded_by" value="{{ auth()->id() }}">
+
+
+        <div class="form-group">
+            <label for="title">Tên tài liệu</label>
+            <input type="text" name="title" class="form-control" required>
         </div>
 
-    </div>
+        <div class="form-group">
+            <label for="description">Mô tả</label>
+            <textarea name="description" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="file">Tài liệu (file hoặc link)</label>
+            <div class="file-upload-container">
+                <div class="form-group">
+                    <input type="file" name="file" id="file" class="form-control-file"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar">
+                    <small class="form-text text-muted">Chấp nhận file: PDF, Word, Excel, PowerPoint, ZIP (Tối đa
+                        10MB)</small>
+                </div>
+                <div class="or-separator">HOẶC</div>
+                <div class="form-group">
+                    <input type="url" name="file_url" class="form-control" placeholder="Nhập URL tài liệu">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" class="save-btn">Lưu</button>
+        </div>
+    </form>
+
+</div>
+
+<div class="form-container" id="addFormQuiz">
+    <button class="closebtn" onclick="toggleFormQuiz()">X</button>
+    <h2 class="text-center">THÊM BÀI THI</h2>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('quizzes.store') }}" method="POST">
+        @csrf
+
+        <input type="hidden" name="course_id" value="{{ $class->course_id }}">
+        <input type="hidden" name="uploaded_by" value="{{ auth()->id() }}">
+
+        <div class="form-group">
+            <label for="title">Tên bài thi</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="instructions">Hướng dẫn</label>
+            <textarea name="instructions" class="form-control" rows="3" placeholder="Nhập hướng dẫn nếu có..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Thời gian làm bài (phút)</label>
+            <input type="number" name="time_limit" class="form-control" min="1" value="30" required>
+        </div>
+
+        <div class="form-group">
+            <label>Điểm đạt (%)</label>
+            <input type="number" name="passing_score" class="form-control" min="0" max="100"
+                value="70" required>
+        </div>
+
+        <div class="form-group">
+            <label>Số lần làm tối đa</label>
+            <input type="number" name="max_attempts" class="form-control" min="1" value="1">
+        </div>
+
+        <div class="form-group d-flex align-items-center gap-2">
+            <label>Xáo trộn câu hỏi?</label><br>
+            <span class="d-flex align-items-center" style="margin-bottom: 6px; display: inline-block; width: 27px;">
+                <input style="padding: 6px" type="checkbox" class="form-check-input" id="is_shuffle_questions"
+                    name="is_shuffle_questions">
+            </span>
+            <label class="form-check-label fw-bold" for="is_shuffle_questions"
+                style="color: black; display: contents">Có</label>
+        </div>
+
+        <div class="form-group">
+            <label>Thời gian mở bài thi</label>
+            <input type="datetime-local" name="available_from" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Thời gian đóng bài thi</label>
+            <input type="datetime-local" name="available_to" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tạo bài thi</button>
+    </form>
 </div>
 
 
@@ -555,5 +677,51 @@
                 document.getElementById(this.dataset.tab).classList.add("active");
             });
         });
+    });
+</script>
+
+<script>
+    function toggleForm() {
+        var form = document.getElementById("addForm");
+        var overlay = document.getElementById("overlay");
+        var mainContent = document.getElementById("mainContent");
+
+        if (form.classList.contains("active")) {
+            form.classList.remove("active");
+            overlay.classList.remove("active");
+        } else {
+            form.classList.add("active");
+            overlay.classList.add("active");
+            mainContent.style.filter = "blur(5px)";
+        }
+    }
+</script>
+
+<script>
+    function toggleFormQuiz() {
+        var form = document.getElementById("addFormQuiz");
+        var overlay = document.getElementById("overlay");
+        var mainContent = document.getElementById("mainContent");
+
+        if (form.classList.contains("active")) {
+            form.classList.remove("active");
+            overlay.classList.remove("active");
+        } else {
+            form.classList.add("active");
+            overlay.classList.add("active");
+            mainContent.style.filter = "blur(5px)";
+        }
+    }
+</script>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const fileInput = document.getElementById('file');
+        const urlInput = document.querySelector('input[name="file_url"]');
+
+        if (!fileInput.files.length && !urlInput.value.trim()) {
+            e.preventDefault();
+            alert('Vui lòng chọn file hoặc nhập URL tài liệu');
+        }
     });
 </script>

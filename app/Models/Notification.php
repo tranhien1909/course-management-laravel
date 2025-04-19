@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
+    protected $table = 'notifications'; // Tên bảng trong cơ sở dữ liệu
+
     protected $fillable = ['title', 'message', 'type', 'sender_id'];
 
     public function targets()

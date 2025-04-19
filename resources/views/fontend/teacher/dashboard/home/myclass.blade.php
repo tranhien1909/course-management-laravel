@@ -21,7 +21,7 @@
             <div class="filter-bar">
 
                 <div class="search-container">
-                    <form action="{{ route('course.index') }}" method="GET">
+                    <form action="{{ route('teacher.class') }}" method="GET">
                         <input type="text" name="search" class="form-control"
                             placeholder="Tìm kiếm theo mã hoặc tên lớp học" value="{{ request('search') }}">
                         <button type="submit" class="search-icon"

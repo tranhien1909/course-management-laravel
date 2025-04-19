@@ -48,6 +48,41 @@
         margin-bottom: 15px;
         font-size: 15px;
     }
+
+    .image-actions {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        display: flex;
+        gap: 5px;
+    }
+
+    .image-input {
+        display: none !important;
+    }
+
+    .image-actions .edit-icon {
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 2px 5px;
+        font-size: 12px;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-left: 15px;
+    }
+
+    .button-container button {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .save-button {
+        background-color: #3b6db3;
+        color: white;
+        margin-bottom: 30px;
+    }
 </style>
 
 <div class="wrapper wrapper-content">
@@ -78,86 +113,119 @@
             <div class="tab-content-container">
                 <!-- Tab Thông Tin Giáo Viên -->
                 <div class="tab-content active" id="info">
-                    <!-- Cột ảnh giáo viên -->
-                    <div class="col-md-3">
-                        <div class="thumbnail">
-                            <img src="{{ $teacher->user->avatar }}" alt="Ảnh Giáo Viên" class="img-responsive">
-                        </div>
-                        <button class="btn btn-default btn-block">{{ $teacher->id }}</button>
-                    </div>
-
-                    <!-- Cột thông tin giáo viên -->
-                    <div class="col-md-9">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="teacher_name">Họ và tên:</label>
-                                <input type="text" id="teacher_name" class="form-control" placeholder="Họ và tên"
-                                    value="{{ $teacher->user->fullname }}" disabled>
+                    <form id="edit-form" method="POST" action="{{ route('teacher.update', $teacher->id) }}"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <!-- Cột ảnh giáo viên -->
+                        <div class="col-md-3">
+                            <div class="thumbnail image-box">
+                                <div class="image-actions">
+                                    <span class="edit-icon"><i class="fa-solid fa-wrench"></i></span>
+                                </div>
+                                <input name="image" type="file" class="image-input" accept="image/*">
+                                <img src="{{ asset('storage/' . $teacher->user->avatar) }}" alt="Ảnh Giáo Viên"
+                                    class="img-responsive">
                             </div>
-                            <div class="col-md-3">
-                                <label for="birthday">Ngày sinh:</label>
-                                <input type="date" id="birthday" class="form-control" placeholder="Ngày sinh"
-                                    value="{{ date('Y-m-d', strtotime($teacher->user->birthday)) }}" disabled>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="gender">Giới tính:</label>
-                                <input type="text" id="gender" class="form-control" placeholder="Giới tính"
-                                    value="{{ $teacher->user->gender }}" disabled>
-                            </div>
+                            <button class="btn btn-default btn-block">{{ $teacher->id }}</button>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="email">Email:</label>
-                                <input type="email" id="email" class="form-control" placeholder="Email"
-                                    value="{{ $teacher->user->email }}" disabled>
+                        <!-- Cột thông tin giáo viên -->
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="teacher_name">Họ và tên:</label>
+                                    <input name="teacher_name" type="text" id="teacher_name" class="form-control"
+                                        placeholder="Họ và tên" value="{{ $teacher->user->fullname }}" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="birthday">Ngày sinh:</label>
+                                    <input name="birthday" type="date" id="birthday" class="form-control"
+                                        placeholder="Ngày sinh"
+                                        value="{{ date('Y-m-d', strtotime($teacher->user->birthday)) }}" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="gender">Giới tính:</label>
+                                    <select name="gender" id="gender" disabled style="width: 100%; height: 35px;">
+                                        <option value="{{ $teacher->user->gender }}" selected>
+                                            {{ $teacher->user->gender }}</option>
+                                        @foreach (['Nam', 'Nữ'] as $gender)
+                                            <option value="{{ $gender }}">
+                                                {{ $gender }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="expertise">Học vấn:</label>
-                                <input type="text" id="expertise" class="form-control" placeholder="Học vấn"
-                                    value="{{ $teacher->expertise }}" disabled>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" class="form-control" readonly
+                                        placeholder="Email" value="{{ $teacher->user->email }}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="expertise">Học vấn:</label>
+                                    <input name="expertise" type="text" id="expertise" class="form-control"
+                                        placeholder="Học vấn" value="{{ $teacher->expertise }}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="address">Địa chỉ:</label>
+                                    <input name="address" type="text" id="address" class="form-control"
+                                        placeholder="Address" value="{{ $teacher->user->address }}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="joining_date">Ngày vào làm:</label>
+                                    <input type="date" id="joining_date" class="form-control"
+                                        placeholder="Ngày vào làm" readonly
+                                        value="{{ date('Y-m-d', strtotime($teacher->joining_date)) }}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="phone">Số điện thoại:</label>
+                                    <input name="phone" type="number" id="phone" class="form-control"
+                                        placeholder="Phone" value="{{ $teacher->user->phone }}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="status">Trạng thái:</label>
+                                    <select name="status" id="status" disabled
+                                        style="width: 100%; height: 35px;">
+                                        <option value="{{ $teacher->status }}" selected>{{ $teacher->status }}
+                                        </option>
+                                        @foreach (['Active', 'Inactive'] as $status)
+                                            <option value="{{ $status }}">
+                                                {{ $status }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="bio">Mô tả:</label>
+                                    <textarea name="bio" id="bio" class="form-control" disabled>{{ $teacher->bio }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <div class="button-container">
+                                        <button type="button" class="save-button" id="edit-btn">Sửa</button>
+                                        <button type="submit" class="save-button" id="save-btn"
+                                            style="display:none;">Lưu</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="address">Địa chỉ:</label>
-                                <input type="text" id="address" class="form-control" placeholder="Address"
-                                    value="{{ $teacher->user->address }}" disabled>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="joining_date">Ngày vào làm:</label>
-                                <input type="date" id="joining_date" class="form-control" placeholder="Ngày vào làm"
-                                    value="{{ date('Y-m-d', strtotime($teacher->joining_date)) }}" disabled>
-                            </div>
-                        </div>
+                    </form>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="phone">Số điện thoại:</label>
-                                <input type="number" id="phone" class="form-control" placeholder="Phone"
-                                    value="{{ $teacher->user->phone }}" disabled>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="status">Trạng thái:</label>
-                                <input type="text" id="status" class="form-control" placeholder="Trạng thái"
-                                    value="{{ $teacher->status }}" disabled>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="bio">Mô tả:</label>
-                                <textarea id="bio" class="form-control" disabled>{{ $teacher->bio }}</textarea>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12 text-right">
-                                <button class="btn btn-success">Sửa</button>
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
 
@@ -165,28 +233,6 @@
                 <div id="schedule" class="tab-content">
                     <input type="date" id="datePicker" value="{{ now()->toDateString() }}">
                     <input type="hidden" id="teacherId" value="{{ $teacher->id }}">
-                    {{-- <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>Ngày dạy</th>
-                                <th>Buổi học</th>
-                                <th>Giờ học</th>
-                                <th>Lớp học</th>
-                                <th>Ghi chú</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>10/03/2024</td>
-                                <td>Buổi 1</td>
-                                <td>8:00 - 10:00</td>
-                                <td>Toán 12 - Lớp A1</td>
-                                <td>Chuẩn bị bài tập chương 1</td>
-                            </tr>
-                        </tbody>
-                    </table> --}}
 
                     <div id="scheduleContainer">
                         @include('backend.dashboard.component.weekly_schedule', [
@@ -217,6 +263,27 @@
             });
         });
     });
+
+    document.querySelectorAll(".edit-icon").forEach((icon) => {
+        icon.addEventListener("click", function() {
+            let imageInput = this.closest(".image-box").querySelector(".image-input");
+            imageInput.click();
+        });
+    });
+
+    // Xem trước ảnh
+    document.querySelectorAll(".image-input").forEach((input) => {
+        input.addEventListener("change", function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.nextElementSibling.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
 </script>
 
 <script>
@@ -230,5 +297,35 @@
                 document.getElementById('scheduleContainer').innerHTML = data.html;
             })
             .catch(error => console.error('Error:', error));
+    });
+</script>
+
+<script>
+    document.getElementById('edit-btn').addEventListener('click', function() {
+        // Kích hoạt các input và textarea
+        var inputs = document.querySelectorAll(
+            '#edit-form input:not([type=button]), #edit-form textarea, #edit-form select');
+
+        inputs.forEach(function(input) {
+            input.disabled = false;
+        });
+
+        // Hiện nút Lưu
+        document.getElementById('save-btn').style.display = 'inline-block';
+        this.style.display = 'none';
+    });
+
+    document.getElementById('save-btn').addEventListener('click', function() {
+        // Sau khi submit, disable lại tất cả input
+        setTimeout(() => {
+            const inputs = document.querySelectorAll('#edit-form input, #edit-form textarea');
+            inputs.forEach(input => {
+                if (input.type !== 'button') {
+                    input.disabled = true;
+                }
+            });
+            document.getElementById('edit-btn').style.display = 'inline-block';
+            this.style.display = 'none';
+        }, 500);
     });
 </script>

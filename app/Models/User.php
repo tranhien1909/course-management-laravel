@@ -15,7 +15,7 @@ use App\Models\ClassSchedule;
 use App\Models\Payment;
 use App\Models\Attendance;
 use App\Models\CourseMaterial;
-use App\Models\Exam;
+use App\Models\Quizz;
 
 
 class User extends Authenticatable

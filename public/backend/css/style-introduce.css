@@ -411,7 +411,7 @@
   
   .contact .row form .box:focus {
     border-color: var(--blue);
-    color: #fff;
+    color: black
   }
   
   .contact .row form textarea {

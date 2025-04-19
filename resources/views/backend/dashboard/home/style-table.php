@@ -248,4 +248,36 @@
         margin-top: 10px;
         cursor: pointer;
     }
+
+    .form-container {
+        min-height: 500px;
+        overflow-x: auto;
+    }
+
+    .file-upload-container {
+    margin-bottom: 20px;
+}
+
+    .or-separator {
+        text-align: center;
+        margin: 10px 0;
+        font-weight: bold;
+        color: #666;
+        position: relative;
+    }
+
+    .or-separator::before,
+    .or-separator::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #ddd;
+        margin: auto 10px;
+    }
+
+    .form-control-file {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+    }
 </style>

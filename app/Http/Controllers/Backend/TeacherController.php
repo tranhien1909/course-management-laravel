@@ -23,6 +23,9 @@ class TeacherController extends Controller
     }
 
     public function index(Request $request) {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
 
         $search = $request->input('search');
 
@@ -36,7 +39,7 @@ class TeacherController extends Controller
             ->paginate(5);
 
         $template = 'backend.dashboard.home.qlgiangvien';
-        return view('backend.dashboard.layout', compact('template', 'teachers'));
+        return view('backend.dashboard.layout', compact('thongKe', 'template', 'teachers'));
     }
 
     public function detail($id)
@@ -71,9 +74,17 @@ class TeacherController extends Controller
             }
 
             // Xử lý avatar
-            $avatarPath = $request->hasFile('avatar') 
-            ? $request->file('avatar')->store('avatars', 'public') 
-            : null;
+            $avatarPath = null;
+
+            if ($request->hasFile('image')) {
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            } elseif ($request->filled('avatar_temp')) {
+                // Di chuyển ảnh từ thư mục temp sang thư mục avatars
+                $tempPath = storage_path('app/public/' . $request->input('avatar_temp'));
+                $newPath = 'avatars/' . basename($tempPath);
+                Storage::disk('public')->move($request->input('avatar_temp'), $newPath);
+                $avatarPath = $newPath;
+            }
 
             // Tạo user
             $user = User::create([
@@ -134,6 +145,58 @@ class TeacherController extends Controller
             } catch (\Exception $e) {
                 return redirect()->route('teacher.index')->with('error', 'Không thể xoá giảng viên');
             }
+        }
+
+        public function update(Request $request, $id)
+        {
+            $teacher = Teacher::findOrFail($id);
+            $user = User::findOrFail($teacher->user_id);
+        
+            $request->validate([
+                'teacher_name' => 'required|string|max:255',
+                'birthday' => 'required|date',
+                'gender' => 'required',
+                'expertise' => 'nullable|string',
+                'bio' => 'nullable|string',
+                'address' => 'nullable|string',
+                'phone' => 'required|numeric',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            ]);
+        
+            $user->fullname = $request->teacher_name;
+            $user->birthday = $request->birthday;
+            $user->gender = $request->gender;
+            $user->address = $request->address;
+            $user->updated_at = now();
+            $user->phone = $request->phone;
+            $teacher->expertise = $request->expertise;
+            $teacher->bio = $request->bio;
+            $teacher->status = $request->status;
+        
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('public/avatars', $filename); // lưu đúng chỗ
+                $user->avatar = 'avatars/' . $filename;
+            }
+        
+            $user->save();
+            $teacher->save();
+        
+            return redirect()->back()->with('success', 'Cập nhật giáo viên thành công!');
+        }
+
+        public function uploadTempImage(Request $request)
+        {
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+    
+            $path = $request->file('image')->store('temp', 'public');
+            
+            return response()->json([
+                'path' => $path
+            ]);
         }
 
     public function exportPDF()

@@ -137,8 +137,7 @@
         display: flex;
         justify-content: flex-end;
         gap: 10px;
-        margin-top: 35px;
-        margin-right: 10px;
+        margin-top: 57px;
         margin-bottom: -20px;
     }
 
@@ -300,38 +299,59 @@
             </div>
 
             <div class="tab-content-container">
-                <div id="tab1" class="tab-content active">
-                    <div class="thongtinchung">
-                        <div class="left">
-                            <label for="class-id">Mã lớp học:</label>
-                            <input type="text" id="class-id" placeholder="Mã lớp học" value="{{ $class->id }}"
-                                disabled>
-                            <label for="teacher_name">Giáo viên phụ trách:</label>
-                            <input type="text" id="teacher_name" placeholder="GV phụ trách"
-                                value="{{ $class->user->fullname ?? 'N/A' }}" disabled>
-                            <label for="course-name">Tên khóa học:</label>
-                            <textarea id="course-name" rows="2" placeholder="Tên khoá học" disabled>{{ $class->course->course_name ?? 'N/A' }}</textarea>
-                            <label for="description">Mô tả:</label>
-                            <textarea id="description" rows="4" placeholder="Mô tả" value="{{ $class->description }}" disabled></textarea>
-                        </div>
-                        <div class="right">
+                <div id="tab1" class="tab-content active" style="min-height: 80vh;">
+                    <div class="ibox-content">
+                        <form id="edit-form" method="POST" action="{{ route('class.update', $class->id) }}"
+                            enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="col-md-6">
+                                <label for="class_id">Mã lớp học:</label>
+                                <input name="class_id" type="text" id="class-id" placeholder="Mã lớp học"
+                                    value="{{ $class->id }}" disabled>
+                                <label for="teacher_id" style="margin-top: 36px;">Giáo viên phụ trách:</label>
+                                <select name="teacher_id" id="teacher_id" disabled style="width: 100%; height: 43px;">
+                                    <option value="{{ $class->user->fullname }}" selected>{{ $class->user->fullname }}
+                                    </option>
+                                    @foreach ($teachers as $teacher)
+                                        <option value="{{ $teacher->id }}">
+                                            {{ $teacher->fullname }}</option>
+                                    @endforeach
+                                </select>
 
-                            <label for="start-date"><strong>Ngày bắt đầu:</strong></label>
-                            <input type="date" id="start-date"
-                                value="{{ \Carbon\Carbon::parse($class->start_date)->format('Y-m-d') }}" disabled>
-                            <label for="teacher_name">Sĩ số:</label>
-                            <input type="number" id="number_of_student" placeholder="Sĩ số"
-                                value="{{ $class->number_of_student }}" disabled>
-                            <label for="room">Phòng học:</label>
-                            <input type="text" id="time" placeholder="Thời Gian Học">
-                            <label for="status">Trạng thái:</label>
-                            <input type="text" id="status" placeholder="Trạng thái" value="{{ $class->status }}"
-                                disabled>
-                        </div>
+                                <label for="course_name">Tên khóa học:</label>
+                                <input id="course-name" placeholder="Tên khoá học" disabled
+                                    value="{{ $class->course->course_name ?? 'N/A' }}" readonly>
+                                <label for="room">Phòng học:</label>
+                                <input name="room" type="text" id="time" value="{{ $class->room }}"
+                                    placeholder="Phòng Học" disabled>
+                            </div>
+                            <div class="col-md-6">
+
+                                <label for="start_date"><strong>Ngày bắt đầu:</strong></label>
+                                <input name="start_date" type="date" id="start-date"
+                                    value="{{ \Carbon\Carbon::parse($class->start_date)->format('Y-m-d') }}" disabled>
+                                <label for="number_of_student">Sĩ số:</label>
+                                <input name="number_of_student" type="number" id="number_of_student"
+                                    placeholder="Sĩ số" value="{{ $class->number_of_student }}" disabled readonly>
+                                <label for="status">Trạng thái:</label>
+                                <select name="status" id="status" disabled style="width: 100%; height: 43px;">
+                                    <option value="{{ $class->status }}" selected>{{ $class->status }}</option>
+                                    @foreach (['Active', 'Inactive'] as $status)
+                                        <option value="{{ $status }}">
+                                            {{ $status }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="button-container">
+                                    <button type="button" class="save-button" id="edit-btn">Sửa</button>
+                                    <button type="submit" class="save-button" id="save-btn"
+                                        style="display:none;">Lưu</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="button-container">
-                        <button class="save-button">Sửa</button>
-                    </div>
+
                 </div>
                 <div id="tab2" class="tab-content">
                     <div class="filter-bar">
@@ -392,7 +412,8 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="#"><i class="fa-solid fa-trash" title="Xoá"></i></a>
+                                                <a href="#"><i class="fa-solid fa-trash"
+                                                        title="Xoá"></i></a>
                                             </td>
                                         </tr>
                                     @endif
@@ -446,50 +467,6 @@
             });
         });
 
-        // Mở form chỉnh sửa khi nhấn nút "Sửa"
-        editBtn.addEventListener("click", () => {
-            if (document.querySelector(".row-checkbox:checked")) {
-                editForm.classList.add("active");
-                loadEditData();
-            }
-        });
-
-        // Đóng form khi nhấn dấu "×"
-        closeButton.addEventListener("click", () => editForm.classList.remove("active"));
-
-        // Lưu chỉnh sửa
-        document.querySelector("#edit-form button").addEventListener("click", () => {
-            alert("Lưu thông tin thành công!");
-            editForm.classList.remove("active");
-        });
-
-        // Cập nhật các nút "Sửa" và "Xóa" khi chọn checkbox
-        function updateButtons() {
-            let selectedRows = document.querySelectorAll(".row-checkbox:checked");
-            editBtn.style.display = selectedRows.length === 1 ? "inline-block" : "none";
-            deleteBtn.style.display = selectedRows.length > 0 ? "inline-block" : "none";
-
-            if (selectedRows.length === 1) loadEditData();
-        }
-
-        // Lấy dữ liệu từ hàng được chọn
-        function loadEditData() {
-            let row = document.querySelector(".row-checkbox:checked")?.closest("tr");
-            if (row) {
-                document.getElementById("edit-buoi-hoc").value = row.cells[2].textContent.trim();
-                document.getElementById("edit-noi-dung").value = row.cells[3].textContent.trim();
-                let ngayDay = row.cells[4].textContent.trim().split("/"); // Tách ngày theo dấu "/"
-                document.getElementById("edit-ngay-day").value =
-                    `${ngayDay[2]}-${ngayDay[1]}-${ngayDay[0]}`; // Định dạng lại thành yyyy-mm-dd
-
-                document.getElementById("edit-thoi-gian").value = row.cells[5].textContent.trim();
-                document.getElementById("edit-phong-hoc").value = row.cells[6].textContent.trim();
-            }
-        }
-
-        // Gọi updateButtons() khi checkbox thay đổi
-        document.querySelectorAll(".row-checkbox").forEach(checkbox => checkbox.addEventListener("change",
-            updateButtons));
     });
 
     function approve(id) {
@@ -515,20 +492,6 @@
                 deleteBtn.style.display = "none";
             }
         }
-
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", function() {
-                updateButtons();
-                allCheckbox.checked = checkboxes.length === document.querySelectorAll(
-                    ".checkbox:checked").length;
-            });
-        });
-        allCheckbox.addEventListener("change", function() {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = allCheckbox.checked;
-            });
-            updateButtons();
-        });
     });
 </script>
 
@@ -543,5 +506,35 @@
                 document.getElementById('scheduleContainer').innerHTML = data.html;
             })
             .catch(error => console.error('Error:', error));
+    });
+</script>
+
+<script>
+    document.getElementById('edit-btn').addEventListener('click', function() {
+        // Kích hoạt các input và textarea
+        var inputs = document.querySelectorAll(
+            '#edit-form input:not([type=button]), #edit-form textarea, #edit-form select');
+
+        inputs.forEach(function(input) {
+            input.disabled = false;
+        });
+
+        // Hiện nút Lưu
+        document.getElementById('save-btn').style.display = 'inline-block';
+        this.style.display = 'none';
+    });
+
+    document.getElementById('save-btn').addEventListener('click', function() {
+        // Sau khi submit, disable lại tất cả input
+        setTimeout(() => {
+            const inputs = document.querySelectorAll('#edit-form input, #edit-form textarea');
+            inputs.forEach(input => {
+                if (input.type !== 'button') {
+                    input.disabled = true;
+                }
+            });
+            document.getElementById('edit-btn').style.display = 'inline-block';
+            this.style.display = 'none';
+        }, 500);
     });
 </script>

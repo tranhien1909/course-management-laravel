@@ -176,12 +176,21 @@
 <section class="contact" id="contact">
     <h1 class="heading"><span>contact</span> us</h1>
     <div class="row">
-        <form action="">
-            <input type="text" name="" id="" placeholder="name" class="box">
-            <input type="email" name="" id="" placeholder="email" class="box">
-            <input type="number" name="" id="" placeholder="number" class="box">
-            <textarea name="" id="" placeholder="message" cols="30" rows="10" class="box"></textarea>
-            <input type="submit" value="send message" class="btn">
+        <form action="{{ route('consultations.store') }}" method="POST">
+            @csrf
+            <input type="text" name="fullname" id="" placeholder="Họ tên" class="box">
+            <input type="email" name="email" id="" placeholder="Email" class="box">
+            <input type="number" name="phone" id="" placeholder="Số điện thoại" class="box">
+            <select name="course_interested" id="course_interested" class="box" required>
+                <option value="" disabled selected>--Chọn khoá học cần tư vấn--</option>
+                @foreach ($tuvans as $tuvan)
+                    <option value="{{ $tuvan->id }}" {{ old('course_interested') == $tuvan->id ? 'selected' : '' }}>
+                        {{ $tuvan->course_name }}</option>
+                @endforeach
+            </select>
+            <textarea name="message" id="" placeholder="Nội dung tư vấn" cols="30" rows="10"
+                class="box"></textarea>
+            <input type="submit" value="send message" class="btn btn-success" style="font-size: 13px;">
         </form>
 
         <div class="image">
@@ -190,3 +199,16 @@
     </div>
 </section>
 <!-- contact section ends -->
+
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const phoneInput = document.getElementById('phone');
+        const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+
+        if (!phoneRegex.test(phoneInput.value)) {
+            e.preventDefault();
+            alert('Vui lòng nhập số điện thoại hợp lệ');
+            phoneInput.focus();
+        }
+    });
+</script>

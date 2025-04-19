@@ -27,10 +27,19 @@ class TeacherDashboardController extends Controller
 
     }
 
-    public function myClass()
+    public function myClass(Request $request)
     {
+        $search = $request->input('search');
+
         $user = Auth::user();
-        $classes = $user->classes()->with(['course', 'user'])->get();
+        $classes = $user->classes()->with(['course', 'user'])
+        ->when($search, function ($query, $search) {
+            $query->where('id', 'like', "%$search%")
+                  ->orWhereHas('course', function ($q) use ($search) {
+                      $q->where('course_name', 'like', "%$search%");
+                  });
+        })
+        ->get();
         $template = 'fontend.teacher.dashboard.home.myclass';
     
         return view('fontend.teacher.dashboard.layout', compact('template', 'classes'));
@@ -42,7 +51,7 @@ class TeacherDashboardController extends Controller
         $user = Auth::user();
         // Lấy lớp học với các quan hệ cần thiết
         $class = Classroom::with([
-            'course',                               // Tên khóa học
+            'course.quizzes',                               // Tên khóa học
             'user',                                 // Giảng viên phụ trách
             'enrollments.student', 
             'classSchedules'

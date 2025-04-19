@@ -15,10 +15,13 @@ class NotificationTargetController extends Controller
     }
 
     public function index() {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
 
         $template = 'backend.dashboard.home.qlthuchi';
         $payments = Payment::all();
-        return view('backend.dashboard.layout', compact('template', 'payments'));
+        return view('backend.dashboard.layout', compact('thongKe', 'template', 'payments'));
     }
 
 

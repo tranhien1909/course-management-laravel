@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('file_url');
-            $table->enum('file_type', ['pdf', 'video', 'slide', 'document', 'other']);
             $table->foreignId('uploaded_by')->constrained('teachers')->onDelete('cascade');
             $table->timestamps();
 

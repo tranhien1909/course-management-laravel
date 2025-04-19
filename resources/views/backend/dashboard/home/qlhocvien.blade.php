@@ -81,7 +81,8 @@
                                         </td>
                                         <td>
                                             <form action="{{ route('student.destroy', $user->id) }}" method="POST"
-                                                class="delete-form">
+                                                class="delete-form"
+                                                onsubmit="return confirm('Bạn có chắc muốn xoá học viên này không?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-link p-0" style="border: none;"

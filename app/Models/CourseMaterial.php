@@ -9,7 +9,6 @@ class CourseMaterial extends Model
     protected $table = 'course_materials';
 
     protected $fillable = [
-        'id',
         'course_id',
         'title',
         'description',
@@ -24,7 +23,7 @@ class CourseMaterial extends Model
 
     public function teacher()
     {
-        return $this->belongsTo(User::class, 'uploaded_by');
+        return $this->belongsTo(Teacher::class, 'uploaded_by');
     }
 
 }

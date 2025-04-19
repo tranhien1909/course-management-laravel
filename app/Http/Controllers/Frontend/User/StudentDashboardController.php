@@ -91,4 +91,49 @@ class StudentDashboardController extends Controller
         $template = 'fontend.user.dashboard.home.chitietlophoc';
         return view('fontend.user.dashboard.layout', compact('template', 'class'));
     }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+    
+        $request->validate([
+            'student_name' => 'required|string|max:255',
+            'birthday' => 'required|date',
+            'gender' => 'required',
+            'address' => 'nullable|string',
+            'phone' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+    
+        $user->fullname = $request->student_name;
+        $user->birthday = $request->birthday;
+        $user->gender = $request->gender;
+        $user->address = $request->address;
+        $user->updated_at = now();
+        $user->phone = $request->phone;
+    
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/avatars', $filename); // lưu đúng chỗ
+            $user->avatar = 'avatars/' . $filename;
+        }
+    
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Cập nhật thành công!');
+    }
+
+    public function uploadTempImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $path = $request->file('image')->store('temp', 'public');
+        
+        return response()->json([
+            'path' => $path
+        ]);
+    }
 }

@@ -45,6 +45,12 @@
                 <a href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-home"></i> <span class="nav-label">Trang
                         chủ</span></a>
             </li>
+            <li class="{{ request()->routeIs('consultations.index') ? 'active' : '' }}">
+                <a href="{{ route('consultations.index') }}"><i class="fas fa-book"></i> <span class="nav-label">QL
+                        Người Cần
+                        tư vấn</span>
+                </a>
+            </li>
             <li class="{{ request()->routeIs('course.index') ? 'active' : '' }}">
                 <a href="{{ route('course.index') }}"><i class="fas fa-book"></i> <span class="nav-label">QL Khoá
                         học</span>

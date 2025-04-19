@@ -122,6 +122,7 @@
                                             <th>Đối tượng</th>
                                             <th>Tiêu đề</th>
                                             <th>Nội dung</th>
+                                            <th colspan="2">Thao tác</th>
 
                                         </tr>
                                     </thead>
@@ -153,7 +154,24 @@
                                                     @endswitch
                                                 </td>
                                                 <td>{{ $notification->title }}</td>
-                                                <td>{{ Str::limit($notification->message, 100) }}</td>
+                                                <td>{{ Str::limit($notification->message, 500) }}</td>
+                                                <td style="padding: 1px 24px;">
+                                                    <a href="{{ route('admin.notifications.create', ['edit' => $notification->id]) }}"
+                                                        title="Sửa">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <form
+                                                        action="{{ route('notifications.destroy', $notification->id) }}"
+                                                        method="POST" class="delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-link p-0" title="Xoá">
+                                                            <i class="fas fa-trash text-danger"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -166,8 +184,44 @@
             </div>
         </div>
     </div>
-
 </div>
+
+@if (isset($editNotification))
+    <div class="form-container active" id="addForm">
+        <button class="closebtn" onclick="toggleForm()">X</button>
+        <h2 class="text-center">SỬA THÔNG BÁO</h2>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('notifications.update', $editNotification->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="form-group">
+                <label for="title">Tiêu đề</label>
+                <input type="text" name="title" id="title" class="form-control"
+                    value="{{ old('title', $editNotification->title) }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Nội dung</label>
+                <textarea name="message" id="message" class="form-control" rows="5" required>{{ old('message', $editNotification->message) }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <a href="{{ route('admin.notifications.create') }}" class="btn btn-secondary">Huỷ</a>
+        </form>
+    </div>
+@endif
+
 
 <script>
     function toggleTargetFields() {
@@ -175,5 +229,22 @@
         document.getElementById('target-user').style.display = type === 'user' ? 'block' : 'none';
         document.getElementById('target-class').style.display = type === 'class' ? 'block' : 'none';
         document.getElementById('target-course').style.display = type === 'course' ? 'block' : 'none';
+    }
+</script>
+
+<script>
+    function toggleForm() {
+        var form = document.getElementById("addForm");
+        var overlay = document.getElementById("overlay");
+        var mainContent = document.getElementById("mainContent");
+
+        if (form.classList.contains("active")) {
+            form.classList.remove("active");
+            overlay.classList.remove("active");
+        } else {
+            form.classList.add("active");
+            overlay.classList.add("active");
+            mainContent.style.filter = "blur(5px)";
+        }
     }
 </script>

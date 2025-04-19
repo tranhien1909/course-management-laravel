@@ -66,6 +66,7 @@
         margin-bottom: 10px;
         padding-left: 20px;
         position: relative;
+        text-align: left;
     }
 
     .course-sidebar {
@@ -308,12 +309,8 @@
                     <div class="students">(260 Đánh giá) 36,603 Học viên</div>
                 </div>
                 <div class="highlights">
-                    <div class="highlight-item">✅ Đánh cho các ban với mục tiêu đạt
-                        điểm
-                        TOEIC tại các mức đầu ra 450
-                        - 650 - 800+
-                    </div>
-                    <div class="highlight-item">✅ Bộ 1200 từ vựng TOEIC 99% sẽ xuất hiện trong bài thi TOEIC và 17 chủ
+                    <div class="highlight-item" style="white-space: pre-line;">{{ $course->description }}</div>
+                    {{-- <div class="highlight-item">✅ Bộ 1200 từ vựng TOEIC 99% sẽ xuất hiện trong bài thi TOEIC và 17 chủ
                         đề ngữ pháp
                         quan trọng nhất</div>
                     <div class="highlight-item">✅ Bài giảng ngữ pháp và phương pháp làm tất cả các dạng câu hỏi TOEIC
@@ -326,7 +323,7 @@
                         nghe chép
                         chính tả</div>
                     <div class="highlight-item"> ✅ Tặng kèm khoá Luyện nghe nói tiếng Anh cùng Ted Talks trị giá 599k
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 

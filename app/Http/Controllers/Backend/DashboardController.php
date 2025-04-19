@@ -33,7 +33,8 @@ class DashboardController extends Controller
             'khoa_hoc' => DB::table('courses')->count(),
             'lop_hoc' => DB::table('classes')->count(),
             'giang_vien' => DB::table('teachers')->count(),
-            'hoc_vien' => DB::table('users')->where('role', 'student')->count()
+            'hoc_vien' => DB::table('users')->where('role', 'student')->count(),
+            'thong_bao' => DB::table('notifications')->count(),
         ];
 
         $tasks = AdminTask::orderBy('created_at', 'desc')->get();
@@ -68,6 +69,10 @@ class DashboardController extends Controller
 
     public function thongke()
     {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count()
+        ];
+
         // Học viên mới theo tháng
         $studentsPerMonth = User::where('role', 'student')
             ->whereYear('created_at', now()->year)
@@ -102,6 +107,7 @@ class DashboardController extends Controller
             }
     
         return view('backend.dashboard.layout', [
+            'thongKe', 
             'template' => 'backend.dashboard.home.thongke',
             'studentData' => $studentData,
             'classStats' => $classStats,

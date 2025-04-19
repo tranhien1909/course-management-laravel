@@ -59,6 +59,7 @@
                                 <th>Ngày khai giảng</th>
                                 <th>Giáo viên phụ trách</th>
                                 <th>Sĩ số</th>
+                                <th>Phòng học</th>
                                 <th>Trạng thái</th>
                                 <th colspan="2">Thao tác</th>
                             </tr>
@@ -74,6 +75,7 @@
                                         <td>{{ date('d/m/Y', strtotime($class->start_date)) }}</td>
                                         <td>{{ $class->user->fullname ?? 'N/A' }}</td>
                                         <td>{{ $class->number_of_student }}</td>
+                                        <td>{{ $class->room }}</td>
                                         <td>{{ $class->status }}</td>
                                         <td style="padding: 1px 24px;">
                                             <a href="{{ route('class.detail', $class->id) }}" title="Xem chi tiết"><i
@@ -81,7 +83,8 @@
                                         </td>
                                         <td>
                                             <form action="{{ route('class.destroy', $class->id) }}" method="POST"
-                                                class="delete-form">
+                                                class="delete-form"
+                                                onsubmit="return confirm('Bạn có chắc muốn xoá lớp học này không?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-link p-0" style="border: none;"
@@ -152,6 +155,9 @@
 
         <label for="start_date">Ngày khai giảng</label>
         <input type="date" name="start_date" value="{{ old('start_date') }}" required>
+
+        <label for="room">Phòng học:</label>
+        <input type="text" name="room" value="{{ old('room') }}" required>
 
         <label for="description">Mô tả:</label>
         <textarea name="description" id="description">{{ old('description') }}</textarea>

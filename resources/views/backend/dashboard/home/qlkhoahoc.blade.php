@@ -70,7 +70,8 @@
                                     <tr class="course-row">
                                         <td>{{ ($courses->currentPage() - 1) * $courses->perPage() + $index + 1 }}</td>
                                         <td>{{ $course->id }}</td>
-                                        <td><img src="{{ $course->image }}" class='course-img' alt='Ảnh khóa học'></td>
+                                        <td><img src="{{ asset('storage/' . $course->image) }}" class="course-img"
+                                                alt="Ảnh khóa học"></td>
                                         <td>{{ $course->course_name }}</td>
                                         <td>{{ $course->level }}</td>
                                         <td>{{ $course->lessons }}</td>
@@ -82,7 +83,8 @@
                                         </td>
                                         <td>
                                             <form action="{{ route('course.destroy', $course->id) }}" method="POST"
-                                                class="delete-form">
+                                                class="delete-form"
+                                                onsubmit="return confirm('Bạn có chắc muốn xoá khoá học này không?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-link p-0" style="border: none;"
@@ -136,6 +138,7 @@
                 <div class="avatar">
                     <div>
                         <input type="file" name="avatar" class="image-input" accept="image/*" id="fileInput">
+                        <input type="hidden" name="avatar_temp" id="imagePath">
                         <img src="https://thudaumot.binhduong.gov.vn/Portals/0/images/default.jpg" class="img-avatar"
                             id="avatarImage">
                     </div>
@@ -176,31 +179,6 @@
     </div>
 
 </div>
-
-<script>
-    // Handle image preview
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('avatarImage').src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Make avatar image clickable
-    document.getElementById('avatarImage').addEventListener('click', function() {
-        document.getElementById('fileInput').click();
-    });
-
-    // Handle form submission
-    document.getElementById('courseForm').addEventListener('submit', function(e) {
-        // You can add any pre-submission logic here if needed
-        console.log('Form submitted');
-    });
-</script>
 
 <script>
     function toggleForm() {
@@ -249,53 +227,6 @@
             reader.readAsDataURL(file);
         }
     });
-
-    // document.querySelector("#addCourseForm").addEventListener("submit", function(event) {
-    //     event.preventDefault();
-    //     let formData = new FormData(this);
-
-    //     fetch("{{ route('course.store') }}", {
-    //             method: "POST",
-    //             headers: {
-    //                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-    //             },
-    //             body: formData
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             alert(data.success);
-    //             location.reload(); // Reload trang sau khi thêm
-    //         });
-    // });
-
-    // function deleteCourse(courseId) {
-    //     if (!confirm("Bạn có chắc muốn xóa khóa học này?")) return;
-
-    //     const formData = new FormData();
-    //     formData.append('_method', 'DELETE');
-    //     formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-    //     fetch(`/management_laravel/CourseManagement/public/course_management/${courseId}`, {
-    //             method: 'POST',
-    //             body: formData
-    //         })
-    //         .then(response => {
-    //             if (!response.ok) {
-    //                 return response.text().then(text => {
-    //                     throw new Error(text || 'Request thất bại');
-    //                 });
-    //             }
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             alert(data.success || 'Xóa thành công!');
-    //             location.reload();
-    //         })
-    //         .catch(error => {
-    //             console.error('Lỗi:', error);
-    //             alert("Không thể xoá khoá học. Vui lòng thử lại.");
-    //         });
-    // }
 </script>
 
 <script>
@@ -317,6 +248,7 @@
                     _token: form.find('input[name="_token"]').val()
                 },
                 success: function(response) {
+                    console.log(response);
                     if (response.success) {
                         toastr.success(response.success);
                         setTimeout(() => {

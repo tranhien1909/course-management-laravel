@@ -12,8 +12,10 @@ use App\Models\CourseMaterial;
 use App\Models\ClassSchedule;
 use App\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\StoreClassRequest;
+
 
 class ClassController extends Controller
 {
@@ -24,6 +26,9 @@ class ClassController extends Controller
 
     public function index(Request $request)
     {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
         $search = $request->input('search');
     
         $classes = Classroom::with(['course:id,course_name', 'user:id,fullname'])
@@ -40,7 +45,7 @@ class ClassController extends Controller
         $teachers = User::select('id', 'fullname')->where('role', 'teacher')->get();
     
         $template = 'backend.dashboard.home.qllophoc';
-        return view('backend.dashboard.layout', compact('template', 'classes', 'courses', 'teachers'));
+        return view('backend.dashboard.layout', compact('thongKe', 'template', 'classes', 'courses', 'teachers'));
     }
 
     public function detail($id)
@@ -54,12 +59,14 @@ class ClassController extends Controller
             
         ])->findOrFail($id);
 
+        $teachers = User::where('role', 'teacher')->get();
+
         $classSchedules = ClassSchedule::with(['class.course', 'class.user'])
         ->where('class_id', $id)
         ->get();
     
         $template = 'backend.dashboard.home.chitietlophoc';
-        return view('backend.dashboard.layout', compact('template', 'class', 'classSchedules'));
+        return view('backend.dashboard.layout', compact('template', 'class', 'classSchedules', 'teachers'));
     }
     
 
@@ -75,6 +82,7 @@ class ClassController extends Controller
                 'course_id' => $validated['course_id'],
                 'teacher_id' => $validated['teacher_id'],
                 'start_date' => $validated['start_date'],
+                'room' => $validated['room'],
                 'description' => $validated['description'] ?? null,
                 'number_of_student' => 0,
                 'status' => 'Active',
@@ -120,20 +128,29 @@ class ClassController extends Controller
         }
     }
 
-    public function search(Request $request)
+    public function update(Request $request, $id)
 {
-    $search = $request->input('search');
+    $class = Classroom::findOrFail($id);
 
-    $classes = Classroom::with(['course', 'user'])
-        ->when($search, function ($query, $search) {
-            $query->where('id', 'like', "%$search%")
-                  ->orWhereHas('course', function ($q) use ($search) {
-                      $q->where('course_name', 'like', "%$search%");
-                  });
-        })->paginate(10);
+    $request->validate([
+        'class_id' => 'required|string|max:255',
+        'teacher_id' => 'required',
+        'start_date' => 'required|date',
+        'room' => 'required',
+        'status' => 'required',
+        'status' => 'nullable|string|max:100',
+    ]);
 
-        $template = 'backend.dashboard.home.qllophoc';
-        return view('backend.dashboard.layout', compact('template', 'classes'));
+    $class->id = $request->class_id;
+    $class->teacher_id = $request->teacher_id;
+    $class->start_date = $request->start_date;
+    $class->room = $request->room;
+    $class->updated_at = now();
+    $class->status = $request->status;
+
+    $class->save();
+
+    return redirect()->back()->with('success', 'Cập nhật lớp học thành công!');
 }
 
 

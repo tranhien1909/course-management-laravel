@@ -11,7 +11,7 @@ use App\Models\Classroom;
 use App\Models\Payment;
 use App\Models\Course;
 
-class SpendingController extends Controller
+class NavController extends Controller
 {
     public function __construct()
     {
@@ -23,9 +23,7 @@ class SpendingController extends Controller
             'thong_bao' => DB::table('notifications')->count(),
         ];
 
-        $template = 'backend.dashboard.home.qlthuchi';
-        $payments = Payment::with(['student', 'course'])->get();
-        return view('backend.dashboard.layout', compact('thongKe', 'template', 'payments'));
+        return view('backend.dashboard.component.nav', compact('thongKe'));
     }
 
 }

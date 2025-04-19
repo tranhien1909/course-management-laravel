@@ -92,7 +92,8 @@
                                         </td>
                                         <td>
                                             <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
-                                                class="delete-form">
+                                                class="delete-form"
+                                                onsubmit="return confirm('Bạn có chắc muốn xoá giảng viên này không?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-link p-0" style="border: none;"
@@ -141,7 +142,7 @@
         @csrf
         <div class="avatar">
             <div>
-                <input type="file" class="image-input" accept="image/*" id="fileInput">
+                <input name="avatar" type="file" class="image-input" accept="image/*" id="fileInput">
                 <img src="https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg"
                     class="img-circle img-avatar" id="avatarImage">
             </div>

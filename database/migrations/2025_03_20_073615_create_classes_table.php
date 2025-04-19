@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('number_of_student');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
+            $table->string('room', 50);
             $table->enum('status', ['Active', 'Inactive'])->default('Active'); // Trạng thái
             $table->timestamps();
 

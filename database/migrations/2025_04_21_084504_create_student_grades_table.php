@@ -14,9 +14,18 @@ return new class extends Migration
         Schema::create('student_grades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('exam_id')->constrained('exams')->onDelete('cascade');
-            $table->decimal('score', 5, 2);
+            $table->string('class_id', 20);
+        
+            $table->decimal('grade_1', 5, 2)->nullable(); // điểm lần 1
+            $table->decimal('grade_2', 5, 2)->nullable(); // điểm lần 2
+            $table->decimal('grade_3', 5, 2)->nullable(); // điểm lần 3
+        
+            $table->text('note')->nullable();
             $table->timestamps();
+        
+            $table->unique(['student_id', 'class_id']); // Mỗi học viên chỉ có 1 bản ghi/1 lớp
+            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
+
         });
     }
 

@@ -10,7 +10,8 @@
                             - {{ $course->discount ?? '0' }}%
                         </span>
                         <div class="image">
-                            <img src="{{ $course->image ?? asset('backend/img/course_1.jpg') }}" alt="Ảnh khoá học">
+                            <img src="{{ asset('storage/' . $course->image) ?? asset('backend/img/course_1.jpg') }}"
+                                alt="Ảnh khoá học">
                         </div>
 
                         <div class="content">

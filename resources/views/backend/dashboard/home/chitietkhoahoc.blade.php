@@ -258,8 +258,9 @@
                                 </div>
                                 <div class="form-row">
                                     <input name="lessons" type="number" id="lessons" placeholder="Số buổi học" value="{{$course->lessons}}" disabled>
-                                    <input type="date" id="start-date" value="{{ \Carbon\Carbon::parse($course->created_at)->format('Y-m-d') }}" disabled readonly>
-    
+                                    <input type="text" id="start-date" 
+                                    value="{{ \Carbon\Carbon::parse($course->created_at)->format('d/m/Y') }}" 
+                                    disabled readonly>    
                                 </div>
                                 <div class="form-row">
                                     <label for="price" class="right"><strong>Học phí:</strong></label>
@@ -364,7 +365,7 @@
                                                         {{ $material->title }}
                                                     </a>
                                                 </td>
-                                                <td>{{ $material->teacher->user->fullname ?? 'N/A' }}</td>
+                                                <td>{{ $material->teacher->fullname ?? 'N/A' }}</td>
                                                 <td>{{ $material->created_at->format('d/m/Y') }}</td>
                                                 <td>Đã duyệt</td>
                                             </tr>
@@ -497,13 +498,8 @@
         </div>
     
         <div class="form-group">
-            <label for="file">Tài liệu (file hoặc link)</label>
+            <label for="file">Tài liệu (link)</label>
             <div class="file-upload-container">
-                <div class="form-group">
-                    <input type="file" name="file" id="file" class="form-control-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar">
-                    <small class="form-text text-muted">Chấp nhận file: PDF, Word, Excel, PowerPoint, ZIP (Tối đa 10MB)</small>
-                </div>
-                <div class="or-separator">HOẶC</div>
                 <div class="form-group">
                     <input type="url" name="file_url" class="form-control" placeholder="Nhập URL tài liệu">
                 </div>
@@ -512,12 +508,7 @@
 
         <div class="form-group">
             <label for="uploaded_by">Người tải</label>
-            <select name="uploaded_by" id="uploaded_by" class="form-control" required>
-                <option value="" disabled>-- Chọn giáo viên --</option>
-                @foreach ($teachers as $teacher)
-                    <option value="{{ $teacher->id }}">{{ $teacher->fullname }}</option>
-                @endforeach
-            </select>
+                <input type="text" class="form-control" value="{{ Auth::user()->fullname }}" readonly>
         </div>
     
         <div class="form-footer">

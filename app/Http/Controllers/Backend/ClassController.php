@@ -59,6 +59,10 @@ class ClassController extends Controller
             
         ])->findOrFail($id);
 
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
+
         $teachers = User::where('role', 'teacher')->get();
 
         $classSchedules = ClassSchedule::with(['class.course', 'class.user'])
@@ -66,7 +70,7 @@ class ClassController extends Controller
         ->get();
     
         $template = 'backend.dashboard.home.chitietlophoc';
-        return view('backend.dashboard.layout', compact('template', 'class', 'classSchedules', 'teachers'));
+        return view('backend.dashboard.layout', compact('template', 'class', 'classSchedules', 'teachers', 'thongKe'));
     }
     
 

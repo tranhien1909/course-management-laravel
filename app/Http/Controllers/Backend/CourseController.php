@@ -44,6 +44,9 @@ class CourseController extends Controller
 
     // Xem chi tiết
     public function detail($id) {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
         $template = 'backend.dashboard.home.chitietkhoahoc';
     // Lấy course và load trước quan hệ classes + user
         $course = Course::with([
@@ -63,6 +66,7 @@ class CourseController extends Controller
 
         return view('backend.dashboard.layout', compact(
             'template', 
+            'thongKe',
             'course', 
             'classes', 
             'teachers',

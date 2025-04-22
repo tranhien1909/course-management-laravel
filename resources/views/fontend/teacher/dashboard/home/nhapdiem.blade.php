@@ -39,7 +39,35 @@
                     </table>
                 </div>
             </div>
+
+            <div class="ibox-content">
+                <form action="{{ route('grades.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="quiz_id" value="{{ $quiz->id }}">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ tên</th>
+                                <th>Điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($quiz->course->classes->first()->enrollments as $index => $enrollment)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $enrollment->student->fullname }}</td>
+                                    <td>
+                                        <input type="number" name="grades[{{ $enrollment->student_id }}]"
+                                            step="0.01" min="0" max="10" required>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn btn-primary">Lưu điểm</button>
+                </form>
+
+            </div>
         </div>
-
-
     </div>

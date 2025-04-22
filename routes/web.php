@@ -7,10 +7,11 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\NotificationController;
 use App\Http\Controllers\Backend\NotificationTargetController;
 use App\Http\Controllers\Frontend\Teacher\TeacherDashboardController;
+use App\Http\Controllers\Frontend\Teacher\StudentGradeController;
 use App\Http\Controllers\Frontend\User\StudentDashboardController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminTaskController;
-use App\Http\Controllers\Frontend\AttendanceController;
+use App\Http\Controllers\Frontend\Teacher\AttendanceController;
 use App\Http\Controllers\Backend\ScheduleController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\CourseMaterialController;
@@ -36,15 +37,21 @@ Route::get('/all', [WelcomeController::class, 'all'])
 Route::get('/detail/{id}', [WelcomeController::class, 'detail']) 
     -> name('chitiet');
 
-    Route::post('/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
+    // Ql người tư vấn
+    Route::get('/consultations/index', [ConsultationController::class, 'index']) 
+    -> name('consultations.index');
+
+    Route::post('/consultations/store', [ConsultationController::class, 'store'])->name('consultations.store');
+
+    Route::put('/consultations/{consultation}/status', [ConsultationController::class, 'updateStatus'])
+    ->name('consultations.updateStatus');
 
 Route::get('profile', [DashboardController::class, 'profile']) 
     -> name('dashboard.profile')
     ->middleware(AdminMiddleware::class);
 
     Route::get('statistical', [DashboardController::class, 'thongke']) 
-    -> name('dashboard.thongke')
-    ->middleware(AdminMiddleware::class);
+    -> name('dashboard.thongke');
 
 // Auth routes - không yêu cầu đăng nhập
 Route::middleware([RedirectIfAuthenticated::class])->group(function () {
@@ -74,9 +81,7 @@ Route::get('/admin/dashboard', [DashboardController::class, 'index'])
     ->name('student.dashboard')
     ->middleware('auth');
 
-    // Ql người tư vấn
-    Route::get('/consultations', [ConsultationController::class, 'index']) 
-    -> name('consultations.index');
+
 
 // Quản lý khoá học
 Route::get('course_management/index', [CourseController::class, 'index']) 
@@ -102,7 +107,7 @@ Route::put('/course_management/{id}', [CourseController::class, 'update'])->name
 Route::get('course-pdf', [CourseController::class, 'exportPDF'])->name('courseExport.pdf');
 
 //QL tài liệu
-Route::post('/course-materials', [CourseMaterialController::class, 'store'])->name('course-materials.store');
+Route::post('/course-materials/store', [CourseMaterialController::class, 'store'])->name('course-materials.store');
 Route::resource('course-materials', CourseMaterialController::class)->only(['store']);
 
 // QL bìa thi
@@ -191,6 +196,9 @@ Route::get('spending/detail', [SpendingController::class, 'detail'])
 -> name('spending.detail')
 ->middleware(AdminMiddleware::class);
 
+    Route::put('/payments/{payment}/status', [SpendingController::class, 'updateStatus'])
+    ->name('spending.updateStatus');
+
 // Quản lý thông báo
 // Route::prefix('admin')->middleware(['auth', 'can:admin'])->group(function () {
     // Hiển thị form gửi thông báo
@@ -219,6 +227,15 @@ Route::get('my-class', [TeacherDashboardController::class, 'myClass'])
     -> name('teacher.lichhoc');
 
     Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
+
+    Route::post('/grades', [StudentGradeController::class, 'store'])->name('grades.store');
+
+    Route::get('/quizzes/{quiz}/grades', [StudentGradeController::class, 'inputForm'])->name('grades.input');
+
+    Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
+
+
+
 
 
 //

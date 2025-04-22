@@ -34,23 +34,6 @@
         display: block;
     }
 
-    .tenlop {
-        display: flex;
-        justify-content: center;
-        /* Căn giữa theo chiều ngang */
-        align-items: center;
-        /* Căn giữa theo chiều dọc */
-        height: 30px;
-        /* Điều chỉnh chiều cao nếu cần */
-        margin-bottom: 20px;
-    }
-
-    .table-container {
-        width: 100%;
-        background: white;
-        margin-top: 20px;
-    }
-
     table {
         width: 100%;
         border-collapse: collapse;
@@ -92,78 +75,6 @@
         border: 1px solid silver;
     }
 
-    .anhhv img {
-        width: 70px;
-        /* Định kích thước ảnh */
-        height: 70px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .stu-list {
-        max-height: 300px;
-        /* hoặc chiều cao bạn muốn */
-        overflow-y: auto;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        margin-bottom: 10px;
-    }
-
-    .addhv {
-        background: white;
-        color: #3b6db3;
-        font-size: 15px;
-        padding: 6px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-        margin-bottom: 20px;
-        border: 1px solid silver;
-    }
-
-    .stu-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        background: #fff;
-        padding: 15px;
-        border-radius: 8px;
-        width: 265px;
-        position: relative;
-        border: 1px solid silver;
-        height: 83px;
-    }
-
-    .anh {
-        background: #eee;
-        border-radius: 5px;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-    }
-
-    .stu-info {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-left: 5px;
-        flex-grow: 1;
-    }
-
-    .stu-info h3 {
-        font-size: 14.5px;
-    }
-
-    .stu-info p {
-        font-size: 13px;
-        color: #555;
-    }
-
     button {
         padding: 5px 12px;
         font-size: 14px;
@@ -190,36 +101,6 @@
         margin-left: 7px;
     }
 
-    .thongtinchung {
-        display: flex;
-        margin: auto;
-        gap: 20px;
-        width: 95%;
-    }
-
-    .left,
-    .right {
-        flex: 1;
-    }
-
-    .right {
-        padding-left: 10px;
-    }
-
-    .left {
-        border-right: 1px solid silver;
-        padding-right: 30px;
-    }
-
-    .form-row {
-        display: flex;
-        gap: 10px;
-    }
-
-    .form-row input {
-        flex: 1;
-    }
-
     input,
     textarea {
         width: 100%;
@@ -230,125 +111,53 @@
         font-size: 15px;
     }
 
-    .tenlop {
-        display: flex;
-        justify-content: center;
-        /* Căn giữa theo chiều ngang */
-        align-items: center;
-        /* Căn giữa theo chiều dọc */
-        height: 30px;
-        /* Điều chỉnh chiều cao nếu cần */
-        margin-bottom: 20px;
-    }
-
-    .button-container {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 35px;
-        margin-right: 10px;
-        margin-bottom: -20px;
-    }
-
-    .button-container button {
-        padding: 8px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .save-button {
-        background-color: #3b6db3;
-        color: white;
-        margin-bottom: 30px;
-    }
-
-    .edit-button {
-        background-color: #008CBA;
-        color: white;
-    }
-
-    .edit-form {
-        position: fixed;
-        top: 250px;
-        left: 56%;
-        transform: translateX(-50%);
-        width: 450px;
-        background: white;
-        padding: 15px;
-        border-radius: 5px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    input[type="text"],
+    input[type="file"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px;
         border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .file-upload {
+        border: 2px dashed #ccc;
+        padding: 20px;
         text-align: center;
-        opacity: 0;
-        visibility: hidden;
-        transition: 0.4s;
-        z-index: 1003;
-    }
-
-    .edit-form.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .edit-form p {
-        font-weight: bold;
-        margin: 15px 0;
-        font-size: 17px;
-    }
-
-    .edit-form input,
-    .edit-form textarea {
-        width: 90%;
-        padding: 8px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
         margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 15px;
     }
 
-    .edit-form button {
-        padding: 8px 12px;
-        border: none;
-        border-radius: 4px;
-        background: #3b6db3;
-        color: white;
-        cursor: pointer;
+    .file-upload:hover {
+        border-color: #999;
     }
 
-    .close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 20px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #555;
-    }
-
-    .actions {
-        text-align: right;
-        /* Căn chỉnh các nút sang phải */
-        margin-bottom: 15px;
-        margin-top: -8px
-            /* Thêm một chút khoảng cách từ bảng */
-    }
-
-    /* Nút Sửa và Xóa */
-    .actions button {
-        padding: 6px 15px;
-        margin-left: 10px;
-        /* Khoảng cách giữa các nút */
-        background-color: #3b6db3;
+    .btn {
+        background-color: #3498db;
         color: white;
         border: none;
-        border-radius: 5px;
+        padding: 12px 20px;
+        border-radius: 4px;
         cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #2980b9;
+    }
+
+    .file-info {
         font-size: 14px;
+        color: #666;
+        margin-top: 5px;
     }
 
-    .actions button:hover {
-        background-color: #0056b3;
+    .required {
+        color: #e74c3c;
     }
 </style>
 
@@ -377,6 +186,8 @@
                 <div class="tab-item active" data-tab="tab1">Danh sách học viên</div>
                 <div class="tab-item" data-tab="tab2">Tài liệu học tập</div>
                 <div class="tab-item" data-tab="tab3">Bài thi</div>
+                <div class="tab-item" data-tab="tab4">Điểm danh</div>
+                <div class="tab-item" data-tab="tab5">Nhập điểm</div>
             </div>
 
             <div class="tab-content-container">
@@ -455,10 +266,13 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>
-                                                    <a href="{{ Str::startsWith($material->file_url, 'http') ? $material->file_url : asset('storage/' . $material->file_url) }}"
+                                                    {{-- <a href="{{ Str::startsWith($material->file_url, 'http') ? $material->file_url : asset('storage/' . $material->file_url) }}"
                                                         target="_blank">
                                                         {{ $material->title }}
-                                                    </a>
+                                                    </a> --}}
+                                                    <strong>{{ $material->title }}</strong> -
+                                                    <a href="{{ asset($material->file_url) }}" target="_blank">Xem tài
+                                                        liệu</a>
                                                 </td>
                                                 <td>{{ $class->user->fullname ?? 'N/A' }}</td>
                                                 <td>{{ $material->created_at->format('d/m/Y') }}</td>
@@ -495,7 +309,7 @@
                                     <th>Tên kỳ thi</th>
                                     <th>Ngày thi</th>
                                     <th>Giáo viên phụ trách</th>
-                                    <th colspan="2">Thao tác</th>
+                                    <th colspan="3">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -522,16 +336,121 @@
                                                     </button>
                                                 </form>
                                             </td>
+                                            <td>
+                                                <a href="{{ route('grades.input', $quizz->id) }}" title="Nhập điểm">
+                                                    <i class="fa-solid fa-clipboard-check text-success"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="7">Chưa có tài liệu</td>
+                                        <td colspan="7">Chưa có bài thi</td>
                                     </tr>
                                 @endif
                             </tbody>
 
                         </table>
+                    </div>
+                </div>
+                <div id="tab4" class="tab-content">
+                    <div class="table-responsive">
+                        <form method="POST" action="{{ route('attendance.store') }}">
+                            @csrf
+                            <input type="hidden" name="class_id" value="{{ $class->id }}">
+                            <input type="date" name="date" value="{{ date('Y-m-d') }}" class="form-control mb-3"
+                                required>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã học viên</th>
+                                        <th>Họ tên</th>
+                                        <th>Có mặt</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($class->enrollments as $index => $enrollment)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $enrollment->student->student_id }}</td>
+                                            <td>{{ $enrollment->student->fullname }}</td>
+                                            <td>
+                                                <input type="checkbox"
+                                                    name="attendance[{{ $enrollment->student->id }}][present]"
+                                                    value="1">
+                                            </td>
+                                            <td>
+                                                <input type="text"
+                                                    name="attendance[{{ $enrollment->student->id }}][note]"
+                                                    class="form-control">
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                            <button type="submit" class="btn btn-primary" style="margin-top: 30px;">Lưu điểm
+                                danh</button>
+                        </form>
+
+                    </div>
+                </div>
+                <div id="tab5" class="tab-content">
+                    <div class="table-responsive">
+
+                        <form action="{{ route('grades.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="class_id" value="{{ $class->id }}">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã học viên</th>
+                                        <th>Họ tên học viên</th>
+                                        <th>Điểm lần 1</th>
+                                        <th>Điểm lần 2</th>
+                                        <th>Điểm lần 3</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($class->enrollments as $index => $enrollment)
+                                        @php
+                                            $grade = $enrollment->student->grades
+                                                ->where('class_id', $class->id)
+                                                ->first();
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $enrollment->student->student_id }}</td>
+                                            <td>{{ $enrollment->student->fullname }}</td>
+
+                                            <td><input type="number" step="0.01"
+                                                    name="grades[{{ $enrollment->student->id }}][grade_1]"
+                                                    class="form-control" value="{{ $grade->grade_1 ?? '' }}"></td>
+                                            <td><input type="number" step="0.01"
+                                                    name="grades[{{ $enrollment->student->id }}][grade_2]"
+                                                    class="form-control" value="{{ $grade->grade_2 ?? '' }}"></td>
+                                            <td><input type="number" step="0.01"
+                                                    name="grades[{{ $enrollment->student->id }}][grade_3]"
+                                                    class="form-control" value="{{ $grade->grade_3 ?? '' }}"></td>
+                                            <td><input type="text"
+                                                    name="grades[{{ $enrollment->student->id }}][note]"
+                                                    class="form-control" value="{{ $grade->note ?? '' }}"></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                            <div class="text-center" style="margin-top: 30px;">
+                                <button type="submit" class="btn btn-primary">Lưu điểm</button>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
             </div>
@@ -556,7 +475,7 @@
     <form method="POST" action="{{ route('course-materials.store') }}" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="course_id" value="{{ $class->course_id }}">
-        <input type="hidden" name="uploaded_by" value="{{ auth()->id() }}">
+        <input type="hidden" name="uploaded_by" value="{{ Auth::user()->id }}">
 
 
         <div class="form-group">
@@ -570,13 +489,12 @@
         </div>
 
         <div class="form-group">
-            <label for="file">Tài liệu (file hoặc link)</label>
+            <label for="file">Tải lên tài liệu <span class="required">*</span></label>
             <div class="file-upload-container">
-                <div class="form-group">
-                    <input type="file" name="file" id="file" class="form-control-file"
-                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar">
-                    <small class="form-text text-muted">Chấp nhận file: PDF, Word, Excel, PowerPoint, ZIP (Tối đa
-                        10MB)</small>
+                <div class="file-upload">
+                    <input type="file" id="file" name="file" required>
+                    <p>Kéo thả file vào đây hoặc click để chọn file</p>
+                    <p class="file-info">Hỗ trợ định dạng: PDF, DOCX, PPTX, XLSX, ZIP (Tối đa 50MB)</p>
                 </div>
                 <div class="or-separator">HOẶC</div>
                 <div class="form-group">
@@ -724,4 +642,30 @@
             alert('Vui lòng chọn file hoặc nhập URL tài liệu');
         }
     });
+</script>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Xử lý upload file ở đây
+        alert('Tài liệu đã được tải lên thành công!');
+    });
+
+    // Hiển thị tên file khi chọn
+    document.getElementById('file').addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+            const fileName = this.files[0].name;
+            const fileInfo = document.querySelector('.file-info');
+            fileInfo.innerHTML =
+                `File đã chọn: <strong>${fileName}</strong> (${formatFileSize(this.files[0].size)})`;
+        }
+    });
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
 </script>

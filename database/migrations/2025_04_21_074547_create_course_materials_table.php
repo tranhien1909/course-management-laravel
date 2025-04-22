@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('course_id', 20);
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('file_url');
-            $table->foreignId('uploaded_by')->constrained('teachers')->onDelete('cascade');
+            $table->string('file_url')->nullable(); 
+            $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

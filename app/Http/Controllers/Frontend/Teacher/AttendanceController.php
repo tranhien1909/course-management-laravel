@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Classroom;
+use App\Models\Attendance;
 
-class TeacherDashboardController extends Controller
+class AttendanceController extends Controller
 {
     public function __construct()
     {
@@ -18,25 +19,27 @@ class TeacherDashboardController extends Controller
     }
 
     public function store(Request $request)
-{
-    $scheduleId = $request->input('schedule_id');
-    $attendances = $request->input('attendance', []);
-
-    foreach ($attendances as $studentId => $data) {
-        Attendance::updateOrCreate(
-            [
-                'student_id' => $studentId,
-                'schedule_id' => $scheduleId,
-            ],
-            [
-                'status' => $data['status'],
-                'notes' => $data['notes'] ?? null,
-            ]
-        );
+    {
+        $classId = $request->input('class_id');
+        $date = $request->input('date');
+        $data = $request->input('attendance', []);
+    
+        foreach ($data as $studentId => $info) {
+            Attendance::updateOrCreate(
+                [
+                    'student_id' => $studentId,
+                    'class_id' => $classId,
+                    'date' => $date,
+                ],
+                [
+                    'present' => isset($info['present']) ? 1 : 0,
+                    'note' => $info['note'] ?? null,
+                ]
+            );
+        }
+    
+        return back()->with('success', 'Điểm danh thành công!');
     }
-
-    return back()->with('success', 'Điểm danh đã được lưu!');
-}
 
 
 

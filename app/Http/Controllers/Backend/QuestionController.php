@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Quizz;
 use App\Models\Question;
 use App\Models\Option;
@@ -14,10 +15,13 @@ class QuestionController extends Controller
 {
     public function create($quizId)
     {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
         $quiz = Quizz::findOrFail($quizId);
         $template = 'backend.dashboard.home.taobaithi';
 
-        return view('backend.dashboard.layout', compact('template', 'quiz'));
+        return view('backend.dashboard.layout', compact('template', 'thongKe', 'quiz'));
     }
     
     public function store(Request $request, $quizId)

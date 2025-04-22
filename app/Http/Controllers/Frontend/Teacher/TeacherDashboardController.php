@@ -21,6 +21,15 @@ class TeacherDashboardController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
+        // Lấy lớp học với các quan hệ cần thiết
+        $class = Classroom::with([
+            'course.quizzes',                               // Tên khóa học
+            'user',                                 // Giảng viên phụ trách
+            'enrollments.student', 
+            'classSchedules'
+            
+        ]);
 
         $template = 'fontend.teacher.dashboard.home.index';
         return view('fontend.teacher.dashboard.layout', compact('template'));
@@ -57,6 +66,10 @@ class TeacherDashboardController extends Controller
             'classSchedules'
             
         ])->findOrFail($id);
+
+        $class->enrollments = $class->enrollments->sortBy(function ($enrollment) {
+            return $enrollment->student->fullname;
+        })->values();
     
         $template = 'fontend.teacher.dashboard.home.chitietloptoi';
         return view('fontend.teacher.dashboard.layout', compact('template', 'class'));

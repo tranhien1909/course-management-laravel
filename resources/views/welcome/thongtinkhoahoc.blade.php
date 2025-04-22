@@ -338,8 +338,7 @@
             <div class="tabs">
                 <div class="tab">Mục tiêu khoá học</div>
                 <div class="tab">Thông tin khoá học</div>
-                <div class="tab">Chương trình học</div>
-                <div class="tab">Đánh giá (260)</div>
+                <div class="tab">Đánh giá</div>
             </div>
         </div>
 
@@ -370,7 +369,7 @@
 
         <div class="col-12 col-md-4 course-sidebar">
             <div class="brand">
-                <img src="{{ $course->image }}" class='course-img' alt='Ảnh khóa học'>
+                <img src="{{ asset('storage/' . $course->image) }}" class='course-img' alt='Ảnh khóa học'>
             </div>
 
             <div class="price-section">

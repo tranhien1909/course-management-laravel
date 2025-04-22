@@ -105,6 +105,10 @@ class UserController extends Controller
         $payments = $user->payments;
         $grades = $user->grades;
 
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
+
         $attendances = $user->attendances;
 
             // Tổng buổi nghỉ
@@ -144,6 +148,7 @@ class UserController extends Controller
         $template = 'backend.dashboard.home.chitiethocvien';
         return view('backend.dashboard.layout', compact('template', 'user', 'payments', 'attendances', 'enrollments', 'absentCount', 'grades',
         'lateCount',
+        'thongKe',
         'absentThisMonth',
         'absentLastMonth',
         'lateThisMonth',

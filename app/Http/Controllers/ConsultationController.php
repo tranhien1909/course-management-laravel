@@ -60,4 +60,15 @@ class ConsultationController extends Controller
 
         return back()->with('success', 'Yêu cầu tư vấn của bạn đã được gửi thành công! Chúng tôi sẽ liên hệ sớm nhất.');
     }
+
+    public function updateStatus(Request $request, $consultationId)
+    {
+        $consultation = Consultation::findOrFail($consultationId);
+        $consultation->status = $request->input('status');
+        $consultation->save();
+
+        return response()->json(['message' => 'Cập nhật thành công']);
+    }
+
+    
 }

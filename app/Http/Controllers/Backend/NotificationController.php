@@ -31,6 +31,9 @@ class NotificationController extends Controller
 
     public function create(Request $request)
     {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
         $teachers = User::where('role', 'teacher')->get();
         $students = User::where('role', 'student')->get();
         $classes = Classroom::all(); 
@@ -44,6 +47,7 @@ class NotificationController extends Controller
         }
     
         return view('backend.dashboard.layout', compact(
+            'thongKe',
             'template',
             'teachers',
             'students',

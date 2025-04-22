@@ -23,7 +23,7 @@ class CourseMaterial extends Model
 
     public function teacher()
     {
-        return $this->belongsTo(Teacher::class, 'uploaded_by');
+        return $this->belongsTo(User::class, 'uploaded_by');
     }
 
 }

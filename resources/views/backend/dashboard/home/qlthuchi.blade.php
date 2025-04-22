@@ -70,6 +70,33 @@
         z-index: 1001;
         /* Hiển thị trên cùng */
     }
+
+    .status-badge {
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .status-pending {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .status-contacted {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-failed {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
 </style>
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -92,22 +119,24 @@
             <div class="filter-bar">
                 <button>Export</button>
 
-                <div class="input-group from">
-                    <input type="date" id="tungay" name="tungay">
-                </div>
-                <div class="input-group to">
-                    <input type="date" id="denngay" name="denngay">
-                </div>
+                <form action={{ route('spending.index') }} method="GET" style="display: flex; gap: 10px;">
+                    <div class="input-group from">
+                        <input type="date" id="tungay" name="tungay" value="{{ request('tungay') }}">
+                    </div>
+                    <div class="input-group to">
+                        <input type="date" id="denngay" name="denngay" value="{{ request('denngay') }}">
+                    </div>
 
-                <div class="search-container">
-                    <form action="" method="GET">
+                    <div class="search-container">
                         <input type="text" name="search" class="form-control"
-                            placeholder="Tìm kiếm theo mã lớp hoặc tên khóa học" value="">
-                        <button type="submit" class="search-icon"
-                            style="background-color: white; left: 8px; padding: 6px;"><i
-                                class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
-                    </form>
-                </div>
+                            placeholder="Tìm kiếm theo mã (tuỳ chọn)" value="{{ request('search') }}"
+                            style="padding: 19px 0px 19px 20px; width: 440px;">
+                    </div>
+                    <button type="submit" class="btn-success" style="left: 8px; padding: 6px 12px;"><i
+                            class="fa-solid fa-magnifying-glass" style="color: white;"></i></button>
+                </form>
+
+
 
                 <button class="add-btn" onclick="toggleForm()">+ Thêm Hoá đơn</button>
             </div>
@@ -134,7 +163,16 @@
                                     <td>{{ $payment->course->course_name ?? $payment->course_id }}</td>
                                     <td>{{ number_format($payment->amount, 0, ',', '.') }}</td>
                                     <td>{{ ucfirst($payment->payment_method) }}</td>
-                                    <td>{{ ucfirst($payment->status) }}</td>
+                                    <td>
+                                        <span class="status-badge status-{{ $payment->status }}">
+                                            {{ ucfirst($payment->status) }}
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-primary update-status-btn"
+                                            data-id="{{ $payment->id }}" data-status="{{ $payment->status }}"
+                                            data-toggle="modal" data-target="#statusModal">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
@@ -148,14 +186,45 @@
         </div>
     </div>
 
+    <!-- Status Update Modal -->
+    <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusModalLabel">Cập nhật trạng thái tư vấn</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="statusForm" method="POST"
+                    action="{{ route('spending.updateStatus', ['payment' => $payment->id]) }}">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="status">Tình trạng</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="pending">Chờ xử lý</option>
+                                <option value="completed">Hoàn thành</option>
+                                <option value="failed">Thất bại</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 <div class="form-container" id="addForm">
     <button class="closebtn" onclick="toggleForm()">X</button>
     <h2 class="text-center">THÊM HÓA ĐƠN</h2>
     <form>
-        <label>Mã hóa đơn</label>
-        <input type="text" name="ma_hoa_don" required>
-
         <label>Ngày tạo</label>
         <input type="date" name="ngay_tao" required>
 
@@ -205,46 +274,60 @@
             mainContent.style.filter = "blur(5px)";
         }
     }
-    document.addEventListener("DOMContentLoaded", function() {
-        const checkboxes = document.querySelectorAll(".row-checkbox");
-        const btnEdit = document.querySelector(".btn-edit");
-        const btnDelete = document.querySelector(".btn-delete");
-        const selectAll = document.getElementById("select-all");
-
-        function updateButtons() {
-            let checkedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
-            let checkedCount = checkedCheckboxes.length;
-
-            btnEdit.disabled = checkedCount !== 1;
-            btnDelete.disabled = checkedCount === 0;
-
-            checkboxes.forEach(checkbox => {
-                let row = checkbox.closest("tr");
-                if (checkbox.checked) {
-                    row.classList.add("selected");
-                } else {
-                    row.classList.remove("selected");
-                }
-            });
-        }
-
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", updateButtons);
-        });
-
-        if (selectAll) {
-            selectAll.checked = false;
-            selectAll.addEventListener("change", function() {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-                updateButtons();
-            });
-        }
-        updateButtons();
-    });
 </script>
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            // Khi click nút cập nhật trạng thái
+            $('.update-status-btn').click(function() {
+                const paymentId = $(this).data('id');
+                const currentStatus = $(this).data('status');
+
+                // Cập nhật form action với ID thanh toán
+                $('#statusForm').attr('action', '/payments/' + paymentId + '/status');
+
+                // Set giá trị hiện tại cho select
+                $('#status').val(currentStatus);
+            });
+
+            // Xử lý submit form bằng AJAX
+            $('#statusForm').submit(function(e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const url = form.attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            // Đóng modal
+                            $('#statusModal').modal('hide');
+
+                            // Cập nhật UI
+                            const row = $(
+                                    `button[data-id="${form.attr('action').split('/')[2]}"]`)
+                                .closest('tr');
+                            row.find('.status-badge')
+                                .removeClass('status-pending status-completed status-failed')
+                                .addClass('status-' + response.new_status)
+                                .text(response.new_status.charAt(0).toUpperCase() + response
+                                    .new_status.slice(1));
+
+                            // Cập nhật data-status trên nút
+                            row.find('.update-status-btn').data('status', response.new_status);
+
+                            toastr.success(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        toastr.error(xhr.responseJSON.message || 'Có lỗi xảy ra');
+                    }
+                });
+            });
+        });
+    </script>
+@endsection

@@ -47,6 +47,10 @@ class TeacherController extends Controller
         $teacher = Teacher::findOrFail($id);
         $selectedDate = Carbon::parse(request('date', now()));
         $weekStart = $selectedDate->copy()->startOfWeek(Carbon::MONDAY);
+
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
     
         // Lấy lịch dạy theo teacher_id
         $classSchedules = ClassSchedule::with(['class.user'])
@@ -56,7 +60,7 @@ class TeacherController extends Controller
             ->get();
     
         $template = 'backend.dashboard.home.chitietgiangvien';
-        return view('backend.dashboard.layout', compact('template', 'teacher', 'classSchedules', 'weekStart'));
+        return view('backend.dashboard.layout', compact('template', 'teacher', 'classSchedules', 'weekStart', 'thongKe'));
     }
 
     public function store(StoreTeacherRequest $request)

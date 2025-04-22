@@ -15,7 +15,11 @@ class Consultation extends Model
         'email',
         'course_interested',
         'message',
-        'status',
-        'assigned_to'
+        'status'
     ];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_interested', 'id');
+    }
 }

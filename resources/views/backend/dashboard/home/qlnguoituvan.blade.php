@@ -3,7 +3,33 @@
 <style>
     .table-responsive {
         margin-top: 30px;
+    }
 
+    .status-badge {
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .status-pending {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .status-contacted {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .status-completed {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .update-status-btn {
+        padding: 0.15rem 0.4rem;
+        margin-left: 5px;
     }
 </style>
 <div class="wrapper wrapper-content">
@@ -57,7 +83,6 @@
                                 <th>Nội dung</th>
                                 <th>Ngày điền form</th>
                                 <th>Tình trạng</th>
-                                <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,22 +97,28 @@
                                         <td>{{ $consultation->course_interested }}</td>
                                         <td>{{ $consultation->message }}</td>
                                         <td>{{ date('d/m/Y', strtotime($consultation->created_at)) }}</td>
-                                        <td>{{ $consultation->status }}</td>
-                                        <td style="padding: 1px 24px;">
-                                            <a href="" title="Xem chi tiết"><i
-                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                        <td>
+                                            <span class="status-badge status-{{ $consultation->status }}">
+                                                {{ ucfirst($consultation->status) }}
+                                            </span>
+                                            <button class="btn btn-sm btn-outline-primary update-status-btn"
+                                                data-id="{{ $consultation->id }}"
+                                                data-status="{{ $consultation->status }}" data-toggle="modal"
+                                                data-target="#statusModal">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="9">Không có khóa học nào.</td>
+                                    <td colspan="8">Không có khóa học nào.</td>
                                 </tr>
                             @endif
 
                             @if (isset($consultations))
                                 <tr>
-                                    <td colspan="9">
+                                    <td colspan="8">
                                         {{ $consultations->links('pagination::bootstrap-4') }}
                                     </td>
                                 </tr>
@@ -99,3 +130,79 @@
         </div>
     </div>
 </div>
+
+<!-- Status Update Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="statusModalLabel">Cập nhật trạng thái tư vấn</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="statusForm" method="POST">
+                @csrf
+                <input type="hidden" id="route-update-status"
+                    value="{{ route('consultations.updateStatus', ['consultation' => 'ID_REPLACE']) }}">
+                <input type="hidden" name="_method" value="PUT">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="status">Tình trạng</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="pending">Chờ xử lý</option>
+                            <option value="contacted">Đã liên hệ</option>
+                            <option value="completed">Hoàn thành</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.update-status-btn').click(function() {
+                const consultationId = $(this).data('id');
+                const currentStatus = $(this).data('status');
+
+                let template = $('#route-update-status').val(); // dạng: /consultations/ID_REPLACE/status
+                let url = template.replace('ID_REPLACE', consultationId);
+
+                $('#statusForm').attr('action', url);
+                $('#status').val(currentStatus);
+            });
+
+            $('#statusForm').submit(function(e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const url = form.attr('action');
+
+                console.log("Form will submit to: ", url); // <-- log này rất quan trọng
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        alert("Cập nhật thất bại!");
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+        });
+    </script>
+@endsection

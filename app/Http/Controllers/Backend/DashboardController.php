@@ -62,15 +62,18 @@ class DashboardController extends Controller
 
     public function profile()
     {
+        $thongKe = [
+            'thong_bao' => DB::table('notifications')->count(),
+        ];
         $template = 'backend.dashboard.home.profile';
-        return view('backend.dashboard.layout', compact('template'));
+        return view('backend.dashboard.layout', compact('template', 'thongKe'));
 
     }
 
     public function thongke()
     {
         $thongKe = [
-            'thong_bao' => DB::table('notifications')->count()
+            'thong_bao' => DB::table('notifications')->count(),
         ];
 
         // Học viên mới theo tháng
@@ -107,7 +110,7 @@ class DashboardController extends Controller
             }
     
         return view('backend.dashboard.layout', [
-            'thongKe', 
+            'thongKe' => $thongKe, 
             'template' => 'backend.dashboard.home.thongke',
             'studentData' => $studentData,
             'classStats' => $classStats,

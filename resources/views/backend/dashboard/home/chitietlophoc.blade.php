@@ -296,6 +296,7 @@
                 <div class="tab-item active" data-tab="tab1">Thông Tin Chung</div>
                 <div class="tab-item" data-tab="tab2">Lịch Học</div>
                 <div class="tab-item" data-tab="tab3">Danh Sách Học Viên</div>
+                <div class="tab-item" data-tab="tab4">Kết quả học tập</div>
             </div>
 
             <div class="tab-content-container">
@@ -375,7 +376,6 @@
                 <div id="tab3" class="tab-content">
                     <div class="filter-bar">
                         <button>Export</button>
-                        <button class="add-btn" onclick="toggleForm()">+ Thêm Học viên</button>
                     </div>
                     <div class="table-responsive">
                         <table>
@@ -425,6 +425,57 @@
                             </tbody>
 
                         </table>
+                    </div>
+                </div>
+                <div id="tab4" class="tab-content">
+                    <div class="table-responsive">
+
+                        <form action="{{ route('grades.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="class_id" value="{{ $class->id }}">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã học viên</th>
+                                        <th>Họ tên học viên</th>
+                                        <th>Điểm lần 1</th>
+                                        <th>Điểm lần 2</th>
+                                        <th>Điểm lần 3</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($class->enrollments as $index => $enrollment)
+                                        @php
+                                            $grade = $enrollment->student->grades
+                                                ->where('class_id', $class->id)
+                                                ->first();
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $enrollment->student->student_id }}</td>
+                                            <td>{{ $enrollment->student->fullname }}</td>
+
+                                            <td><input type="number" step="0.01"
+                                                    name="grades[{{ $enrollment->student->id }}][grade_1]"
+                                                    class="form-control" value="{{ $grade->grade_1 ?? '' }}"></td>
+                                            <td><input type="number" step="0.01"
+                                                    name="grades[{{ $enrollment->student->id }}][grade_2]"
+                                                    class="form-control" value="{{ $grade->grade_2 ?? '' }}"></td>
+                                            <td><input type="number" step="0.01"
+                                                    name="grades[{{ $enrollment->student->id }}][grade_3]"
+                                                    class="form-control" value="{{ $grade->grade_3 ?? '' }}"></td>
+                                            <td><input type="text"
+                                                    name="grades[{{ $enrollment->student->id }}][note]"
+                                                    class="form-control" value="{{ $grade->note ?? '' }}"></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </form>
+
                     </div>
                 </div>
 

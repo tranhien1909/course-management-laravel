@@ -40,9 +40,10 @@ class CourseMaterialController extends Controller
     if ($request->hasFile('file')) {
         $file = $request->file('file');
         $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = $file->storeAs('course_materials', $fileName, 'public');
-    } else {
-        $filePath = $request->file_url;
+        $file->storeAs('public/course_materials', $filename);
+        $fileUrl = 'storage/course_materials/' . $filename;
+    } elseif ($request->filled('file_url')) {
+        $fileUrl = $request->file_url;
     }
 
     CourseMaterial::create([

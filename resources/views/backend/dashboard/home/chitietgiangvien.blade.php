@@ -124,8 +124,7 @@
                                     <span class="edit-icon"><i class="fa-solid fa-wrench"></i></span>
                                 </div>
                                 <input name="image" type="file" class="image-input" accept="image/*">
-                                <img src="{{ asset('storage/' . $teacher->user->avatar) }}" alt="Ảnh Giáo Viên"
-                                    class="img-responsive">
+                                <img src="{{ $teacher->user->avatar }}" alt="Ảnh Giáo Viên" class="img-responsive">
                             </div>
                             <button class="btn btn-default btn-block">{{ $teacher->id }}</button>
                         </div>

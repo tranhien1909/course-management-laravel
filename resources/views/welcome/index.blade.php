@@ -74,9 +74,9 @@
         @foreach ($courses as $course)
             <a href="{{ route('chitiet', $course->id) }}" class="box">
                 <div>
-                    <span class="discount text-danger">
+                    {{-- <span class="discount text-danger">
                         - {{ $course->discount ?? '0' }}%
-                    </span>
+                    </span> --}}
                     <div class="image">
                         <img src="{{ asset('storage/' . $course->image) ?? asset('backend/img/course_1.jpg') }}"
                             alt="Ảnh khoá học">
@@ -86,7 +86,7 @@
                         <h3>{{ $course->course_name ?? 'Courses' }}</h3>
                         <div class="stars">★★★★★</div>
                         <div class="price">{{ number_format($course->price, 0, ',', '.') }}
-                            <span>{{ number_format($course->price, 0, ',', '.') }}</span>
+                            {{-- <span>{{ number_format($course->price, 0, ',', '.') }}</span> --}}
                         </div>
                     </div>
                 </div>

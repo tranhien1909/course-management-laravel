@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend\Teacher;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Grade;
+use App\Models\StudentGrade;
 use App\Models\Quizz;
 
 class StudentGradeController extends Controller
@@ -24,6 +24,15 @@ class StudentGradeController extends Controller
         $gradesData = $request->input('grades');
     
         foreach ($gradesData as $studentId => $data) {
+            // Tính điểm TB riêng cho từng học viên
+            $grades = collect([
+                $data['grade_1'] ?? null,
+                $data['grade_2'] ?? null,
+                $data['grade_3'] ?? null
+            ])->filter(fn($grade) => $grade !== null);
+    
+            $finalGrade = $grades->count() === 3 ? round($grades->avg(), 2) : null;
+    
             StudentGrade::updateOrCreate(
                 [
                     'student_id' => $studentId,
@@ -33,6 +42,7 @@ class StudentGradeController extends Controller
                     'grade_1' => $data['grade_1'] ?? null,
                     'grade_2' => $data['grade_2'] ?? null,
                     'grade_3' => $data['grade_3'] ?? null,
+                    'final_grade' => $finalGrade,
                     'note' => $data['note'] ?? null,
                 ]
             );

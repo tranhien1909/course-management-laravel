@@ -80,12 +80,12 @@ class TeacherController extends Controller
             // Xử lý avatar
             $avatarPath = null;
 
-            if ($request->hasFile('image')) {
-                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            if ($request->hasFile('avatar')) {
+                $avatarPath = $request->file('avatar')->store('course_images', 'public');
             } elseif ($request->filled('avatar_temp')) {
-                // Di chuyển ảnh từ thư mục temp sang thư mục avatars
+                // Di chuyển ảnh từ thư mục temp sang thư mục course_images
                 $tempPath = storage_path('app/public/' . $request->input('avatar_temp'));
-                $newPath = 'avatars/' . basename($tempPath);
+                $newPath = 'course_images/' . basename($tempPath);
                 Storage::disk('public')->move($request->input('avatar_temp'), $newPath);
                 $avatarPath = $newPath;
             }
@@ -179,9 +179,9 @@ class TeacherController extends Controller
         
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('public/avatars', $filename); // lưu đúng chỗ
-                $user->avatar = 'avatars/' . $filename;
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('course_images', $filename); // lưu đúng chỗ
+                $user->avatar = 'course_images/' . $filename;
             }
         
             $user->save();

@@ -98,9 +98,7 @@ class UserController extends Controller
 
     public function detail($id)
     {
-        $user = User::with([
-            'grades.exam' 
-        ])->findOrFail($id);
+        $user = User::findOrFail($id);
         $enrollments = Enrollment::with('class')->where('student_id', $id)->get();
         $payments = $user->payments;
         $grades = $user->grades;

@@ -642,6 +642,20 @@
             imageInput.click();
         });
     });
+
+        // Xem trước ảnh
+        document.querySelectorAll(".image-input").forEach((input) => {
+            input.addEventListener("change", function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.nextElementSibling.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
 </script>
 
 <script>
@@ -682,5 +696,40 @@
         alert('Vui lòng chọn file hoặc nhập URL tài liệu');
     }
 });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.delete-form').on('submit', function(e) {
+            e.preventDefault();
+
+            if (!confirm('Bạn có chắc chắn muốn xoá khoá học này?')) {
+                return false;
+            }
+
+            var form = $(this);
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: form.find('input[name="_token"]').val()
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        toastr.success(response.success);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000); // đợi toastr hiển thị rồi reload
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error(xhr.responseJSON.error || 'Có lỗi xảy ra');
+                }
+            });
+        });
+    });
 </script>
 

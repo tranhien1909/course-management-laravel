@@ -443,6 +443,7 @@
                                         <th>Điểm lần 1</th>
                                         <th>Điểm lần 2</th>
                                         <th>Điểm lần 3</th>
+                                        <th>Điểm TB</th>
                                         <th>Ghi chú</th>
                                     </tr>
                                 </thead>
@@ -467,6 +468,11 @@
                                             <td><input type="number" step="0.01"
                                                     name="grades[{{ $enrollment->student->id }}][grade_3]"
                                                     class="form-control" value="{{ $grade->grade_3 ?? '' }}"></td>
+                                            <td><input type="number" step="0.01"
+                                                    name="grades[{{ $enrollment->student->id }}][final_grade]"
+                                                    class="form-control" value="{{ $grade->final_grade ?? '' }}"
+                                                    readonly>
+                                            </td>
                                             <td><input type="text"
                                                     name="grades[{{ $enrollment->student->id }}][note]"
                                                     class="form-control" value="{{ $grade->note ?? '' }}"></td>

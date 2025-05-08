@@ -370,8 +370,8 @@
                                         <span class="edit-icon"><i class="fa-solid fa-wrench"></i></span>
                                     </div>
                                     <input name="image" type="file" class="image-input" accept="image/*">
-                                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="Ảnh Học Viên"
-                                        class="img-responsive" style="width: 200px;">
+                                    <img src="{{ $user->avatar }}" alt="Ảnh Học Viên" class="img-responsive"
+                                        style="width: 200px;">
                                 </div>
                                 <button class="btn btn-default btn-block mb-10">{{ $user->student_id }}</button>
                             </div>
@@ -552,8 +552,7 @@
                                     <canvas id="myChart"></canvas>
                                 </div>
                                 <div class="stats-box">
-                                    <p>Số bài kiểm tra hoàn thành: <span class="green">0/12</span></p>
-                                    <p>Điểm kiểm tra trung bình: <span class="green">63/100</span></p>
+                                    <p>Số bài kiểm tra hoàn thành: <span class="green">1/2</span></p>
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -561,9 +560,10 @@
                                     <thead>
                                         <tr>
                                             <th>STT</th>
-                                            <th>Bài kiểm tra</th>
-                                            <th>Ngày làm bài</th>
-                                            <th>Điểm</th>
+                                            <th>Điểm lần 1</th>
+                                            <th>Điểm lần 2</th>
+                                            <th>Điểm lần 3</th>
+                                            <th>Điểm TB</th>
                                             <th>Ghi chú</th>
                                         </tr>
                                     </thead>
@@ -571,10 +571,26 @@
                                         @foreach ($grades as $index => $grade)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td>{{ $grade->exam->name ?? '---' }}</td>
-                                                <td>{{ $grade->exam->exam_date ?? '---' }}</td>
-                                                <td>{{ $grade->score }}</td>
-                                                <td>{{ $grade->exam->notes ?? '---' }}</td>
+                                                <td><input type="number" step="0.01"
+                                                        name="grades[{{ $enrollment->student->id }}][grade_1]"
+                                                        class="form-control" value="{{ $grade->grade_1 ?? '' }}">
+                                                </td>
+                                                <td><input type="number" step="0.01"
+                                                        name="grades[{{ $enrollment->student->id }}][grade_2]"
+                                                        class="form-control" value="{{ $grade->grade_2 ?? '' }}">
+                                                </td>
+                                                <td><input type="number" step="0.01"
+                                                        name="grades[{{ $enrollment->student->id }}][grade_3]"
+                                                        class="form-control" value="{{ $grade->grade_3 ?? '' }}">
+                                                </td>
+                                                <td><input type="number" step="0.01"
+                                                        name="grades[{{ $enrollment->student->id }}][final_grade]"
+                                                        class="form-control" value="{{ $grade->final_grade ?? '' }}"
+                                                        readonly>
+                                                </td>
+                                                <td><input type="text"
+                                                        name="grades[{{ $enrollment->student->id }}][note]"
+                                                        class="form-control" value="{{ $grade->note ?? '' }}"></td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -739,7 +755,7 @@
         data: {
             labels: [1, 2, 3, 4, 5],
             datasets: [{
-                    label: 'Điểm kiểm tra định kỳ',
+                    label: 'Điểm lần 1',
                     data: [90, 80, 70, 75, 85],
                     borderColor: 'red',
                     backgroundColor: 'rgba(255, 0, 0, 0.2)',

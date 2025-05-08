@@ -84,7 +84,7 @@ class CourseController extends Controller
             // Xử lý avatar
             $avatarPath = null;
 
-            if ($request->hasFile('avatar')) {
+            if ($request->hasFile('image')) {
                 $avatarPath = $request->file('avatar')->store('course_images', 'public');
             } elseif ($request->filled('avatar_temp')) {
                 // Di chuyển ảnh từ thư mục temp sang thư mục course_images

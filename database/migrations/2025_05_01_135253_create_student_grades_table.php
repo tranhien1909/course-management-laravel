@@ -19,6 +19,9 @@ return new class extends Migration
             $table->decimal('grade_1', 5, 2)->nullable(); // điểm lần 1
             $table->decimal('grade_2', 5, 2)->nullable(); // điểm lần 2
             $table->decimal('grade_3', 5, 2)->nullable(); // điểm lần 3
+
+            $table->decimal('final_grade', 5, 2)->nullable();
+
         
             $table->text('note')->nullable();
             $table->timestamps();

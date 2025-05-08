@@ -61,9 +61,9 @@
             <div class="filter-bar">
 
                 <div class="search-container">
-                    <form action="{{ route('class.index') }}" method="GET">
+                    <form action="{{ route('consultations.index') }}" method="GET">
                         <input type="text" name="search" class="form-control"
-                            placeholder="Tìm kiếm theo mã hoặc tên khóa học" value="{{ request('search') }}">
+                            placeholder="Tìm kiếm theo mã khóa học" value="{{ request('search') }}">
                         <button type="submit" class="search-icon"
                             style="background-color: white; left: 8px; padding: 6px;"><i
                                 class="fa-solid fa-magnifying-glass" style="color: #3b6db3;"></i></button>
@@ -142,11 +142,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="statusForm" method="POST">
+            <form id="statusForm" method="POST"
+                action="{{ route('consultations.updateStatus', ['consultation' => $consultation->id]) }}">
                 @csrf
-                <input type="hidden" id="route-update-status"
-                    value="{{ route('consultations.updateStatus', ['consultation' => 'ID_REPLACE']) }}">
-                <input type="hidden" name="_method" value="PUT">
+                @method('PUT')
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="status">Tình trạng</label>
@@ -173,10 +172,7 @@
                 const consultationId = $(this).data('id');
                 const currentStatus = $(this).data('status');
 
-                let template = $('#route-update-status').val(); // dạng: /consultations/ID_REPLACE/status
-                let url = template.replace('ID_REPLACE', consultationId);
-
-                $('#statusForm').attr('action', url);
+                $('#statusForm').attr('action', '/consultations/' + consultationId + '/status');
                 $('#status').val(currentStatus);
             });
 
@@ -189,16 +185,32 @@
                 console.log("Form will submit to: ", url); // <-- log này rất quan trọng
 
                 $.ajax({
+                    type: "POST",
                     url: url,
-                    type: 'POST',
                     data: form.serialize(),
                     success: function(response) {
-                        alert(response.message);
-                        location.reload();
+                        if (response.success) {
+                            // Đóng modal
+                            $('#statusModal').modal('hide');
+
+                            // Cập nhật UI
+                            const row = $(
+                                    `button[data-id="${form.attr('action').split('/')[2]}"]`)
+                                .closest('tr');
+                            row.find('.status-badge')
+                                .removeClass('status-pending status-completed status-failed')
+                                .addClass('status-' + response.new_status)
+                                .text(response.new_status.charAt(0).toUpperCase() + response
+                                    .new_status.slice(1));
+
+                            // Cập nhật data-status trên nút
+                            row.find('.update-status-btn').data('status', response.new_status);
+
+                            toastr.success(response.message);
+                        }
                     },
                     error: function(xhr) {
-                        alert("Cập nhật thất bại!");
-                        console.error(xhr.responseText);
+                        toastr.error(xhr.responseJSON.message || 'Có lỗi xảy ra');
                     }
                 });
             });

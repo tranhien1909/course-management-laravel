@@ -1,17 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Password;
+
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\ConsultationController;
+
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\NotificationController;
 use App\Http\Controllers\Backend\NotificationTargetController;
-use App\Http\Controllers\Frontend\Teacher\TeacherDashboardController;
-use App\Http\Controllers\Frontend\Teacher\StudentGradeController;
-use App\Http\Controllers\Frontend\User\StudentDashboardController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminTaskController;
-use App\Http\Controllers\Frontend\Teacher\AttendanceController;
 use App\Http\Controllers\Backend\ScheduleController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\CourseMaterialController;
@@ -20,8 +20,15 @@ use App\Http\Controllers\Backend\QuestionController;
 use App\Http\Controllers\Backend\ClassController;
 use App\Http\Controllers\Backend\TeacherController;
 use App\Http\Controllers\Backend\SpendingController;
+
+use App\Http\Controllers\Frontend\Teacher\AttendanceController;
+use App\Http\Controllers\Frontend\Teacher\TeacherDashboardController;
+use App\Http\Controllers\Frontend\Teacher\StudentGradeController;
+
+use App\Http\Controllers\Frontend\User\StudentDashboardController;
+
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\ConsultationController;
+
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\RoleMiddleware;
@@ -258,4 +265,5 @@ Route::put('/student/{id}', [StudentDashboardController::class, 'update'])->name
 
     Route::get('/teacher-schedule/week', [ScheduleController::class, 'loadTeacherWeek']);
 
-    
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

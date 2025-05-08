@@ -67,7 +67,7 @@ class ConsultationController extends Controller
         $consultation->status = $request->input('status');
         $consultation->save();
 
-        return response()->json(['message' => 'Cập nhật thành công']);
+        return redirect()->back()->with('success', 'Cập nhật trạng thái thành công!');
     }
 
     

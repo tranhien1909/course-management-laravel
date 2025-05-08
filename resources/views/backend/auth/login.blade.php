@@ -95,7 +95,8 @@
                                 <label class="form-check-label fw-bold" for="rememberMe" style="color: black;">Remember
                                     me</label>
                             </div>
-                            <a href="#" class="text-primary text-decoration-none">Forgot Password</a>
+                            <a href="#" class="text-primary text-decoration-none">Forgot
+                                Password</a>
                         </div>
 
 

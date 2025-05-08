@@ -414,6 +414,7 @@
                                         <th>Điểm lần 1</th>
                                         <th>Điểm lần 2</th>
                                         <th>Điểm lần 3</th>
+                                        <th>Điểm TB</th>
                                         <th>Ghi chú</th>
                                     </tr>
                                 </thead>
@@ -438,6 +439,11 @@
                                             <td><input type="number" step="0.01"
                                                     name="grades[{{ $enrollment->student->id }}][grade_3]"
                                                     class="form-control" value="{{ $grade->grade_3 ?? '' }}"></td>
+                                            <td><input type="number" step="0.01"
+                                                    name="grades[{{ $enrollment->student->id }}][final_grade]"
+                                                    class="form-control" value="{{ $grade->final_grade ?? '' }}"
+                                                    readonly>
+                                            </td>
                                             <td><input type="text"
                                                     name="grades[{{ $enrollment->student->id }}][note]"
                                                     class="form-control" value="{{ $grade->note ?? '' }}"></td>
@@ -668,4 +674,37 @@
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            const inputs = {
+                grade1: row.querySelector('input[name*="[grade_1]"]'),
+                grade2: row.querySelector('input[name*="[grade_2]"]'),
+                grade3: row.querySelector('input[name*="[grade_3]"]'),
+                final: row.querySelector('input[name*="[final_grade]"]')
+            };
+
+            function calculateAverage() {
+                const g1 = parseFloat(inputs.grade1.value);
+                const g2 = parseFloat(inputs.grade2.value);
+                const g3 = parseFloat(inputs.grade3.value);
+
+                if (!isNaN(g1) && !isNaN(g2) && !isNaN(g3)) {
+                    const avg = ((g1 + g2 + g3) / 3).toFixed(2);
+                    inputs.final.value = avg;
+                } else {
+                    inputs.final.value = '';
+                }
+            }
+
+            // Gắn sự kiện khi nhập vào 3 ô điểm
+            inputs.grade1.addEventListener('input', calculateAverage);
+            inputs.grade2.addEventListener('input', calculateAverage);
+            inputs.grade3.addEventListener('input', calculateAverage);
+        });
+    });
 </script>

@@ -123,4 +123,17 @@ class User extends Authenticatable
                 ->withPivot(['enrollment_date', 'status', 'payment_id']);
 }
 
+public function sendPasswordResetNotification($token)
+{
+    $url = url(route('password.reset', [
+        'token' => $token,
+        'email' => $this->email,
+    ], false));
+
+    $this->notify(new \App\Notifications\ResetPasswordNotification($url));
 }
+
+
+}
+
+
